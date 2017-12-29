@@ -1,7 +1,5 @@
-/**
- * Integration Common
- *
- * Copyright (C) 2017 Black Duck Software, Inc.
+/*******************************************************************************
+ * Copyright (C) 2016 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,14 +18,12 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
+ *******************************************************************************/
 package com.blackducksoftware.integration.encryption;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public final class PasswordEncrypterTest {
     @Test
@@ -52,8 +48,8 @@ public final class PasswordEncrypterTest {
         System.out.println("Decrypted Password : " + decryptedPassword);
         System.out.println("Decrypted Password Length : " + decryptedPassword.length());
 
-        Assert.assertEquals(longPassword.length(), decryptedPassword.length());
-        Assert.assertEquals(longPassword, decryptedPassword);
+        assertEquals(longPassword.length(), decryptedPassword.length());
+        assertEquals(longPassword, decryptedPassword);
     }
 
 }

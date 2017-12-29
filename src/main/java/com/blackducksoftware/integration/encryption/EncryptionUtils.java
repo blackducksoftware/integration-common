@@ -1,8 +1,9 @@
 /**
- * Integration Common
+ * integration-common
  *
  * Copyright (C) 2017 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
+ *
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -25,7 +26,6 @@ package com.blackducksoftware.integration.encryption;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.KeyStore;
@@ -40,15 +40,15 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.blackducksoftware.integration.exception.EncryptionException;
+import com.blackducksoftware.integration.util.ResourceUtil;
 
 public class EncryptionUtils {
     private static final Charset UTF8 = Charset.forName("UTF-8");
-    private static final String EMBEDDED_SUN_KEY_FILE = "/Sun-Key.jceks";
-    private static final String EMBEDDED_IBM_KEY_FILE = "/IBM-Key.jceks";
+    private static final String EMBEDDED_SUN_KEY_FILE = "Sun-Key.jceks";
+    private static final String EMBEDDED_IBM_KEY_FILE = "IBM-Key.jceks";
 
     // needs to be at least 8 characters
     private static final char[] KEY_PASS = { 'b', 'l', 'a', 'c', 'k', 'd', 'u', 'c', 'k', '1', '2', '3', 'I', 'n', 't', 'e', 'g', 'r', 'a', 't', 'i', 'o', 'n' };
@@ -78,12 +78,10 @@ public class EncryptionUtils {
             }
         } else {
             try {
-                final InputStream inputStream = getResourceAsStream(EMBEDDED_SUN_KEY_FILE);
-                key = retrieveKeyFromInputStream(inputStream);
+                key = retrieveKeyFromFile(EMBEDDED_SUN_KEY_FILE);
             } catch (final Exception e) {
                 try {
-                    final InputStream inputStream = getResourceAsStream(EMBEDDED_IBM_KEY_FILE);
-                    key = retrieveKeyFromInputStream(inputStream);
+                    key = retrieveKeyFromFile(EMBEDDED_IBM_KEY_FILE);
                 } catch (final Exception e1) {
                     throw new EncryptionException("Failed to retrieve the encryption key from classpath", e);
                 }
@@ -134,26 +132,17 @@ public class EncryptionUtils {
         return decryptedString;
     }
 
-    private Key retrieveKeyFromInputStream(final InputStream inputStream) throws NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, KeyStoreException {
-        try {
-            final KeyStore keystore = KeyStore.getInstance("JCEKS");
-            keystore.load(inputStream, KEY_PASS);
-            final Key key = keystore.getKey("keyStore", KEY_PASS);
-            return key;
-        } finally {
-            IOUtils.closeQuietly(inputStream);
+    private Key retrieveKeyFromFile(final String keyFile) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+        try (InputStream inputStream = ResourceUtil.getResourceAsStream(keyFile)) {
+            return retrieveKeyFromInputStream(inputStream);
         }
     }
 
-    private InputStream getResourceAsStream(final String resourceName) throws IOException {
-        URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
-        if (url == null) {
-            url = EncryptionUtils.class.getResource(resourceName);
-        }
-        if (url != null) {
-            return url.openStream();
-        }
-        throw new IOException("Failed to retrieve the resource from classpath");
+    private Key retrieveKeyFromInputStream(final InputStream inputStream) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+        final KeyStore keystore = KeyStore.getInstance("JCEKS");
+        keystore.load(inputStream, KEY_PASS);
+        final Key key = keystore.getKey("keyStore", KEY_PASS);
+        return key;
     }
 
 }

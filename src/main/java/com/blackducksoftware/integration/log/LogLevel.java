@@ -1,8 +1,9 @@
 /**
- * Integration Common
+ * integration-common
  *
  * Copyright (C) 2017 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
+ *
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -36,14 +37,6 @@ public enum LogLevel {
     INFO,
     DEBUG,
     TRACE;
-
-    /**
-     * @deprecated Please use the instance method isLoggable(LogLevel logLevel) instead.
-     */
-    @Deprecated
-    public static boolean isLoggable(final LogLevel logger, final LogLevel message) {
-        return logger.isLoggable(message);
-    }
 
     public static LogLevel fromString(final String level) {
         if (StringUtils.isNotBlank(level)) {

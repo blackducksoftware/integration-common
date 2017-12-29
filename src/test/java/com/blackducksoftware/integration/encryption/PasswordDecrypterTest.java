@@ -1,7 +1,5 @@
-/**
- * Integration Common
- *
- * Copyright (C) 2017 Black Duck Software, Inc.
+/*******************************************************************************
+ * Copyright (C) 2016 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,7 +18,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
+ *******************************************************************************/
 package com.blackducksoftware.integration.encryption;
 
 import static org.junit.Assert.assertEquals;
@@ -35,8 +33,6 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import com.blackducksoftware.integration.encryption.PasswordDecrypter;
 
 public class PasswordDecrypterTest {
     private static Properties encryptedUserPassword = null;
@@ -79,7 +75,7 @@ public class PasswordDecrypterTest {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Please provide a non-blank password.");
 
-        assertNull(PasswordDecrypter.decrypt(null));
+        assertNull(PasswordDecrypter.decrypt((String) null));
     }
 
 }
