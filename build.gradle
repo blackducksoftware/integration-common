@@ -17,3 +17,11 @@ dependencies {
     compile 'commons-codec:commons-codec:1.11'
     compile 'org.slf4j:slf4j-api:1.7.25'
 }
+
+jacocoTestReport {
+    reports {
+        // coveralls plugin depends on xml format report
+        xml.enabled = true
+        html.enabled = true
+    }
+}
