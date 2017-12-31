@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
         maven { url 'https://plugins.gradle.org/m2/' }
     }
-    dependencies { classpath "com.blackducksoftware.integration:common-gradle-plugin:0.0.13" }
+    dependencies { classpath "com.blackducksoftware.integration:common-gradle-plugin:0.0.14" }
 }
 
 apply plugin: 'com.blackducksoftware.integration.library'
@@ -16,12 +16,4 @@ dependencies {
     compile 'commons-io:commons-io:2.6'
     compile 'commons-codec:commons-codec:1.11'
     compile 'org.slf4j:slf4j-api:1.7.25'
-}
-
-jacocoTestReport {
-    reports {
-        // coveralls plugin depends on xml format report
-        xml.enabled = true
-        html.enabled = true
-    }
 }
