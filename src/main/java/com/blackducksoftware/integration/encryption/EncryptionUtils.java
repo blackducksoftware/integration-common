@@ -4,7 +4,6 @@
  * Copyright (C) 2018 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
  *
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -133,7 +132,7 @@ public class EncryptionUtils {
     }
 
     private Key retrieveKeyFromFile(final String keyFile) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-        try (InputStream inputStream = ResourceUtil.getResourceAsStream(keyFile)) {
+        try (InputStream inputStream = ResourceUtil.getResourceAsStream(this.getClass(), keyFile)) {
             return retrieveKeyFromInputStream(inputStream);
         }
     }
