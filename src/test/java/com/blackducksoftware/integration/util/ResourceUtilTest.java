@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 
 public class ResourceUtilTest {
-    private static final String TEST_RESOURCE = "test-resource.txt";
+    private static final String TEST_RESOURCE = "/test-resource.txt";
 
     @Test
     public void testReturnsValues() throws Exception {
