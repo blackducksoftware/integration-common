@@ -42,7 +42,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import com.blackducksoftware.integration.exception.EncryptionException;
-import com.blackducksoftware.integration.util.ResourceUtil;
 
 public class EncryptionUtils {
     private static final Charset UTF8 = Charset.forName("UTF-8");
@@ -132,7 +131,7 @@ public class EncryptionUtils {
     }
 
     private Key retrieveKeyFromFile(final String keyFile) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-        try (InputStream inputStream = ResourceUtil.getResourceAsStream(this.getClass(), keyFile)) {
+        try (InputStream inputStream = this.getClass().getResourceAsStream(keyFile)) {
             return retrieveKeyFromInputStream(inputStream);
         }
     }
