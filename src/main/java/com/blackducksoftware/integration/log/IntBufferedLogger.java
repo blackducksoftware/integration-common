@@ -26,6 +26,7 @@ package com.blackducksoftware.integration.log;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,12 +50,7 @@ public class IntBufferedLogger extends IntLogger {
     }
 
     public void resetAllLogs() {
-        outputMap.put(LogLevel.OFF, new ArrayList<String>());
-        outputMap.put(LogLevel.ERROR, new ArrayList<String>());
-        outputMap.put(LogLevel.WARN, new ArrayList<String>());
-        outputMap.put(LogLevel.INFO, new ArrayList<String>());
-        outputMap.put(LogLevel.DEBUG, new ArrayList<String>());
-        outputMap.put(LogLevel.TRACE, new ArrayList<String>());
+        EnumSet.allOf(LogLevel.class).forEach(logLevel -> resetLogs(logLevel));
     }
 
     public List<String> getOutputList(final LogLevel level) {
@@ -62,7 +58,7 @@ public class IntBufferedLogger extends IntLogger {
     }
 
     public String getOutputString(final LogLevel level) {
-        return StringUtils.trimToNull(StringUtils.join(outputMap.get(level), '\n'));
+        return StringUtils.trimToNull(StringUtils.join(getOutputList(level), '\n'));
     }
 
     public String getErrorOutputString(final Throwable e) {
