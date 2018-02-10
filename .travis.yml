@@ -18,4 +18,5 @@ script:
 
 after_success:
   - ./gradlew test jacocoTestReport coveralls
+  - ./gradlew sonarqube
   - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
