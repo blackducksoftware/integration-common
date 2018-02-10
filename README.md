@@ -7,7 +7,7 @@ The integration-common library supplies shared utilities across many integration
 [![Coverage Status](https://coveralls.io/repos/github/blackducksoftware/integration-common/badge.svg?branch=master)](https://coveralls.io/github/blackducksoftware/integration-common?branch=master) 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Black Duck Security Risk](https://copilot.blackducksoftware.com/github/repos/blackducksoftware/integration-common/branches/master/badge-risk.svg)](https://copilot.blackducksoftware.com/github/repos/blackducksoftware/integration-common/branches/master)
-[!SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=com.blackducksoftware.integration%3Aintegration-common&metric=alert_status)
+[![Quality Gate](https://sonarqube.com/api/badges/gate?key=com.qualinsight.plugins.sonarqube:qualinsight-plugins-sonarqube-badges)](https://sonarcloud.io/api/project_badges/measure?project=com.blackducksoftware.integration%3Aintegration-common&metric=alert_status)
 
 ## Where can I get the latest release? ##
 You can download the latest release from Maven Central.
