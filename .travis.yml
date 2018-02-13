@@ -8,7 +8,7 @@ addons:
       secure: "b8qbfSCtdXi7T2HSORz3I6kH8EappKLmzfmbt0CJxDllAi723yTj1B8Bgn6gV11/d+5r96XXDw1ru42Q2+KsJw1Uyr5Uv8aoWpogjApcGPZmPWSLhImwjvByANnqmK/bFgGMQvURsnMqQ0VtSoKguOtbatDSAFUzQ5a92Emg6R8GiHmFNxAJKEOt5QqYfrYRiIRAILhSls4OtCT78ByvKMKcwl7kd+PBeNCo5ymYUEhW6cFKW50jt1dlY2lPMjR+JWI2lPWyk5MJJkzK8j74sGda1VdGJbxpHlkyy8ntgkC9DUkrt2Fj/vG9i294tn1S91QR59gPSDm/dVBe9hKCjVh3Rk+SNCUdDYZrxKPnIMJArZrSls9JWRLvpGGQDcM/zC0OdlBwsZIIBCD8BPaiSJCqxnuMQSyqdhm1CzZoovTd6RUI8zV21hZKMMdHKsuP+Qnh6UknxlmThenB96q2SO/pO+SkwHvJK/6uX/PM+r77OJtzsmXFuqTBRA5CeYTpC2YndK328pje/TSWpjN4y/tSrwfHqvWw/c/JoTzmSb0gS/eTbnpZ7Pd2ryq4mRJ4W2ntw4s0a5mPl3J4zuzNtwCvqKYf7cPBxneHiFJEcKZkih1ZZVZFiKcVDJqilYiuUEsu0xRFbEULwxd2qaqghSnLQ8JBlsx7wqyOzZZuvgA="
 
 jdk:
-- oraclejdk8
+  - oraclejdk8
 
 notifications:
   email:
@@ -19,11 +19,10 @@ notifications:
     - ekerwin@blackducksoftware.com
 
 script:
- - "./gradlew clean build sonarqube"
+  - "./gradlew clean build jacocoTestReport coveralls sonarqube"
 
 after_success:
- - "./gradlew test jacocoTestReport coveralls"
- - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
+  - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
 
 cache:
   directories:
