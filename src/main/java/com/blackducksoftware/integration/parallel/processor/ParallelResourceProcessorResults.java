@@ -31,7 +31,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 public class ParallelResourceProcessorResults<R> {
     private final List<R> results;
-
     private final List<Exception> exceptions;
 
     public ParallelResourceProcessorResults(final List<R> results, final List<Exception> exceptionMessages) {
