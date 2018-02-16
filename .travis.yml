@@ -5,7 +5,7 @@ install: true
 addons:
   sonarcloud:
     token:
-      secure: "b8qbfSCtdXi7T2HSORz3I6kH8EappKLmzfmbt0CJxDllAi723yTj1B8Bgn6gV11/d+5r96XXDw1ru42Q2+KsJw1Uyr5Uv8aoWpogjApcGPZmPWSLhImwjvByANnqmK/bFgGMQvURsnMqQ0VtSoKguOtbatDSAFUzQ5a92Emg6R8GiHmFNxAJKEOt5QqYfrYRiIRAILhSls4OtCT78ByvKMKcwl7kd+PBeNCo5ymYUEhW6cFKW50jt1dlY2lPMjR+JWI2lPWyk5MJJkzK8j74sGda1VdGJbxpHlkyy8ntgkC9DUkrt2Fj/vG9i294tn1S91QR59gPSDm/dVBe9hKCjVh3Rk+SNCUdDYZrxKPnIMJArZrSls9JWRLvpGGQDcM/zC0OdlBwsZIIBCD8BPaiSJCqxnuMQSyqdhm1CzZoovTd6RUI8zV21hZKMMdHKsuP+Qnh6UknxlmThenB96q2SO/pO+SkwHvJK/6uX/PM+r77OJtzsmXFuqTBRA5CeYTpC2YndK328pje/TSWpjN4y/tSrwfHqvWw/c/JoTzmSb0gS/eTbnpZ7Pd2ryq4mRJ4W2ntw4s0a5mPl3J4zuzNtwCvqKYf7cPBxneHiFJEcKZkih1ZZVZFiKcVDJqilYiuUEsu0xRFbEULwxd2qaqghSnLQ8JBlsx7wqyOzZZuvgA="
+      secure: "J+Mncw7Rl/qMVNy5y+0vKzuAXS+MSGyWzXXsFeRPouywBPPclLRu0zOtp8SGfpzOvRRocE0f7sCF7kn6L4H78pwzdFEMPKWz8q1Kq24tiS8IJOWX1cV1W8pRjYzQmS7dgLC6Ubp55z5UBAPKh37AJ1bJICRZo0SiG+atKJ/uiJz9JTi/pmYa49LPpiKFIigJGSYOMoEbovGicFpBoOVJgtgJB22OmjmZpMwF04ac+DNYEiTyg3JlLx5YkF+u4Bgr8lr3ds+RlB0BVCpB2XLWKuwKzFVo516TG8qVHzaMCnv5udaFln1iuWG1uYKHhoW4CZF4gU+YBDw+cmx7AN4W2MpiZqnMklqHerIy0J4LM6K5Zvyvxcpm1PKhSPQytL6LxhMfgsdXSPzEUV8sG8c/8I8KWBUCb/T53HvL27T6HajlW7c2aMgLIkwAw2vsxd0dqtXt9zdvjghs7FL6JQvixheMnTSbZjlnJqp/zJH8J72Q1xGOX+dcD2Vc6jz9bUHlaT6WYPC7sAgRZ9UwaL2PB6+3abcaqx/AHgs7e/ZnxRFaMq2dLlFukS8zjfXrmZQtLqELHSAuH4vm4WtsJv8JkPEfBKMlH07bp7WxFFJ5PvBq0NCe+I+REV69FFV3YRMCdW9BLH54JYc3XOI0fk5suB4jHn8441yeuMZ94iMV3Qk="
 
 jdk:
 - oraclejdk8
@@ -13,10 +13,7 @@ jdk:
 notifications:
   email:
     recipients:
-    - akamen@blackducksoftware.com
-    - jrichard@blackducksoftware.com
-    - psantos@blackducksoftware.com
-    - ekerwin@blackducksoftware.com
+    - bdsoss@blackducksoftware.com
 
 script:
 - "./gradlew clean build jacocoTestReport coveralls sonarqube"
