@@ -1,5 +1,5 @@
 /**
- * hub-common
+ * integration-common
  *
  * Copyright (C) 2018 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
@@ -41,7 +41,7 @@ import java.util.concurrent.ThreadFactory;
 import com.blackducksoftware.integration.log.IntLogger;
 
 public class ParallelResourceProcessor<R, S> implements Closeable {
-    private final Map<Class<?>, ItemTransformer<R, S>> transformerMap = new HashMap<>();
+    private final Map<String, ItemTransformer<R, S>> transformerMap = new HashMap<>();
     private final ExecutorService executorService;
     private final ExecutorCompletionService<List<R>> completionService;
     private final IntLogger logger;
@@ -61,11 +61,19 @@ public class ParallelResourceProcessor<R, S> implements Closeable {
     }
 
     public void addTransformer(final Class<?> clazz, final ItemTransformer<R, S> transform) {
-        transformerMap.put(clazz, transform);
+        addTransformer(clazz.getName(), transform);
+    }
+
+    public void addTransformer(final String transformerKey, final ItemTransformer<R, S> transform) {
+        transformerMap.put(transformerKey, transform);
     }
 
     public void removeTransformer(final Class<?> clazz) {
-        transformerMap.remove(clazz);
+        removeTransformer(clazz.getName());
+    }
+
+    public void removeTransformer(final String transformerKey) {
+        transformerMap.remove(transformerKey);
     }
 
     public ParallelResourceProcessorResults<R> process(final List<S> itemsToProcess) {
