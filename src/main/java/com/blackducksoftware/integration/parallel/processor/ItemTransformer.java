@@ -27,7 +27,7 @@ import java.util.List;
 
 import com.blackducksoftware.integration.exception.IntegrationException;
 
-public interface ItemTransformer<R, S> {
-    public List<R> transform(S item) throws IntegrationException;
+public interface ItemTransformer<S, R> {
+    public List<R> transform(S source) throws IntegrationException;
 
 }
