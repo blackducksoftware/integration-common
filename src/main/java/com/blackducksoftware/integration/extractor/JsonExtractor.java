@@ -27,7 +27,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 public class JsonExtractor {
-
     private final Gson gson;
 
     public JsonExtractor(final Gson gson) {
