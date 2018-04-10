@@ -41,7 +41,7 @@ import java.util.concurrent.ThreadFactory;
 import com.blackducksoftware.integration.log.IntLogger;
 
 public class ParallelResourceProcessor<R, S> implements Closeable {
-    private final Map<String, ItemTransformer<R, S>> transformerMap = new HashMap<>();
+    private final Map<Class<?>, ItemTransformer<S, R>> transformerMap = new HashMap<>();
     private final ExecutorService executorService;
     private final ExecutorCompletionService<List<R>> completionService;
     private final IntLogger logger;
@@ -60,20 +60,12 @@ public class ParallelResourceProcessor<R, S> implements Closeable {
         this.completionService = completionService;
     }
 
-    public void addTransformer(final Class<?> clazz, final ItemTransformer<R, S> transform) {
-        addTransformer(clazz.getName(), transform);
-    }
-
-    public void addTransformer(final String transformerKey, final ItemTransformer<R, S> transform) {
-        transformerMap.put(transformerKey, transform);
+    public void addTransformer(final Class<?> clazz, final ItemTransformer<S, R> transform) {
+        transformerMap.put(clazz, transform);
     }
 
     public void removeTransformer(final Class<?> clazz) {
-        removeTransformer(clazz.getName());
-    }
-
-    public void removeTransformer(final String transformerKey) {
-        transformerMap.remove(transformerKey);
+        transformerMap.remove(clazz);
     }
 
     public ParallelResourceProcessorResults<R> process(final List<S> itemsToProcess) {
@@ -87,7 +79,7 @@ public class ParallelResourceProcessor<R, S> implements Closeable {
         for (final S item : itemList) {
             final Class<?> key = item.getClass();
             if (transformerMap.containsKey(key)) {
-                final ItemTransformer<R, S> converter = transformerMap.get(key);
+                final ItemTransformer<S, R> converter = transformerMap.get(key);
                 final TransformCallable callable = new TransformCallable(item, converter);
                 completionService.submit(callable);
                 submitted++;
@@ -117,9 +109,9 @@ public class ParallelResourceProcessor<R, S> implements Closeable {
 
     private class TransformCallable implements Callable<List<R>> {
         private final S item;
-        private final ItemTransformer<R, S> converter;
+        private final ItemTransformer<S, R> converter;
 
-        public TransformCallable(final S item, final ItemTransformer<R, S> converter) {
+        public TransformCallable(final S item, final ItemTransformer<S, R> converter) {
             this.item = item;
             this.converter = converter;
         }
