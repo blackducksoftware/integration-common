@@ -23,7 +23,7 @@
  */
 package com.blackducksoftware.integration.log;
 
-import com.blackducksoftware.integration.util.CIEnvironmentVariables;
+import com.blackducksoftware.integration.util.IntEnvironmentVariables;
 
 public abstract class IntLogger {
     public abstract void alwaysLog(String txt);
@@ -48,7 +48,7 @@ public abstract class IntLogger {
 
     public abstract void setLogLevel(LogLevel logLevel);
 
-    public void setLogLevel(final CIEnvironmentVariables variables) {
+    public void setLogLevel(final IntEnvironmentVariables variables) {
         final String logLevel = variables.getValue("HUB_LOG_LEVEL", "INFO");
         try {
             setLogLevel(LogLevel.valueOf(logLevel.toUpperCase()));

@@ -1,5 +1,5 @@
 /**
- * hub-common
+ * integration-common
  *
  * Copyright (C) 2018 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
@@ -21,13 +21,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.blackducksoftware.integration.parallel.processor;
+package com.blackducksoftware.integration.util;
 
-import java.util.List;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
-import com.blackducksoftware.integration.exception.IntegrationException;
+public class HostNameHelper {
+    public static final String DEFAULT_UNKNOWN_HOST_NAME = "unknown-host";
 
-public interface ItemTransformer<R, S> {
-    public List<R> transform(S item) throws IntegrationException;
+    public static String getMyHostName() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (final UnknownHostException e) {
+            return DEFAULT_UNKNOWN_HOST_NAME;
+        }
+    }
+
+    public static String getMyHostName(final String defaultUnknownHostName) {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (final UnknownHostException e) {
+            return defaultUnknownHostName;
+        }
+    }
 
 }

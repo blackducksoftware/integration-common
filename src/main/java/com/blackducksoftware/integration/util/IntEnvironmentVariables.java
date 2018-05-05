@@ -26,10 +26,23 @@ package com.blackducksoftware.integration.util;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CIEnvironmentVariables {
+public class IntEnvironmentVariables {
     public static final String BDS_CACERTS_OVERRIDE = "BDS_CACERTS_OVERRIDE";
 
     private final Map<String, String> environmentVariables = new HashMap<>();
+
+    /**
+     * By default, initialize with all system environment variables.
+     */
+    public IntEnvironmentVariables() {
+        putAll(System.getenv());
+    }
+
+    public IntEnvironmentVariables(final boolean inheritSystemEnvironment) {
+        if (inheritSystemEnvironment) {
+            putAll(System.getenv());
+        }
+    }
 
     public void putAll(final Map<String, String> map) {
         environmentVariables.putAll(map);
