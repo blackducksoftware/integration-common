@@ -5,10 +5,10 @@ import org.slf4j.Logger;
 /**
  * Occasionally, a common prefix needs to be added to a set of log messages.
  */
-public class IntPrefixLogger extends Slf4jIntLogger {
+public class Slf4jPrefixIntLogger extends Slf4jIntLogger {
     private final String prefix;
 
-    public IntPrefixLogger(final String prefix, final Logger logger) {
+    public Slf4jPrefixIntLogger(final String prefix, final Logger logger) {
         super(logger);
         this.prefix = prefix;
     }
