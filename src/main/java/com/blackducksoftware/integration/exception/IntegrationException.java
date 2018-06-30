@@ -24,23 +24,25 @@
 package com.blackducksoftware.integration.exception;
 
 public class IntegrationException extends Exception {
+    private static final long serialVersionUID = 6033954233007843793L;
+
     public IntegrationException() {
         super();
     }
 
-    public IntegrationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public IntegrationException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public IntegrationException(String message, Throwable cause) {
+    public IntegrationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public IntegrationException(String message) {
+    public IntegrationException(final String message) {
         super(message);
     }
 
-    public IntegrationException(Throwable cause) {
+    public IntegrationException(final Throwable cause) {
         super(cause);
     }
 

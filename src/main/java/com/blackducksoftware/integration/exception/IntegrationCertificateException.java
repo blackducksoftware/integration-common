@@ -24,6 +24,8 @@
 package com.blackducksoftware.integration.exception;
 
 public class IntegrationCertificateException extends IllegalStateException {
+    private static final long serialVersionUID = 6323746503432559576L;
+
     public IntegrationCertificateException() {
         super();
     }
