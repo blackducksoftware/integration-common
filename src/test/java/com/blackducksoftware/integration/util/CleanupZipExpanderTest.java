@@ -12,15 +12,15 @@ import org.junit.Test;
 
 import com.blackducksoftware.integration.test.tool.TestLogger;
 
-public class CleanupZipExtractorTest {
+public class CleanupZipExpanderTest {
     @Test
     public void testOtherDirectoriesAreDeleted() throws Exception {
         File tempDirectory = setupFiles();
 
         TestLogger logger = new TestLogger();
-        CommonZipExtractor zipExtractor = new CleanupZipExtractor(logger, tempDirectory);
+        CommonZipExpander zipExpander = new CleanupZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
-            zipExtractor.extract(zipFileStream);
+            zipExpander.extract(zipFileStream, tempDirectory);
         }
 
         Assert.assertEquals(2, tempDirectory.listFiles().length);
@@ -33,9 +33,9 @@ public class CleanupZipExtractorTest {
         File tempDirectory = setupFiles();
 
         TestLogger logger = new TestLogger();
-        CommonZipExtractor zipExtractor = new CleanupZipExtractor(logger, tempDirectory, true);
+        CommonZipExpander zipExpander = new CleanupZipExpander(logger, true);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
-            zipExtractor.extract(zipFileStream);
+            zipExpander.extract(zipFileStream, tempDirectory);
         }
 
         Assert.assertEquals(1, tempDirectory.listFiles().length);

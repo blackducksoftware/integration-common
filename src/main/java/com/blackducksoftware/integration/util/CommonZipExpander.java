@@ -1,9 +1,9 @@
 /**
  * integration-common
- *
+ * <p>
  * Copyright (C) 2018 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -11,9 +11,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -37,33 +37,32 @@ import com.blackducksoftware.integration.exception.IntegrationException;
 import com.blackducksoftware.integration.log.IntLogger;
 
 /**
- * Used for expanding a given archive in to a target extractionDirectory.
- * Subclasses can override beforeExtraction and/or afterExtraction as needed.
+ * Used for expanding a given archive in to a target directory. Subclasses can
+ * override beforeExtraction and/or afterExtraction as needed for additional
+ * processing.
  */
-public class CommonZipExtractor {
+public class CommonZipExpander {
     protected final IntLogger logger;
-    protected final File extractionDirectory;
 
-    public CommonZipExtractor(IntLogger logger, File extractionDirectory) {
+    public CommonZipExpander(IntLogger logger) {
         this.logger = logger;
-        this.extractionDirectory = extractionDirectory;
     }
 
-    public void extract(File file) throws IOException, ArchiveException, IntegrationException {
-        beforeExtraction();
+    public void extract(File sourceArchiveFile, File targetExpansionDirectory) throws IOException, ArchiveException, IntegrationException {
+        beforeExpansion(sourceArchiveFile, targetExpansionDirectory);
 
         Expander expander = new Expander();
         try {
-            expander.expand(file, extractionDirectory);
+            expander.expand(sourceArchiveFile, targetExpansionDirectory);
         } catch (IOException | ArchiveException e) {
             logger.error("Couldn't extract the zip file - check the file's permissions: " + e.getMessage());
             throw e;
         }
 
-        afterExtraction();
+        afterExpansion(sourceArchiveFile, targetExpansionDirectory);
     }
 
-    public void extract(InputStream inputStream) throws IOException, ArchiveException, IntegrationException {
+    public void extract(InputStream sourceArchiveStream, File targetExpansionDirectory) throws IOException, ArchiveException, IntegrationException {
         // it is important to first create the zip file as a stream cannot be
         // unzipped correctly in all cases
         // "If possible, you should always prefer ZipFile over
@@ -72,23 +71,23 @@ public class CommonZipExtractor {
         File tempZipFile = File.createTempFile("tmpzip", null);
         try {
             try (FileOutputStream fileOutputStream = new FileOutputStream(tempZipFile)) {
-                IOUtils.copy(inputStream, fileOutputStream);
+                IOUtils.copy(sourceArchiveStream, fileOutputStream);
             }
 
             if (!tempZipFile.exists() || tempZipFile.length() <= 0) {
                 throw new IntegrationException("The zip file was not created correctly. Please try again.");
             }
 
-            extract(tempZipFile);
+            extract(tempZipFile, targetExpansionDirectory);
         } finally {
             FileUtils.deleteQuietly(tempZipFile);
         }
     }
 
-    public void beforeExtraction() throws IntegrationException {
+    public void beforeExpansion(File sourceArchiveFile, File targetExpansionDirectory) throws IntegrationException {
     }
 
-    public void afterExtraction() throws IntegrationException {
+    public void afterExpansion(File sourceArchiveFile, File targetExpansionDirectory) throws IntegrationException {
     }
 
 }

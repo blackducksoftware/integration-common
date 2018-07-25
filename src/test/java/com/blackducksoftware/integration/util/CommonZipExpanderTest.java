@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.blackducksoftware.integration.test.tool.TestLogger;
 
-public class CommonZipExtractorTest {
+public class CommonZipExpanderTest {
     @Test
     public void testZipFileIsExtracted() throws Exception {
         Path tempDirectoryPath = Files.createTempDirectory("unziptesting");
@@ -19,9 +19,9 @@ public class CommonZipExtractorTest {
         Assert.assertEquals(0, tempDirectory.listFiles().length);
 
         TestLogger logger = new TestLogger();
-        CommonZipExtractor commonZipExtractor = new CommonZipExtractor(logger, tempDirectory);
+        CommonZipExpander commonZipExpander = new CommonZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
-            commonZipExtractor.extract(zipFileStream);
+            commonZipExpander.extract(zipFileStream, tempDirectory);
         }
 
         Assert.assertEquals(1, tempDirectory.listFiles().length);
