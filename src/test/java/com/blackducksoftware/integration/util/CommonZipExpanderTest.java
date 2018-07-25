@@ -21,7 +21,7 @@ public class CommonZipExpanderTest {
         TestLogger logger = new TestLogger();
         CommonZipExpander commonZipExpander = new CommonZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
-            commonZipExpander.extract(zipFileStream, tempDirectory);
+            commonZipExpander.expand(zipFileStream, tempDirectory);
         }
 
         Assert.assertEquals(1, tempDirectory.listFiles().length);

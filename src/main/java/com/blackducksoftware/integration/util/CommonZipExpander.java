@@ -48,7 +48,7 @@ public class CommonZipExpander {
         this.logger = logger;
     }
 
-    public void extract(File sourceArchiveFile, File targetExpansionDirectory) throws IOException, ArchiveException, IntegrationException {
+    public void expand(File sourceArchiveFile, File targetExpansionDirectory) throws IOException, ArchiveException, IntegrationException {
         beforeExpansion(sourceArchiveFile, targetExpansionDirectory);
 
         Expander expander = new Expander();
@@ -62,7 +62,7 @@ public class CommonZipExpander {
         afterExpansion(sourceArchiveFile, targetExpansionDirectory);
     }
 
-    public void extract(InputStream sourceArchiveStream, File targetExpansionDirectory) throws IOException, ArchiveException, IntegrationException {
+    public void expand(InputStream sourceArchiveStream, File targetExpansionDirectory) throws IOException, ArchiveException, IntegrationException {
         // it is important to first create the zip file as a stream cannot be
         // unzipped correctly in all cases
         // "If possible, you should always prefer ZipFile over
@@ -78,7 +78,7 @@ public class CommonZipExpander {
                 throw new IntegrationException("The zip file was not created correctly. Please try again.");
             }
 
-            extract(tempZipFile, targetExpansionDirectory);
+            expand(tempZipFile, targetExpansionDirectory);
         } finally {
             FileUtils.deleteQuietly(tempZipFile);
         }

@@ -20,7 +20,7 @@ public class CleanupZipExpanderTest {
         TestLogger logger = new TestLogger();
         CommonZipExpander zipExpander = new CleanupZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
-            zipExpander.extract(zipFileStream, tempDirectory);
+            zipExpander.expand(zipFileStream, tempDirectory);
         }
 
         Assert.assertEquals(2, tempDirectory.listFiles().length);
@@ -35,7 +35,7 @@ public class CleanupZipExpanderTest {
         TestLogger logger = new TestLogger();
         CommonZipExpander zipExpander = new CleanupZipExpander(logger, true);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
-            zipExpander.extract(zipFileStream, tempDirectory);
+            zipExpander.expand(zipFileStream, tempDirectory);
         }
 
         Assert.assertEquals(1, tempDirectory.listFiles().length);
