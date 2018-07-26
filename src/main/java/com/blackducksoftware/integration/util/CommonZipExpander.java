@@ -37,8 +37,8 @@ import com.blackducksoftware.integration.exception.IntegrationException;
 import com.blackducksoftware.integration.log.IntLogger;
 
 /**
- * Used for expanding a given archive in to a target directory. Subclasses can
- * override beforeExtraction and/or afterExtraction as needed for additional
+ * Used for expanding a given archive to a target directory. Subclasses can
+ * override beforeExpansion and/or afterExpansion as needed for additional
  * processing.
  */
 public class CommonZipExpander {

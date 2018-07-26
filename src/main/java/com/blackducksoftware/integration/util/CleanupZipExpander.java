@@ -44,7 +44,7 @@ public class CleanupZipExpander extends CommonZipExpander {
 
     /**
      * If alsoDeleteFiles is true then files will be deleted as well as
-     * directories in expansion directory prior to expanding.
+     * directories in the expansion directory prior to expanding.
      */
     public CleanupZipExpander(IntLogger logger, boolean alsoDeleteFiles) {
         super(logger);
