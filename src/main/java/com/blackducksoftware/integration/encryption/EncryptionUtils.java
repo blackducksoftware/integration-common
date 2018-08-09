@@ -72,7 +72,7 @@ public class EncryptionUtils {
             try {
                 key = retrieveKeyFromInputStream(encryptionKeyStream);
             } catch (final Exception e) {
-                throw new EncryptionException("Failed to retrieve the encryption key from the provided input stream.");
+                throw new EncryptionException("Failed to retrieve the encryption key from the provided input stream.", e);
             }
         } else {
             try {
