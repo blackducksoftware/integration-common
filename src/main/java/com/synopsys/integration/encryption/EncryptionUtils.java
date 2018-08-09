@@ -45,8 +45,8 @@ import com.synopsys.integration.exception.EncryptionException;
 
 public class EncryptionUtils {
     private static final Charset UTF8 = Charset.forName("UTF-8");
-    private static final String EMBEDDED_SUN_KEY_FILE = "/Sun-Key.jceks";
-    private static final String EMBEDDED_IBM_KEY_FILE = "/IBM-Key.jceks";
+    private static final String EMBEDDED_SUN_KEY_FILE = "Sun-Key.jceks";
+    private static final String EMBEDDED_IBM_KEY_FILE = "IBM-Key.jceks";
 
     // needs to be at least 8 characters
     private static final char[] KEY_PASS = { 'b', 'l', 'a', 'c', 'k', 'd', 'u', 'c', 'k', '1', '2', '3', 'I', 'n', 't', 'e', 'g', 'r', 'a', 't', 'i', 'o', 'n' };
@@ -72,7 +72,7 @@ public class EncryptionUtils {
             try {
                 key = retrieveKeyFromInputStream(encryptionKeyStream);
             } catch (final Exception e) {
-                throw new EncryptionException("Failed to retrieve the encryption key from the provided input stream.");
+                throw new EncryptionException("Failed to retrieve the encryption key from the provided input stream.", e);
             }
         } else {
             try {
@@ -131,7 +131,11 @@ public class EncryptionUtils {
     }
 
     private Key retrieveKeyFromFile(final String keyFile) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-        try (InputStream inputStream = this.getClass().getResourceAsStream(keyFile)) {
+        // In multi-threaded environments (such as webapps), the resource may not be available to this class' ClassLoader:
+        // https://stackoverflow.com/questions/7952090/accessing-properties-file-in-a-jsf-application-programmatically/7955826#7955826
+        final ClassLoader contextClassloader = Thread.currentThread().getContextClassLoader();
+        // Note: The context ClassLoader cannot take paths starting with '/'; the path must be relative to the common resource directory (i.e. src/main/resources).
+        try (InputStream inputStream = contextClassloader.getResourceAsStream(keyFile)) {
             return retrieveKeyFromInputStream(inputStream);
         }
     }
