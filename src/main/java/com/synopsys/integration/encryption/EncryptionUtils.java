@@ -135,7 +135,15 @@ public class EncryptionUtils {
         // https://stackoverflow.com/questions/7952090/accessing-properties-file-in-a-jsf-application-programmatically/7955826#7955826
         final ClassLoader contextClassloader = Thread.currentThread().getContextClassLoader();
         // Note: The context ClassLoader cannot take paths starting with '/'; the path must be relative to the common resource directory (i.e. src/main/resources).
-        try (InputStream inputStream = contextClassloader.getResourceAsStream(keyFile)) {
+        Key key = retrieveKeyFromFile(keyFile, contextClassloader);
+        if (key == null) {
+            key = retrieveKeyFromFile("/" + keyFile, getClass().getClassLoader());
+        }
+        return key;
+    }
+
+    private Key retrieveKeyFromFile(final String keyFile, final ClassLoader classLoader) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+        try (InputStream inputStream = classLoader.getResourceAsStream(keyFile)) {
             return retrieveKeyFromInputStream(inputStream);
         }
     }
