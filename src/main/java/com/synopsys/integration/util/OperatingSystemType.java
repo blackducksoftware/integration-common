@@ -3,6 +3,10 @@ package com.synopsys.integration.util;
 public enum OperatingSystemType {
     LINUX,
     MAC,
-    WINDOWS
+    WINDOWS;
+
+    public String prettyPrint() {
+        return EnumUtils.prettyPrint(this);
+    }
 
 }
