@@ -9,7 +9,8 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.synopsys.integration.test.TestLogger;
+import com.synopsys.integration.log.IntLogger;
+import com.synopsys.integration.log.SilentLogger;
 
 public class CommonZipExpanderTest {
     @Test
@@ -18,7 +19,7 @@ public class CommonZipExpanderTest {
         final File tempDirectory = tempDirectoryPath.toFile();
         Assert.assertEquals(0, tempDirectory.listFiles().length);
 
-        final TestLogger logger = new TestLogger();
+        final IntLogger logger = new SilentLogger();
         final CommonZipExpander commonZipExpander = new CommonZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
             commonZipExpander.expand(zipFileStream, tempDirectory);

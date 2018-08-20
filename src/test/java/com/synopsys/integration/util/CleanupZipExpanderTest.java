@@ -10,14 +10,15 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.synopsys.integration.test.TestLogger;
+import com.synopsys.integration.log.IntLogger;
+import com.synopsys.integration.log.SilentLogger;
 
 public class CleanupZipExpanderTest {
     @Test
     public void testOtherDirectoriesAreDeleted() throws Exception {
         final File tempDirectory = setupFiles();
 
-        final TestLogger logger = new TestLogger();
+        final IntLogger logger = new SilentLogger();
         final CommonZipExpander zipExpander = new CleanupZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
             zipExpander.expand(zipFileStream, tempDirectory);
@@ -32,7 +33,7 @@ public class CleanupZipExpanderTest {
     public void testEverythingDeleted() throws Exception {
         final File tempDirectory = setupFiles();
 
-        final TestLogger logger = new TestLogger();
+        final IntLogger logger = new SilentLogger();
         final CommonZipExpander zipExpander = new CleanupZipExpander(logger, true);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
             zipExpander.expand(zipFileStream, tempDirectory);

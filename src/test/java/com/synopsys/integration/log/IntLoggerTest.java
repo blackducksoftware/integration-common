@@ -25,14 +25,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.synopsys.integration.test.TestLogger;
 import com.synopsys.integration.util.IntEnvironmentVariables;
 
 public class IntLoggerTest {
 
     @Test
     public void testSetLogLevelWithVariables() {
-        final TestLogger logger = new TestLogger();
+        final IntLogger logger = new PrintStreamIntLogger(System.out, LogLevel.INFO);
         final IntEnvironmentVariables variables = new IntEnvironmentVariables(false);
         logger.setLogLevel(variables);
         assertEquals(LogLevel.INFO, logger.getLogLevel());
