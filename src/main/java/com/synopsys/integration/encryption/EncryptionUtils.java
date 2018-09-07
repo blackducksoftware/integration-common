@@ -140,9 +140,6 @@ public class EncryptionUtils {
             key = retrieveKeyFromFile(keyFile, getClass().getClassLoader());
         }
         if (key == null) {
-            key = retrieveKeyFromFile("/" + keyFile, contextClassloader);
-        }
-        if (key == null) {
             key = retrieveKeyFromFile("/" + keyFile, getClass().getClassLoader());
         }
         return key;
