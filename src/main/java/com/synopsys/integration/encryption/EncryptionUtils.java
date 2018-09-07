@@ -137,6 +137,12 @@ public class EncryptionUtils {
         // Note: The context ClassLoader cannot take paths starting with '/'; the path must be relative to the common resource directory (i.e. src/main/resources).
         Key key = retrieveKeyFromFile(keyFile, contextClassloader);
         if (key == null) {
+            key = retrieveKeyFromFile(keyFile, getClass().getClassLoader());
+        }
+        if (key == null) {
+            key = retrieveKeyFromFile("/" + keyFile, contextClassloader);
+        }
+        if (key == null) {
             key = retrieveKeyFromFile("/" + keyFile, getClass().getClassLoader());
         }
         return key;
