@@ -93,6 +93,7 @@ public final class PasswordEncryptionTest {
         final EncryptionUtils encryptionUtils = new EncryptionUtils();
         final String password = "PasswordToTestWith";
 
+        ///////// Setting up the KeyStore /////////
         final String algorithm = "AES";
         final KeyGenerator keyGen = KeyGenerator.getInstance(algorithm);
         keyGen.init(256); // for example
@@ -113,6 +114,7 @@ public final class PasswordEncryptionTest {
         ks.setEntry(keyAlias, skEntry, protParam);
 
         ks.store(new FileOutputStream(keyFile), keyStorePassword.toCharArray());
+        ///////////////////////////////////////////
 
         final Cipher encryptionCipher = encryptionUtils.getEncryptionCipher(keyStoreType, new FileInputStream(keyFile), keyAlias, keyStorePassword.toCharArray(), algorithm);
         final Cipher decryptionCipher = encryptionUtils.getDecryptionCipher(keyStoreType, new FileInputStream(keyFile), keyAlias, keyStorePassword.toCharArray(), algorithm);
