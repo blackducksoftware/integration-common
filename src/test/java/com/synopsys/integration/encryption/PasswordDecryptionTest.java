@@ -60,39 +60,42 @@ public class PasswordDecryptionTest {
 
     @Test
     public void testPasswordDecryption() throws Exception {
-        final Cipher cipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
-        final DecryptionService decryptionService = new DecryptionService(cipher);
+        final EncryptionService encryptionService = new EncryptionService();
 
         final String encryptedPassword = encryptedUserPassword.getProperty("super");
         System.out.println("Encrypted password: " + encryptedPassword);
-        final String decryptedPassword = decryptionService.decrypt(encryptedPassword);
+        final Cipher decryptionCipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
+        final String decryptedPassword = encryptionService.decrypt(decryptionCipher, encryptedPassword);
         System.out.println("Decrypted password: " + decryptedPassword);
         assertEquals("super", decryptedPassword);
     }
 
     @Test
     public void testPasswordDecryptionAgain() throws Exception {
-        final Cipher cipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
-        final DecryptionService decryptionService = new DecryptionService(cipher);
-        assertEquals("testing", decryptionService.decrypt(encryptedUserPassword.getProperty("test@blackducksoftware.com")));
+        final EncryptionService encryptionService = new EncryptionService();
+
+        final Cipher decryptionCipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
+        assertEquals("testing", encryptionService.decrypt(decryptionCipher, encryptedUserPassword.getProperty("test@blackducksoftware.com")));
     }
 
     @Test
     public void testPasswordDecryptionEmptyKey() throws Exception {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Please provide a non-blank encrypted string.");
-        final Cipher cipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
-        final DecryptionService decryptionService = new DecryptionService(cipher);
-        assertNull(decryptionService.decrypt(""));
+        final EncryptionService encryptionService = new EncryptionService();
+
+        final Cipher decryptionCipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
+        assertNull(encryptionService.decrypt(decryptionCipher, ""));
     }
 
     @Test
     public void testPasswordDecryptionNullKey() throws Exception {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Please provide a non-blank encrypted string.");
-        final Cipher cipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
-        final DecryptionService decryptionService = new DecryptionService(cipher);
-        assertNull(decryptionService.decrypt(null));
+        final EncryptionService encryptionService = new EncryptionService();
+
+        final Cipher decryptionCipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
+        assertNull(encryptionService.decrypt(decryptionCipher, null));
     }
 
 }

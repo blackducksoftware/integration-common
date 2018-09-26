@@ -58,31 +58,26 @@ public final class PasswordEncryptionTest {
 
     @Test
     public void testMainEncryptPassword() throws Exception {
-        final Cipher encryptionCipher = EncryptionUtils.getEmbeddedEncryptionCipher(getEmbeddedKey());
-        final EncryptionService encryptionService = new EncryptionService(encryptionCipher);
+        final EncryptionService encryptionService = new EncryptionService();
 
-        final String encryptedPassword = encryptionService.encrypt("Password");
+        final Cipher encryptionCipher = EncryptionUtils.getEmbeddedEncryptionCipher(getEmbeddedKey());
+        final String encryptedPassword = encryptionService.encrypt(encryptionCipher, "Password");
         System.out.println(encryptedPassword);
         assertEquals("SaTaqurAqc7q0nf0n6IL4Q==", encryptedPassword);
 
         final Cipher decryptionCipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
-        final DecryptionService decryptionService = new DecryptionService(decryptionCipher);
 
-        final String decrpytedPassword = decryptionService.decrypt(encryptedPassword);
+        final String decrpytedPassword = encryptionService.decrypt(decryptionCipher, encryptedPassword);
         assertEquals("Password", decrpytedPassword);
     }
 
     @Test
     public void testEncryptLongPassword() throws Exception {
-        final Cipher encryptionCipher = EncryptionUtils.getEmbeddedEncryptionCipher(getEmbeddedKey());
-        final EncryptionService encryptionService = new EncryptionService(encryptionCipher);
-
-        final Cipher decryptionCipher = EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
-        final DecryptionService decryptionService = new DecryptionService(decryptionCipher);
+        final EncryptionService encryptionService = new EncryptionService();
 
         final String longPassword = "LongPasswordLetsSeeHowLongWeCanEncryptWithoutbreakingThingsLongPasswordLetsSeeHowLongWeCanEncryptWithoutbreakingThingsLongPasswordLetsSeeHowLongWeCanEncryptWithoutbreakingThings";
-        final String encryptedPassword = encryptionService.encrypt(longPassword);
-        final String decryptedPassword = decryptionService.decrypt(encryptedPassword);
+        final String encryptedPassword = encryptionService.encrypt(EncryptionUtils.getEmbeddedEncryptionCipher(getEmbeddedKey()), longPassword);
+        final String decryptedPassword = encryptionService.decrypt(EncryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey()), encryptedPassword);
 
         System.out.println("Long Password : " + longPassword);
         System.out.println("Long Password Length : " + longPassword.length());
@@ -124,17 +119,16 @@ public final class PasswordEncryptionTest {
 
         ks.store(new FileOutputStream(keyFile), keyStorePassword.toCharArray());
         ///////////////////////////////////////////
+        final EncryptionService encryptionService = new EncryptionService();
+
         final Cipher encryptionCipher = EncryptionUtils.getEncryptionCipher(keyStoreType, new FileInputStream(keyFile), keyAlias, keyStorePassword.toCharArray(), algorithm);
-        final EncryptionService encryptionService = new EncryptionService(encryptionCipher);
-
         final Cipher decryptionCipher = EncryptionUtils.getDecryptionCipher(keyStoreType, new FileInputStream(keyFile), keyAlias, keyStorePassword.toCharArray(), algorithm);
-        final DecryptionService decryptionService = new DecryptionService(decryptionCipher);
 
-        final String encryptedPassword = encryptionService.encrypt(password);
+        final String encryptedPassword = encryptionService.encrypt(encryptionCipher, password);
         // Cant assert the actual value here because the AES algorithm produces different output when encrypting String
         assertNotNull(encryptedPassword);
 
-        final String decryptedPassword = decryptionService.decrypt(encryptedPassword);
+        final String decryptedPassword = encryptionService.decrypt(decryptionCipher, encryptedPassword);
         assertEquals(password, decryptedPassword);
     }
 
