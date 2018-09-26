@@ -51,7 +51,7 @@ public class EncryptionUtils {
     public static final String EMBEDDED_IBM_KEY_FILE = "IBM-Key.jceks";
 
     // needs to be at least 8 characters
-    public static final char[] KEY_PASS = { 'b', 'l', 'a', 'c', 'k', 'd', 'u', 'c', 'k', '1', '2', '3', 'I', 'n', 't', 'e', 'g', 'r', 'a', 't', 'i', 'o', 'n' };
+    private static final char[] KEY_PASS = { 'b', 'l', 'a', 'c', 'k', 'd', 'u', 'c', 'k', '1', '2', '3', 'I', 'n', 't', 'e', 'g', 'r', 'a', 't', 'i', 'o', 'n' };
 
     public Cipher getEncryptionCipher(final String keyStoreType, final InputStream keyStoreStream, final String keyAlias, final char[] keyPassword, final String algorithm)
         throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
@@ -139,7 +139,7 @@ public class EncryptionUtils {
         return decryptedString;
     }
 
-    public Key retrieveKeyFromInputStream(final String keyStoreType, final InputStream keyStoreInputStream, final String keyAlias, final char[] keyPassword)
+    private Key retrieveKeyFromInputStream(final String keyStoreType, final InputStream keyStoreInputStream, final String keyAlias, final char[] keyPassword)
         throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
         final KeyStore keystore = KeyStore.getInstance(keyStoreType);
         keystore.load(keyStoreInputStream, keyPassword);
