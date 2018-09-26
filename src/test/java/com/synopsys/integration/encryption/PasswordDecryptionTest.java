@@ -26,22 +26,23 @@ import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.Properties;
+
+import javax.crypto.Cipher;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class PasswordDecrypterTest {
+public class PasswordDecryptionTest {
     private static Properties encryptedUserPassword = null;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @BeforeClass
-    public static void init() throws URISyntaxException, IOException {
+    public static void init() throws Exception {
         encryptedUserPassword = new Properties();
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         final InputStream is = classLoader.getResourceAsStream("encryptedPasswordFile.txt");
@@ -52,30 +53,45 @@ public class PasswordDecrypterTest {
         }
     }
 
+    private InputStream getEmbeddedKey() {
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return classLoader.getResourceAsStream(EncryptionUtils.EMBEDDED_SUN_KEY_FILE);
+    }
+
     @Test
     public void testPasswordDecryption() throws Exception {
-        assertEquals("super", PasswordDecrypter.decrypt(encryptedUserPassword.getProperty("super")));
+        final EncryptionUtils encryptionUtils = new EncryptionUtils();
+        final Cipher cipher = encryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
+        final String encryptedPassword = encryptedUserPassword.getProperty("super");
+        System.out.println("Encrypted password: " + encryptedPassword);
+        final String decryptedPassword = encryptionUtils.decrypt(cipher, encryptedPassword);
+        System.out.println("Decrypted password: " + decryptedPassword);
+        assertEquals("super", decryptedPassword);
     }
 
     @Test
     public void testPasswordDecryptionAgain() throws Exception {
-        assertEquals("testing", PasswordDecrypter.decrypt(encryptedUserPassword.getProperty("test@blackducksoftware.com")));
+        final EncryptionUtils encryptionUtils = new EncryptionUtils();
+        final Cipher cipher = encryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
+        assertEquals("testing", encryptionUtils.decrypt(cipher, encryptedUserPassword.getProperty("test@blackducksoftware.com")));
     }
 
     @Test
     public void testPasswordDecryptionEmptyKey() throws Exception {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Please provide a non-blank password.");
-
-        assertNull(PasswordDecrypter.decrypt(""));
+        final EncryptionUtils encryptionUtils = new EncryptionUtils();
+        final Cipher cipher = encryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
+        assertNull(encryptionUtils.decrypt(cipher, ""));
     }
 
     @Test
     public void testPasswordDecryptionNullKey() throws Exception {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Please provide a non-blank password.");
-
-        assertNull(PasswordDecrypter.decrypt((String) null));
+        final EncryptionUtils encryptionUtils = new EncryptionUtils();
+        final Cipher cipher = encryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey());
+        assertNull(encryptionUtils.decrypt(cipher, (String) null));
     }
 
 }

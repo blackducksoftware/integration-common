@@ -23,21 +23,45 @@ package com.synopsys.integration.encryption;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.InputStream;
+
+import javax.crypto.Cipher;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-public final class PasswordEncrypterTest {
+public final class PasswordEncryptionTest {
+    private static InputStream keyStream = null;
+
+    @BeforeClass
+    public static void init() throws Exception {
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        keyStream = classLoader.getResourceAsStream(EncryptionUtils.EMBEDDED_SUN_KEY_FILE);
+    }
+
+    private InputStream getEmbeddedKey() {
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return classLoader.getResourceAsStream(EncryptionUtils.EMBEDDED_SUN_KEY_FILE);
+    }
+
     @Test
     public void testMainEncryptPassword() throws Exception {
-        final String encryptedPassword = PasswordEncrypter.encrypt("Password");
+        final EncryptionUtils encryptionUtils = new EncryptionUtils();
+        final Cipher cipher = encryptionUtils.getEmbeddedEncryptionCipher(getEmbeddedKey());
+        final String encryptedPassword = encryptionUtils.encrypt(encryptionUtils.getEmbeddedEncryptionCipher(getEmbeddedKey()), "Password");
         System.out.println(encryptedPassword);
         assertEquals("SaTaqurAqc7q0nf0n6IL4Q==", encryptedPassword);
+
+        final String decrpytedPassword = encryptionUtils.decrypt(encryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey()), encryptedPassword);
+        assertEquals("Password", decrpytedPassword);
     }
 
     @Test
     public void testEncryptLongPassword() throws Exception {
+        final EncryptionUtils encryptionUtils = new EncryptionUtils();
         final String longPassword = "LongPasswordLetsSeeHowLongWeCanEncryptWithoutbreakingThingsLongPasswordLetsSeeHowLongWeCanEncryptWithoutbreakingThingsLongPasswordLetsSeeHowLongWeCanEncryptWithoutbreakingThings";
-        final String encryptedPassword = PasswordEncrypter.encrypt(longPassword);
-        final String decryptedPassword = PasswordDecrypter.decrypt(encryptedPassword);
+        final String encryptedPassword = encryptionUtils.encrypt(encryptionUtils.getEmbeddedEncryptionCipher(getEmbeddedKey()), longPassword);
+        final String decryptedPassword = encryptionUtils.decrypt(encryptionUtils.getEmbeddedDecryptionCipher(getEmbeddedKey()), encryptedPassword);
 
         System.out.println("Long Password : " + longPassword);
         System.out.println("Long Password Length : " + longPassword.length());

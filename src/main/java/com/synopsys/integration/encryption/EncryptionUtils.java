@@ -26,6 +26,7 @@ package com.synopsys.integration.encryption;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -37,6 +38,7 @@ import java.util.Arrays;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -45,18 +47,65 @@ import com.synopsys.integration.exception.EncryptionException;
 
 public class EncryptionUtils {
     private static final Charset UTF8 = Charset.forName("UTF-8");
-    private static final String EMBEDDED_SUN_KEY_FILE = "Sun-Key.jceks";
-    private static final String EMBEDDED_IBM_KEY_FILE = "IBM-Key.jceks";
+    public static final String EMBEDDED_SUN_KEY_FILE = "Sun-Key.jceks";
+    public static final String EMBEDDED_IBM_KEY_FILE = "IBM-Key.jceks";
 
     // needs to be at least 8 characters
-    private static final char[] KEY_PASS = { 'b', 'l', 'a', 'c', 'k', 'd', 'u', 'c', 'k', '1', '2', '3', 'I', 'n', 't', 'e', 'g', 'r', 'a', 't', 'i', 'o', 'n' };
+    public static final char[] KEY_PASS = { 'b', 'l', 'a', 'c', 'k', 'd', 'u', 'c', 'k', '1', '2', '3', 'I', 'n', 't', 'e', 'g', 'r', 'a', 't', 'i', 'o', 'n' };
 
-    public String alterString(final String password, final InputStream encryptionKeyStream, final int cipherMode) throws EncryptionException {
+    public Cipher getAESEncryptionCipher(final InputStream keyStream, final char[] keyPassword)
+        throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
+        return getAESCipher(keyStream, keyPassword, Cipher.ENCRYPT_MODE);
+    }
+
+    public Cipher getAESDecryptionCipher(final InputStream keyStream, final char[] keyPassword)
+        throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
+        return getAESCipher(keyStream, keyPassword, Cipher.DECRYPT_MODE);
+    }
+
+    private Cipher getAESCipher(final InputStream keyStream, final char[] keyPassword, final int cipherMode)
+        throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
+        final Key key = retrieveKeyFromInputStream(keyStream, keyPassword);
+
+        final Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(cipherMode, key);
+        return cipher;
+    }
+
+    public Cipher getEmbeddedEncryptionCipher(final InputStream keyStream)
+        throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
+        return getEmbeddedCipher(keyStream, Cipher.ENCRYPT_MODE);
+    }
+
+    public Cipher getEmbeddedDecryptionCipher(final InputStream keyStream)
+        throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
+        return getEmbeddedCipher(keyStream, Cipher.DECRYPT_MODE);
+    }
+
+    private Cipher getEmbeddedCipher(final InputStream keyStream, final int cipherMode)
+        throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
+        final Key key = retrieveKeyFromInputStream(keyStream, KEY_PASS);
+
+        final Cipher cipher = Cipher.getInstance("DES/ECB/NoPadding");
+        cipher.init(cipherMode, key);
+        return cipher;
+    }
+
+    public String encrypt(final Cipher cipher, final String password) throws EncryptionException {
         assertValidPassword(password);
+        final String alteredString = getAlteredString(password, Cipher.ENCRYPT_MODE, cipher);
+        if (alteredString == null) {
+            throw new EncryptionException("The encrypted password is null");
+        }
+        return alteredString;
+    }
 
-        final Key key = getKey(encryptionKeyStream);
-
-        final String alteredString = getAlteredString(password, cipherMode, key);
+    public String decrypt(final Cipher cipher, final String password) throws EncryptionException {
+        assertValidPassword(password);
+        final String alteredString = getAlteredString(password, Cipher.DECRYPT_MODE, cipher);
+        if (alteredString == null) {
+            throw new EncryptionException("The decrypted password is null");
+        }
         return alteredString;
     }
 
@@ -66,49 +115,19 @@ public class EncryptionUtils {
         }
     }
 
-    private Key getKey(final InputStream encryptionKeyStream) throws EncryptionException {
-        Key key = null;
-        if (encryptionKeyStream != null) {
-            try {
-                key = retrieveKeyFromInputStream(encryptionKeyStream);
-            } catch (final Exception e) {
-                throw new EncryptionException("Failed to retrieve the encryption key from the provided input stream.", e);
-            }
-        } else {
-            try {
-                key = retrieveKeyFromFile(EMBEDDED_SUN_KEY_FILE);
-            } catch (final Exception e) {
-                try {
-                    key = retrieveKeyFromFile(EMBEDDED_IBM_KEY_FILE);
-                } catch (final Exception e1) {
-                    throw new EncryptionException("Failed to retrieve the encryption key from classpath", e);
-                }
-            }
-        }
-
-        if (key == null) {
-            throw new EncryptionException("The encryption key is null");
-        }
-
-        return key;
-    }
-
-    private String getAlteredString(final String original, final int cipherMode, final Key key) throws EncryptionException {
+    private String getAlteredString(final String original, final int cipherMode, final Cipher cipher) throws EncryptionException {
         String alteredString = null;
         try {
-            byte[] bytes = null;
-            final Cipher cipher = Cipher.getInstance("DES/ECB/NoPadding");
-            bytes = original.getBytes(UTF8);
+            byte[] bytes = original.getBytes(UTF8);
             final int originalBytesLength = bytes.length;
             // The buffer must be a multiple of 8 or else
             // the Cipher cant handle it
             final int bufferSize = originalBytesLength + (8 - originalBytesLength % 8);
-            cipher.init(cipherMode, key);
             bytes = Arrays.copyOf(bytes, bufferSize);
             if (Cipher.ENCRYPT_MODE == cipherMode) {
-                alteredString = encrypt(cipher, bytes);
+                alteredString = doEncryption(cipher, bytes);
             } else {
-                alteredString = decrypt(cipher, bytes);
+                alteredString = doDecryption(cipher, bytes);
             }
         } catch (final Exception e) {
             throw new EncryptionException(e);
@@ -117,44 +136,22 @@ public class EncryptionUtils {
         return alteredString;
     }
 
-    private String encrypt(final Cipher cipher, final byte[] bytes) throws IllegalBlockSizeException, BadPaddingException {
+    private String doEncryption(final Cipher cipher, final byte[] bytes) throws IllegalBlockSizeException, BadPaddingException {
         final byte[] buffer = cipher.doFinal(bytes);
         final String encryptedPassword = new String(Base64.encodeBase64(buffer), UTF8).trim();
         return encryptedPassword;
     }
 
-    private String decrypt(final Cipher cipher, final byte[] bytes) throws IllegalBlockSizeException, BadPaddingException {
+    private String doDecryption(final Cipher cipher, final byte[] bytes) throws IllegalBlockSizeException, BadPaddingException {
         final byte[] buffer = cipher.doFinal(Base64.decodeBase64(bytes));
-
         final String decryptedString = new String(buffer, UTF8).trim();
         return decryptedString;
     }
 
-    private Key retrieveKeyFromFile(final String keyFile) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-        // In multi-threaded environments (such as webapps), the resource may not be available to this class' ClassLoader:
-        // https://stackoverflow.com/questions/7952090/accessing-properties-file-in-a-jsf-application-programmatically/7955826#7955826
-        final ClassLoader contextClassloader = Thread.currentThread().getContextClassLoader();
-        // Note: The context ClassLoader cannot take paths starting with '/'; the path must be relative to the common resource directory (i.e. src/main/resources).
-        Key key = retrieveKeyFromFile(keyFile, contextClassloader);
-        if (key == null) {
-            key = retrieveKeyFromFile(keyFile, getClass().getClassLoader());
-        }
-        if (key == null) {
-            key = retrieveKeyFromFile("/" + keyFile, getClass().getClassLoader());
-        }
-        return key;
-    }
-
-    private Key retrieveKeyFromFile(final String keyFile, final ClassLoader classLoader) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-        try (InputStream inputStream = classLoader.getResourceAsStream(keyFile)) {
-            return retrieveKeyFromInputStream(inputStream);
-        }
-    }
-
-    private Key retrieveKeyFromInputStream(final InputStream inputStream) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+    public Key retrieveKeyFromInputStream(final InputStream inputStream, final char[] keyPassword) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
         final KeyStore keystore = KeyStore.getInstance("JCEKS");
-        keystore.load(inputStream, KEY_PASS);
-        final Key key = keystore.getKey("keyStore", KEY_PASS);
+        keystore.load(inputStream, keyPassword);
+        final Key key = keystore.getKey("keyStore", keyPassword);
         return key;
     }
 
