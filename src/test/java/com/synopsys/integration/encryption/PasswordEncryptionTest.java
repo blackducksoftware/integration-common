@@ -22,16 +22,28 @@
 package com.synopsys.integration.encryption;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.security.KeyStore;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public final class PasswordEncryptionTest {
     private static InputStream keyStream = null;
+
+    @Rule
+    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @BeforeClass
     public static void init() throws Exception {
@@ -74,6 +86,43 @@ public final class PasswordEncryptionTest {
 
         assertEquals(longPassword.length(), decryptedPassword.length());
         assertEquals(longPassword, decryptedPassword);
+    }
+
+    @Test
+    public void testAESEncryptPassword() throws Exception {
+        final EncryptionUtils encryptionUtils = new EncryptionUtils();
+        final String password = "PasswordToTestWith";
+
+        final String algorithm = "AES";
+        final KeyGenerator keyGen = KeyGenerator.getInstance(algorithm);
+        keyGen.init(256); // for example
+        final SecretKey secretKey = keyGen.generateKey();
+
+        final File rootDir = temporaryFolder.newFolder();
+        final File keyFile = new File(rootDir, "tempKey.jceks");
+        keyFile.createNewFile();
+
+        final String keyStorePassword = "TemporaryKeyStorePassword";
+        final String keyStoreType = "JCEKS";
+        final KeyStore ks = KeyStore.getInstance("JCEKS");
+        ks.load(null, keyStorePassword.toCharArray());
+
+        final String keyAlias = "SecretKeyAlias";
+        final KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(keyStorePassword.toCharArray());
+        final KeyStore.SecretKeyEntry skEntry = new KeyStore.SecretKeyEntry(secretKey);
+        ks.setEntry(keyAlias, skEntry, protParam);
+
+        ks.store(new FileOutputStream(keyFile), keyStorePassword.toCharArray());
+
+        final Cipher encryptionCipher = encryptionUtils.getEncryptionCipher(keyStoreType, new FileInputStream(keyFile), keyAlias, keyStorePassword.toCharArray(), algorithm);
+        final Cipher decryptionCipher = encryptionUtils.getDecryptionCipher(keyStoreType, new FileInputStream(keyFile), keyAlias, keyStorePassword.toCharArray(), algorithm);
+
+        final String encryptedPassword = encryptionUtils.encrypt(encryptionCipher, password);
+        // Cant assert the actual value here because the AES algorithm produces different output when encrypting String
+        assertNotNull(encryptedPassword);
+
+        final String decryptedPassword = encryptionUtils.decrypt(decryptionCipher, encryptedPassword);
+        assertEquals(password, decryptedPassword);
     }
 
 }

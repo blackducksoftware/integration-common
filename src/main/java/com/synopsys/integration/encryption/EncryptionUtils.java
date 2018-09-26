@@ -53,40 +53,31 @@ public class EncryptionUtils {
     // needs to be at least 8 characters
     public static final char[] KEY_PASS = { 'b', 'l', 'a', 'c', 'k', 'd', 'u', 'c', 'k', '1', '2', '3', 'I', 'n', 't', 'e', 'g', 'r', 'a', 't', 'i', 'o', 'n' };
 
-    public Cipher getAESEncryptionCipher(final InputStream keyStream, final char[] keyPassword)
+    public Cipher getEncryptionCipher(final String keyStoreType, final InputStream keyStoreStream, final String keyAlias, final char[] keyPassword, final String algorithm)
         throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
-        return getAESCipher(keyStream, keyPassword, Cipher.ENCRYPT_MODE);
+        return getCipher(keyStoreType, keyStoreStream, keyAlias, keyPassword, Cipher.ENCRYPT_MODE, algorithm);
     }
 
-    public Cipher getAESDecryptionCipher(final InputStream keyStream, final char[] keyPassword)
+    public Cipher getDecryptionCipher(final String keyStoreType, final InputStream keyStoreStream, final String keyAlias, final char[] keyPassword, final String algorithm)
         throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
-        return getAESCipher(keyStream, keyPassword, Cipher.DECRYPT_MODE);
+        return getCipher(keyStoreType, keyStoreStream, keyAlias, keyPassword, Cipher.DECRYPT_MODE, algorithm);
     }
 
-    private Cipher getAESCipher(final InputStream keyStream, final char[] keyPassword, final int cipherMode)
+    public Cipher getEmbeddedEncryptionCipher(final InputStream keyStoreStream)
         throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
-        final Key key = retrieveKeyFromInputStream(keyStream, keyPassword);
-
-        final Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(cipherMode, key);
-        return cipher;
+        return getCipher("JCEKS", keyStoreStream, "keyStore", KEY_PASS, Cipher.ENCRYPT_MODE, "DES/ECB/NoPadding");
     }
 
-    public Cipher getEmbeddedEncryptionCipher(final InputStream keyStream)
+    public Cipher getEmbeddedDecryptionCipher(final InputStream keyStoreStream)
         throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
-        return getEmbeddedCipher(keyStream, Cipher.ENCRYPT_MODE);
+        return getCipher("JCEKS", keyStoreStream, "keyStore", KEY_PASS, Cipher.DECRYPT_MODE, "DES/ECB/NoPadding");
     }
 
-    public Cipher getEmbeddedDecryptionCipher(final InputStream keyStream)
+    private Cipher getCipher(final String keyStoreType, final InputStream keyStoreStream, final String keyAlias, final char[] keyPassword, final int cipherMode, final String algorithm)
         throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
-        return getEmbeddedCipher(keyStream, Cipher.DECRYPT_MODE);
-    }
+        final Key key = retrieveKeyFromInputStream(keyStoreType, keyStoreStream, keyAlias, keyPassword);
 
-    private Cipher getEmbeddedCipher(final InputStream keyStream, final int cipherMode)
-        throws NoSuchPaddingException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException, InvalidKeyException {
-        final Key key = retrieveKeyFromInputStream(keyStream, KEY_PASS);
-
-        final Cipher cipher = Cipher.getInstance("DES/ECB/NoPadding");
+        final Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(cipherMode, key);
         return cipher;
     }
@@ -148,10 +139,11 @@ public class EncryptionUtils {
         return decryptedString;
     }
 
-    public Key retrieveKeyFromInputStream(final InputStream inputStream, final char[] keyPassword) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-        final KeyStore keystore = KeyStore.getInstance("JCEKS");
-        keystore.load(inputStream, keyPassword);
-        final Key key = keystore.getKey("keyStore", keyPassword);
+    public Key retrieveKeyFromInputStream(final String keyStoreType, final InputStream keyStoreInputStream, final String keyAlias, final char[] keyPassword)
+        throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+        final KeyStore keystore = KeyStore.getInstance(keyStoreType);
+        keystore.load(keyStoreInputStream, keyPassword);
+        final Key key = keystore.getKey(keyAlias, keyPassword);
         return key;
     }
 
