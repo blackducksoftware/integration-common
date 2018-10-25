@@ -21,13 +21,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util.filter;
+package com.synopsys.integration.util.json;
 
-import java.util.function.Predicate;
+import java.lang.reflect.Type;
+import java.util.Collection;
 
-public class OrFieldFilterBuilder<T> extends BinaryOperatorFieldFilterBuilder<T> {
+public class ObjectHierarchicalField extends HierarchicalField {
 
-    public OrFieldFilterBuilder(final FilterBuilder<T> leftFilter, final FilterBuilder<T> rightFilter) {
-        super(leftFilter, rightFilter, Predicate::or);
+    public ObjectHierarchicalField(final Collection<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label, final Type type) {
+        super(pathToField, innerMostFieldName, contentIdentifier, label, type);
     }
 }

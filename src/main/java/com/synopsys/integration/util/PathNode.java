@@ -21,13 +21,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util.filter;
+package com.synopsys.integration.util;
 
-import java.util.function.Predicate;
+import java.util.List;
 
-public class OrFieldFilterBuilder<T> extends BinaryOperatorFieldFilterBuilder<T> {
+public class PathNode<T> {
+    private final T key;
+    private PathNode<T> next;
 
-    public OrFieldFilterBuilder(final FilterBuilder<T> leftFilter, final FilterBuilder<T> rightFilter) {
-        super(leftFilter, rightFilter, Predicate::or);
+    private PathNode(final T key) {
+        this.key = key;
+        this.next = null;
+    }
+
+    public static final <T> PathNode<T> createPath(final List<T> list) {
+        PathNode<T> previousNode = null;
+        PathNode<T> firstNode = null;
+
+        for (final T value : list) {
+            final PathNode currentNode = new PathNode(value);
+            if (firstNode == null) {
+                firstNode = currentNode;
+            }
+            if (previousNode != null) {
+                previousNode.next = currentNode;
+            }
+            previousNode = currentNode;
+        }
+        return firstNode;
+    }
+
+    public T getKey() {
+        return key;
+    }
+
+    public PathNode getNext() {
+        return next;
     }
 }

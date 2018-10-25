@@ -21,13 +21,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util.filter;
+package com.synopsys.integration.util.json;
 
-import java.util.function.Predicate;
+import com.synopsys.integration.util.Stringable;
 
-public class OrFieldFilterBuilder<T> extends BinaryOperatorFieldFilterBuilder<T> {
+public class FieldContentIdentifier extends Stringable {
+    public final String key;
 
-    public OrFieldFilterBuilder(final FilterBuilder<T> leftFilter, final FilterBuilder<T> rightFilter) {
-        super(leftFilter, rightFilter, Predicate::or);
+    public FieldContentIdentifier(final String key) {
+        this.key = key;
     }
 }
