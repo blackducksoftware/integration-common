@@ -28,10 +28,12 @@ import java.util.List;
 public class PathNode<T> {
     private final T key;
     private PathNode<T> next;
+    private PathNode<T> prev;
 
     private PathNode(final T key) {
         this.key = key;
         this.next = null;
+        this.prev = null;
     }
 
     public static <T> PathNode<T> createPath(final List<T> list) {
@@ -40,6 +42,7 @@ public class PathNode<T> {
 
         for (final T value : list) {
             final PathNode currentNode = new PathNode(value);
+            currentNode.prev = previousNode;
             if (firstNode == null) {
                 firstNode = currentNode;
             }
@@ -57,5 +60,9 @@ public class PathNode<T> {
 
     public PathNode getNext() {
         return next;
+    }
+
+    public PathNode<T> getPrev() {
+        return prev;
     }
 }

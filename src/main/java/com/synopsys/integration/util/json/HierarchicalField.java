@@ -25,28 +25,38 @@ package com.synopsys.integration.util.json;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class HierarchicalField extends Field {
+    private final List<String> pathToField;
     private final FieldContentIdentifier contentIdentifier;
     private final Type type;
-    private List<String> fieldList;
 
-    public HierarchicalField(final Collection<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label, final Type type) {
+    public HierarchicalField(final List<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label, final Type type) {
         super(innerMostFieldName, label);
-
-        initFieldList(pathToField, innerMostFieldName);
+        this.pathToField = pathToField;
         this.contentIdentifier = contentIdentifier;
         this.type = type;
+    }
+
+    /**
+     * @return an unmodifiable list of fields representing the path to the parent element of the inner most field defined by this class
+     */
+    public List<String> getPathToField() {
+        return Collections.unmodifiableList(pathToField);
     }
 
     /**
      * @return an unmodifiable list of fields representing the path to a field nested within an object
      */
     public List<String> getFullPathToField() {
-        return fieldList;
+        final List<String> fullList = new ArrayList<>(pathToField.size());
+        for (final String pathElement : pathToField) {
+            fullList.add(pathElement);
+        }
+        fullList.add(getKey());
+        return fullList;
     }
 
     public FieldContentIdentifier getContentIdentifier() {
@@ -55,12 +65,5 @@ public abstract class HierarchicalField extends Field {
 
     public Type getType() {
         return type;
-    }
-
-    private void initFieldList(final Collection<String> pathToField, final String innerMostFieldName) {
-        final List<String> list = new ArrayList<>();
-        list.addAll(pathToField);
-        list.add(innerMostFieldName);
-        this.fieldList = Collections.unmodifiableList(list);
     }
 }

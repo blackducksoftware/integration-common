@@ -24,26 +24,16 @@
 package com.synopsys.integration.util.json;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.synopsys.integration.util.PathNode;
 
-public class JsonExtractor {
-    private final Gson gson;
-
+public class JsonExtractor extends JsonAccessor {
     public JsonExtractor(final Gson gson) {
-        this.gson = gson;
-    }
-
-    public JsonObject createJsonObject(final String json) {
-        return gson.fromJson(json, JsonObject.class);
+        super(gson);
     }
 
     public <T> Optional<T> getFirstValueFromJson(final HierarchicalField field, final String json) {
@@ -64,40 +54,13 @@ public class JsonExtractor {
     }
 
     public <T> List<T> getValuesFromJsonObject(final HierarchicalField field, final JsonObject object) {
-        final List<String> fieldNameHierarchy = field.getFullPathToField();
-        final PathNode<String> head = PathNode.createPath(fieldNameHierarchy);
+        final List<JsonElement> foundElements = getInnerElements(field.getFullPathToField(), object);
 
-        final List<JsonElement> foundElements = getInnerElements(object, head);
         final List<T> convertedObjects = new ArrayList<>();
         for (final JsonElement element : foundElements) {
             final T convertedElement = gson.fromJson(element, field.getType());
             convertedObjects.add(convertedElement);
         }
         return convertedObjects;
-    }
-
-    private List<JsonElement> getInnerElements(final JsonElement element, final PathNode<String> pathNode) {
-        if (element == null) {
-            return Collections.emptyList();
-        } else {
-            if (element.isJsonPrimitive()) {
-                return Arrays.asList(element);
-            } else {
-                if (pathNode != null && element.isJsonObject()) {
-                    final String key = pathNode.getKey();
-                    final JsonObject jsonObject = element.getAsJsonObject();
-                    final JsonElement foundElement = jsonObject.get(key);
-                    return getInnerElements(foundElement, pathNode.getNext());
-                } else if (element.isJsonArray()) {
-                    final JsonArray foundArray = element.getAsJsonArray();
-                    final List<JsonElement> foundValues = new ArrayList<>(foundArray.size());
-                    for (final JsonElement arrayElement : foundArray) {
-                        foundValues.addAll(getInnerElements(arrayElement, pathNode));
-                    }
-                    return foundValues;
-                }
-                return Arrays.asList(element);
-            }
-        }
     }
 }

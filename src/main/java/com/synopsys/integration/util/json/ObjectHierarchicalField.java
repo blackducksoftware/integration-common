@@ -24,11 +24,11 @@
 package com.synopsys.integration.util.json;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
+import java.util.List;
 
 public class ObjectHierarchicalField extends HierarchicalField {
 
-    public ObjectHierarchicalField(final Collection<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label, final Type type) {
+    public ObjectHierarchicalField(final List<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label, final Type type) {
         super(pathToField, innerMostFieldName, contentIdentifier, label, type);
     }
 }

@@ -24,14 +24,14 @@
 package com.synopsys.integration.util.json;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
+import java.util.List;
 
 import com.google.gson.reflect.TypeToken;
 
 public class StringHierarchicalField extends HierarchicalField {
     private static final Type TYPE = new TypeToken<String>() {}.getType();
 
-    public StringHierarchicalField(final Collection<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label) {
+    public StringHierarchicalField(final List<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label) {
         super(pathToField, innerMostFieldName, contentIdentifier, label, TYPE);
     }
 }
