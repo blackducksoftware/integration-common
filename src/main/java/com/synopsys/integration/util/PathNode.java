@@ -34,7 +34,7 @@ public class PathNode<T> {
         this.next = null;
     }
 
-    public static final <T> PathNode<T> createPath(final List<T> list) {
+    public static <T> PathNode<T> createPath(final List<T> list) {
         PathNode<T> previousNode = null;
         PathNode<T> firstNode = null;
 
