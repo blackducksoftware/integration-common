@@ -21,32 +21,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util.json;
+package com.synopsys.integration.util.json.field;
 
-import com.synopsys.integration.util.Stringable;
+import java.util.List;
 
-public abstract class Field extends Stringable {
-    private String key;
-    private String label;
+import com.google.gson.reflect.TypeToken;
 
-    public Field(final String key, final String label) {
-        this.key = key;
-        this.label = label;
-    }
+public class IntegerHierarchicalField extends NumberHierarchicalField {
+    private static final TypeToken TYPE_TOKEN = new TypeToken<Integer>() {};
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(final String key) {
-        this.key = key;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(final String label) {
-        this.label = label;
+    public IntegerHierarchicalField(final List<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label) {
+        super(pathToField, innerMostFieldName, contentIdentifier, label, TYPE_TOKEN);
     }
 }

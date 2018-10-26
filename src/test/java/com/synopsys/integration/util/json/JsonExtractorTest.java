@@ -16,6 +16,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.synopsys.integration.util.Stringable;
+import com.synopsys.integration.util.json.field.ObjectHierarchicalField;
+import com.synopsys.integration.util.json.field.StringHierarchicalField;
 
 public class JsonExtractorTest {
     private final Gson gson = new Gson();

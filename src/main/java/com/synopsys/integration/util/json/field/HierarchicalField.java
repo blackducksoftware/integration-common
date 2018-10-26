@@ -21,7 +21,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util.json;
+package com.synopsys.integration.util.json.field;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -43,14 +43,14 @@ public abstract class HierarchicalField extends Field {
     /**
      * @return an unmodifiable list of fields representing the path to the parent element of the inner most field defined by this class
      */
-    public List<String> getPathToField() {
+    public List<String> getPathToParent() {
         return Collections.unmodifiableList(pathToField);
     }
 
     /**
      * @return an unmodifiable list of fields representing the path to a field nested within an object
      */
-    public List<String> getFullPathToField() {
+    public List<String> getPathToInnerField() {
         final List<String> fullList = new ArrayList<>(pathToField.size());
         for (final String pathElement : pathToField) {
             fullList.add(pathElement);

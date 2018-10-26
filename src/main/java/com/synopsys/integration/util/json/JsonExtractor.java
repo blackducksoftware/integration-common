@@ -30,6 +30,7 @@ import java.util.Optional;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.synopsys.integration.util.json.field.HierarchicalField;
 
 public class JsonExtractor extends JsonAccessor {
     public JsonExtractor(final Gson gson) {
@@ -54,7 +55,7 @@ public class JsonExtractor extends JsonAccessor {
     }
 
     public <T> List<T> getValuesFromJsonObject(final HierarchicalField field, final JsonObject object) {
-        final List<JsonElement> foundElements = getInnerElements(field.getFullPathToField(), object);
+        final List<JsonElement> foundElements = getInnerElements(field.getPathToInnerField(), object);
 
         final List<T> convertedObjects = new ArrayList<>();
         for (final JsonElement element : foundElements) {

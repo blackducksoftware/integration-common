@@ -25,48 +25,42 @@ package com.synopsys.integration.util.json;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Objects;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.synopsys.integration.util.json.field.BooleanHierarchicalField;
+import com.synopsys.integration.util.json.field.HierarchicalField;
+import com.synopsys.integration.util.json.field.NumberHierarchicalField;
+import com.synopsys.integration.util.json.field.StringHierarchicalField;
 
-// TODO add tests for this class
 public class JsonInjector extends JsonAccessor {
     public JsonInjector(final Gson gson) {
         super(gson);
     }
 
-    public String insertValue(final HierarchicalField field, final String json, final Boolean newValue) {
-        return insertValue(field, json, newValue);
+    public String insertValue(final BooleanHierarchicalField field, final String json, final Boolean newValue) {
+        return insertValue((HierarchicalField) field, json, newValue);
     }
 
-    public String insertValue(final HierarchicalField field, final String json, final Character newValue) {
-        return insertValue(field, json, newValue);
+    public String insertValue(final NumberHierarchicalField field, final String json, final Number newValue) {
+        return insertValue((HierarchicalField) field, json, newValue);
     }
 
-    public String insertValue(final HierarchicalField field, final String json, final Number newValue) {
-        return insertValue(field, json, newValue);
+    public String insertValue(final StringHierarchicalField field, final String json, final String newValue) {
+        return insertValue((HierarchicalField) field, json, newValue);
     }
 
-    public String insertValue(final HierarchicalField field, final String json, final String newValue) {
-        return insertValue(field, json, newValue);
+    public JsonObject insertValue(final BooleanHierarchicalField field, final JsonObject jsonObject, final Boolean newValue) {
+        return insertValue((HierarchicalField) field, jsonObject, newValue);
     }
 
-    public JsonObject insertValue(final HierarchicalField field, final JsonObject jsonObject, final Boolean newValue) {
-        return insertValue(field, jsonObject, newValue);
+    public JsonObject insertValue(final NumberHierarchicalField field, final JsonObject jsonObject, final Number newValue) {
+        return insertValue((HierarchicalField) field, jsonObject, newValue);
     }
 
-    public JsonObject insertValue(final HierarchicalField field, final JsonObject jsonObject, final Character newValue) {
-        return insertValue(field, jsonObject, newValue);
-    }
-
-    public JsonObject insertValue(final HierarchicalField field, final JsonObject jsonObject, final Number newValue) {
-        return insertValue(field, jsonObject, newValue);
-    }
-
-    public JsonObject insertValue(final HierarchicalField field, final JsonObject jsonObject, final String newValue) {
-        return insertValue(field, jsonObject, newValue);
+    public JsonObject insertValue(final StringHierarchicalField field, final JsonObject jsonObject, final String newValue) {
+        return insertValue((HierarchicalField) field, jsonObject, newValue);
     }
 
     private String insertValue(final HierarchicalField field, final String json, final Object newValue) {
@@ -75,7 +69,7 @@ public class JsonInjector extends JsonAccessor {
     }
 
     private JsonObject insertValue(final HierarchicalField field, final JsonObject jsonObject, final Object newValue) {
-        final List<JsonElement> innerElements = getInnerElements(field.getPathToField(), jsonObject);
+        final List<JsonElement> innerElements = getInnerElements(field.getPathToParent(), jsonObject);
         for (final JsonElement element : innerElements) {
             if (element.isJsonObject()) {
                 addProperty(field.getType(), element.getAsJsonObject(), field.getKey(), newValue);
@@ -87,22 +81,20 @@ public class JsonInjector extends JsonAccessor {
     }
 
     private void addProperty(final Type type, final JsonObject jsonObject, final String key, final Object newValue) {
-        if (newValue == null) {
+        if (newValue == null && type.getTypeName().equals(newValue.getClass().getTypeName())) {
             jsonObject.addProperty(key, (Character) null);
-        } else if (isAssignable(type, Boolean.class, newValue.getClass())) {
+        } else if (isAssignable(Boolean.class, newValue.getClass())) {
             jsonObject.addProperty(key, Boolean.class.cast(newValue));
-        } else if (isAssignable(type, Character.class, newValue.getClass())) {
-            jsonObject.addProperty(key, Character.class.cast(newValue));
-        } else if (isAssignable(type, Number.class, newValue.getClass())) {
+        } else if (isAssignable(Number.class, newValue.getClass())) {
             jsonObject.addProperty(key, Number.class.cast(newValue));
-        } else if (isAssignable(type, String.class, newValue.getClass())) {
+        } else if (isAssignable(String.class, newValue.getClass())) {
             jsonObject.addProperty(key, String.class.cast(newValue));
         } else {
             throw new IllegalArgumentException("Invalid Type for newValue: " + newValue.getClass().getTypeName());
         }
     }
 
-    private boolean isAssignable(final Type fieldType, final Class<?> potentialClass, final Class<?> newValueClass) {
-        return Objects.equals(fieldType.getClass(), potentialClass) && potentialClass.isAssignableFrom(newValueClass);
+    private boolean isAssignable(final Class<?> potentialClass, final Class<?> newValueClass) {
+        return potentialClass.isAssignableFrom(newValueClass);
     }
 }

@@ -21,7 +21,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util.json;
+package com.synopsys.integration.util.json.field;
 
 import java.lang.reflect.Type;
 import java.util.List;

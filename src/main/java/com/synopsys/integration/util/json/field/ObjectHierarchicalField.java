@@ -21,13 +21,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util.json;
+package com.synopsys.integration.util.json.field;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
 public class ObjectHierarchicalField extends HierarchicalField {
-
     public ObjectHierarchicalField(final List<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label, final Type type) {
         super(pathToField, innerMostFieldName, contentIdentifier, label, type);
     }

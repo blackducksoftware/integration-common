@@ -21,14 +21,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util.json;
+package com.synopsys.integration.util.json.field;
 
-import com.synopsys.integration.util.Stringable;
+import java.util.List;
 
-public class FieldContentIdentifier extends Stringable {
-    public final String key;
+import com.google.gson.reflect.TypeToken;
 
-    public FieldContentIdentifier(final String key) {
-        this.key = key;
+public class DoubleHierarchicalField extends NumberHierarchicalField {
+    private static final TypeToken TYPE_TOKEN = new TypeToken<Double>() {};
+
+    public DoubleHierarchicalField(final List<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label) {
+        super(pathToField, innerMostFieldName, contentIdentifier, label, TYPE_TOKEN);
     }
 }
