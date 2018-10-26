@@ -56,7 +56,7 @@ public abstract class HierarchicalField extends Field {
             fullList.add(pathElement);
         }
         fullList.add(getKey());
-        return fullList;
+        return Collections.unmodifiableList(fullList);
     }
 
     public FieldContentIdentifier getContentIdentifier() {
