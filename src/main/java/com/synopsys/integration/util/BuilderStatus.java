@@ -21,13 +21,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.validator;
+package com.synopsys.integration.util;
 
-public class NoOpValidator extends AbstractValidator {
-    @Override
-    public ValidationResults assertValid() {
-        final ValidationResults results = new ValidationResults();
-        return results;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
+public class BuilderStatus {
+    private final List<String> errorMessages = new ArrayList<>();
+
+    public boolean isValid() {
+        return errorMessages.isEmpty();
+    }
+
+    public void addErrorMessage(final String errorMessage) {
+        errorMessages.add(errorMessage);
+    }
+
+    public void addAllErrorMessages(final List<String> errorMessages) {
+        this.errorMessages.addAll(errorMessages);
+    }
+
+    public List<String> getErrorMessages() {
+        return errorMessages;
+    }
+
+    public String getFullErrorMessage() {
+        return getFullErrorMessage(" ");
+    }
+
+    public String getFullErrorMessage(final String errorMessageSeparator) {
+        return StringUtils.join(errorMessages, errorMessageSeparator);
     }
 
 }
