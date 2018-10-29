@@ -28,7 +28,6 @@ import org.junit.Test;
 import com.synopsys.integration.util.IntEnvironmentVariables;
 
 public class IntLoggerTest {
-
     @Test
     public void testSetLogLevelWithVariables() {
         final IntLogger logger = new PrintStreamIntLogger(System.out, LogLevel.INFO);
@@ -36,39 +35,39 @@ public class IntLoggerTest {
         logger.setLogLevel(variables);
         assertEquals(LogLevel.INFO, logger.getLogLevel());
 
-        variables.put("HUB_LOG_LEVEL", "FAKE");
+        variables.put("BLACK_DUCK_LOG_LEVEL", "FAKE");
         logger.setLogLevel(variables);
         assertEquals(LogLevel.INFO, logger.getLogLevel());
 
-        variables.put("HUB_LOG_LEVEL", "error");
+        variables.put("BLACK_DUCK_LOG_LEVEL", "error");
         logger.setLogLevel(variables);
         assertEquals(LogLevel.ERROR, logger.getLogLevel());
 
-        variables.put("HUB_LOG_LEVEL", "erRor");
+        variables.put("BLACK_DUCK_LOG_LEVEL", "erRor");
         logger.setLogLevel(variables);
         assertEquals(LogLevel.ERROR, logger.getLogLevel());
 
-        variables.put("HUB_LOG_LEVEL", "OFF");
+        variables.put("BLACK_DUCK_LOG_LEVEL", "OFF");
         logger.setLogLevel(variables);
         assertEquals(LogLevel.OFF, logger.getLogLevel());
 
-        variables.put("HUB_LOG_LEVEL", "ERROR");
+        variables.put("BLACK_DUCK_LOG_LEVEL", "ERROR");
         logger.setLogLevel(variables);
         assertEquals(LogLevel.ERROR, logger.getLogLevel());
 
-        variables.put("HUB_LOG_LEVEL", "WARN");
+        variables.put("BLACK_DUCK_LOG_LEVEL", "WARN");
         logger.setLogLevel(variables);
         assertEquals(LogLevel.WARN, logger.getLogLevel());
 
-        variables.put("HUB_LOG_LEVEL", "INFO");
+        variables.put("BLACK_DUCK_LOG_LEVEL", "INFO");
         logger.setLogLevel(variables);
         assertEquals(LogLevel.INFO, logger.getLogLevel());
 
-        variables.put("HUB_LOG_LEVEL", "DEBUG");
+        variables.put("BLACK_DUCK_LOG_LEVEL", "DEBUG");
         logger.setLogLevel(variables);
         assertEquals(LogLevel.DEBUG, logger.getLogLevel());
 
-        variables.put("HUB_LOG_LEVEL", "TRACE");
+        variables.put("BLACK_DUCK_LOG_LEVEL", "TRACE");
         logger.setLogLevel(variables);
         assertEquals(LogLevel.TRACE, logger.getLogLevel());
     }

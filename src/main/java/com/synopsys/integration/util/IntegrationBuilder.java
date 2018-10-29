@@ -23,16 +23,7 @@
  */
 package com.synopsys.integration.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
 public abstract class IntegrationBuilder<T> {
-    protected List<String> errorMessages;
-
-    private String errorMessageSeparator = " ";
-
     public T build() throws IllegalArgumentException {
         assertValid();
 
@@ -40,36 +31,32 @@ public abstract class IntegrationBuilder<T> {
     }
 
     /**
-     * This method is for other builders to use to instantiate the object they wrap. If invalid values are used or any Exceptions thrown, null values should be used.
-     * @return
+     * This method is for builders to instantiate the object they wrap. It is reasonable for a builder to
+     * assume that all values are safe before this method will be called.
      */
     protected abstract T buildWithoutValidation();
 
-    public void assertValid() throws IllegalArgumentException {
-        final String errorMessage = createErrorMessage();
-        if (!errorMessage.isEmpty()) {
-            throw new IllegalStateException(errorMessage);
+    protected abstract void validate(BuilderStatus builderStatus);
+
+    public final void assertValid() throws IllegalArgumentException {
+        final BuilderStatus builderStatus = validateAndGetBuilderStatus();
+
+        if (!builderStatus.isValid()) {
+            throw new IllegalArgumentException(builderStatus.getFullErrorMessage());
         }
     }
 
-    public boolean isValid() {
-        return createErrorMessage().isEmpty();
+    public final boolean isValid() {
+        final BuilderStatus builderStatus = validateAndGetBuilderStatus();
+        return builderStatus.isValid();
     }
 
-    public String createErrorMessage() {
-        errorMessages = new ArrayList<>();
-        populateIndividualErrorMessages();
-        return StringUtils.join(errorMessages, errorMessageSeparator);
-    }
+    public final BuilderStatus validateAndGetBuilderStatus() {
+        final BuilderStatus builderStatus = new BuilderStatus();
 
-    protected abstract void populateIndividualErrorMessages();
+        validate(builderStatus);
 
-    public List<String> getErrorMessages() {
-        return errorMessages;
-    }
-
-    public void setErrorMessageSeparator(final String errorMessageSeperator) {
-        errorMessageSeparator = errorMessageSeparator;
+        return builderStatus;
     }
 
 }
