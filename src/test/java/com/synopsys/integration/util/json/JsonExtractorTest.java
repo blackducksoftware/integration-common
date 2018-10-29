@@ -62,7 +62,7 @@ public class JsonExtractorTest {
         assertEquals(Arrays.asList(value1, value2), values);
 
         final Optional<String> optionalValue = jsonExtractor.getFirstValueFromJson(field, json);
-        assertEquals(value2, optionalValue.orElse(null));
+        assertEquals(value1, optionalValue.orElse(null));
     }
 
     @Test

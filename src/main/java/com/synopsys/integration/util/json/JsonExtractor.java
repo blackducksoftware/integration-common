@@ -43,11 +43,7 @@ public class JsonExtractor extends JsonAccessor {
 
     public <T> Optional<T> getFirstValueFromJsonObject(final HierarchicalField field, final JsonObject object) {
         final List<T> values = getValuesFromJsonObject(field, object);
-        if (values.isEmpty()) {
-            return Optional.empty();
-        }
-        final int lastIndex = values.size() - 1;
-        return Optional.of(values.get(lastIndex));
+        return values.stream().findFirst();
     }
 
     public <T> List<T> getValuesFromJson(final HierarchicalField field, final String json) {
