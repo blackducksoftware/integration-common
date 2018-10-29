@@ -81,16 +81,17 @@ public class JsonInjector extends JsonAccessor {
     }
 
     private void addProperty(final Type type, final JsonObject jsonObject, final String key, final Object newValue) {
-        if (newValue == null && type.getTypeName().equals(newValue.getClass().getTypeName())) {
+        final Class<?> newValueClass = newValue.getClass();
+        if (newValue == null && type.getTypeName().equals(newValueClass.getTypeName())) {
             jsonObject.addProperty(key, (Character) null);
-        } else if (isAssignable(Boolean.class, newValue.getClass())) {
+        } else if (isAssignable(Boolean.class, newValueClass)) {
             jsonObject.addProperty(key, Boolean.class.cast(newValue));
-        } else if (isAssignable(Number.class, newValue.getClass())) {
+        } else if (isAssignable(Number.class, newValueClass)) {
             jsonObject.addProperty(key, Number.class.cast(newValue));
-        } else if (isAssignable(String.class, newValue.getClass())) {
+        } else if (isAssignable(String.class, newValueClass)) {
             jsonObject.addProperty(key, String.class.cast(newValue));
         } else {
-            throw new IllegalArgumentException("Invalid Type for newValue: " + newValue.getClass().getTypeName());
+            throw new IllegalArgumentException("Invalid Type for newValue: " + newValueClass.getTypeName());
         }
     }
 
