@@ -21,49 +21,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util.json.field;
+package com.synopsys.integration.jsonfield;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class HierarchicalField extends Field {
-    private final List<String> pathToField;
-    private final FieldContentIdentifier contentIdentifier;
+public class HierarchicalField {
+    private final List<String> fieldPath;
     private final Type type;
 
-    public HierarchicalField(final List<String> pathToField, final String innerMostFieldName, final FieldContentIdentifier contentIdentifier, final String label, final Type type) {
-        super(innerMostFieldName, label);
-        this.pathToField = pathToField;
-        this.contentIdentifier = contentIdentifier;
+    public HierarchicalField(final List<String> fieldPath, final Type type) {
+        this.fieldPath = fieldPath;
         this.type = type;
     }
 
     /**
-     * @return an unmodifiable list of fields representing the path to the parent element of the inner most field defined by this class
+     * @return an unmodifiable list of fields representing the path to the parent element of the inner most field defined by this class (could be empty)
      */
-    public List<String> getPathToParent() {
-        return Collections.unmodifiableList(pathToField);
+    public List<String> getParentPath() {
+        if (fieldPath.size() >= 2) {
+            return Collections.unmodifiableList(fieldPath.subList(0, fieldPath.size() - 1));
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     /**
      * @return an unmodifiable list of fields representing the path to a field nested within an object
      */
-    public List<String> getPathToInnerField() {
-        final List<String> fullList = new ArrayList<>(pathToField.size());
-        for (final String pathElement : pathToField) {
-            fullList.add(pathElement);
-        }
-        fullList.add(getKey());
-        return Collections.unmodifiableList(fullList);
-    }
-
-    public FieldContentIdentifier getContentIdentifier() {
-        return contentIdentifier;
+    public List<String> getFieldPath() {
+        return Collections.unmodifiableList(fieldPath);
     }
 
     public Type getType() {
         return type;
     }
+
 }
