@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 public class JsonFieldResolver {
     private final Gson gson;
@@ -16,17 +17,18 @@ public class JsonFieldResolver {
         this.gson = gson;
     }
 
-    public <T> List<T> resolveValues(final String json, final HierarchicalField jsonField) {
+    public <T> JsonFieldResult<T> resolveValues(final String json, final HierarchicalField<T> jsonField) {
         final JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
         final List<JsonElement> foundElements = getElements(jsonObject, jsonField.getFieldPath());
 
         final List<T> convertedObjects = new ArrayList<>();
+        final TypeToken<T> typeToken = new TypeToken<T>() {};
         for (final JsonElement element : foundElements) {
-            final T convertedElement = gson.fromJson(element, jsonField.getType());
+            final T convertedElement = gson.fromJson(element, typeToken.getType());
             convertedObjects.add(convertedElement);
         }
 
-        return convertedObjects;
+        return new JsonFieldResult<>(jsonObject, foundElements, convertedObjects);
     }
 
     private List<JsonElement> getElements(final JsonElement element, final List<String> fieldPath) {

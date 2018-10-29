@@ -23,28 +23,16 @@
  */
 package com.synopsys.integration.jsonfield;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
-public class HierarchicalField {
+public class HierarchicalField<T> {
     private final List<String> fieldPath;
-    private final Type type;
+    private final T type;
 
-    public HierarchicalField(final List<String> fieldPath, final Type type) {
+    public HierarchicalField(final List<String> fieldPath, final T type) {
         this.fieldPath = fieldPath;
         this.type = type;
-    }
-
-    /**
-     * @return an unmodifiable list of fields representing the path to the parent element of the inner most field defined by this class (could be empty)
-     */
-    public List<String> getParentPath() {
-        if (fieldPath.size() >= 2) {
-            return Collections.unmodifiableList(fieldPath.subList(0, fieldPath.size() - 1));
-        } else {
-            return Collections.emptyList();
-        }
     }
 
     /**
@@ -54,7 +42,7 @@ public class HierarchicalField {
         return Collections.unmodifiableList(fieldPath);
     }
 
-    public Type getType() {
+    public T getType() {
         return type;
     }
 
