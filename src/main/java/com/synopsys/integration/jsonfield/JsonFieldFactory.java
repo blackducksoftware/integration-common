@@ -1,5 +1,7 @@
-/*******************************************************************************
- * Copyright (C) 2016 Black Duck Software, Inc.
+/**
+ * integration-common
+ *
+ * Copyright (C) 2018 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -18,19 +20,26 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
-package com.synopsys.integration.validator;
+ */
+package com.synopsys.integration.jsonfield;
 
-import static org.junit.Assert.assertTrue;
+import java.util.List;
 
-import org.junit.Test;
-
-public class NoOpValidatorTest {
-
-    @Test
-    public void testNoOpValidator() throws Exception {
-        final NoOpValidator validator = new NoOpValidator();
-        final ValidationResults results = validator.assertValid();
-        assertTrue(results.isSuccess());
+public class JsonFieldFactory {
+    public static JsonField<Integer> createIntegerJsonField(final List<String> fieldPath) {
+        return new JsonField<>(fieldPath);
     }
+
+    public static JsonField<Double> createDoubleJsonField(final List<String> fieldPath) {
+        return new JsonField<>(fieldPath);
+    }
+
+    public static JsonField<Boolean> createBooleanJsonField(final List<String> fieldPath) {
+        return new JsonField<>(fieldPath);
+    }
+
+    public static JsonField<String> createStringJsonField(final List<String> fieldPath) {
+        return new JsonField<>(fieldPath);
+    }
+
 }

@@ -1,0 +1,258 @@
+{
+  "totalCount": 6354,
+  "items": [
+    {
+      "content": {
+        "componentName": "GLib",
+        "versionName": "2.54.2",
+        "componentVersionOriginName": "centos",
+        "componentVersionOriginId": "glib2\/2.54.2-2.el7\/x86_64",
+        "componentVersion": "https:\/\/int-hub02.dc1.lan\/api\/components\/a17d22e7-d0b2-4e51-b63c-e9eadb733049\/versions\/7bd38282-0e77-47ef-a0d3-efa34e069b04",
+        "newVulnerabilityCount": 1,
+        "updatedVulnerabilityCount": 0,
+        "deletedVulnerabilityCount": 0,
+        "newVulnerabilityIds": [
+          {
+            "source": "BDSA",
+            "vulnerabilityId": "BDSA-2018-3793",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/BDSA-2018-3793"
+          }
+        ],
+        "updatedVulnerabilityIds": [
+        ],
+        "deletedVulnerabilityIds": [
+        ],
+        "affectedProjectVersions": [
+          {
+            "projectVersion": "https:\/\/int-hub02.dc1.lan\/api\/projects\/ec01fe47-c4c0-44f6-9b16-da8fcbb582d0\/versions\/312e1fb2-ce95-4a96-b221-ca02c523d4af",
+            "projectName": "centos",
+            "projectVersionName": "latest",
+            "componentIssueUrl": "https:\/\/int-hub02.dc1.lan\/api\/projects\/ec01fe47-c4c0-44f6-9b16-da8fcbb582d0\/versions\/312e1fb2-ce95-4a96-b221-ca02c523d4af\/components\/a17d22e7-d0b2-4e51-b63c-e9eadb733049\/component-versions\/7bd38282-0e77-47ef-a0d3-efa34e069b04\/issues",
+            "bomComponent": "https:\/\/int-hub02.dc1.lan\/api\/projects\/ec01fe47-c4c0-44f6-9b16-da8fcbb582d0\/versions\/312e1fb2-ce95-4a96-b221-ca02c523d4af\/components\/a17d22e7-d0b2-4e51-b63c-e9eadb733049\/versions\/7bd38282-0e77-47ef-a0d3-efa34e069b04"
+          }
+        ]
+      },
+      "contentType": "application\/json",
+      "type": "VULNERABILITY",
+      "createdAt": "2018-10-29T16:31:31.378Z",
+      "_meta": {
+        "allow": [
+          "GET"
+        ],
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/notifications\/d0862aa4-5af4-49e7-b5de-a8d9ce916aa4",
+        "links": [
+        ]
+      }
+    },
+    {
+      "content": {
+        "componentName": "GLib",
+        "versionName": "2.54.2",
+        "componentVersionOriginName": "centos",
+        "componentVersionOriginId": "glib2\/2.54.2-2.el7\/x86_64",
+        "componentVersion": "https:\/\/int-hub02.dc1.lan\/api\/components\/a17d22e7-d0b2-4e51-b63c-e9eadb733049\/versions\/7bd38282-0e77-47ef-a0d3-efa34e069b04",
+        "newVulnerabilityCount": 2,
+        "updatedVulnerabilityCount": 0,
+        "deletedVulnerabilityCount": 0,
+        "newVulnerabilityIds": [
+          {
+            "source": "BDSA",
+            "vulnerabilityId": "BDSA-2018-3790",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/BDSA-2018-3790"
+          },
+          {
+            "source": "BDSA",
+            "vulnerabilityId": "BDSA-2018-3795",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/BDSA-2018-3795"
+          }
+        ],
+        "updatedVulnerabilityIds": [
+        ],
+        "deletedVulnerabilityIds": [
+        ],
+        "affectedProjectVersions": [
+          {
+            "projectVersion": "https:\/\/int-hub02.dc1.lan\/api\/projects\/ec01fe47-c4c0-44f6-9b16-da8fcbb582d0\/versions\/312e1fb2-ce95-4a96-b221-ca02c523d4af",
+            "projectName": "centos",
+            "projectVersionName": "latest",
+            "componentIssueUrl": "https:\/\/int-hub02.dc1.lan\/api\/projects\/ec01fe47-c4c0-44f6-9b16-da8fcbb582d0\/versions\/312e1fb2-ce95-4a96-b221-ca02c523d4af\/components\/a17d22e7-d0b2-4e51-b63c-e9eadb733049\/component-versions\/7bd38282-0e77-47ef-a0d3-efa34e069b04\/issues",
+            "bomComponent": "https:\/\/int-hub02.dc1.lan\/api\/projects\/ec01fe47-c4c0-44f6-9b16-da8fcbb582d0\/versions\/312e1fb2-ce95-4a96-b221-ca02c523d4af\/components\/a17d22e7-d0b2-4e51-b63c-e9eadb733049\/versions\/7bd38282-0e77-47ef-a0d3-efa34e069b04"
+          }
+        ]
+      },
+      "contentType": "application\/json",
+      "type": "VULNERABILITY",
+      "createdAt": "2018-10-29T15:30:30.175Z",
+      "_meta": {
+        "allow": [
+          "GET"
+        ],
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/notifications\/42282dca-dd95-44dd-bfd2-03ef1afabab9",
+        "links": [
+        ]
+      }
+    },
+    {
+      "content": {
+        "componentName": "node-macaddress",
+        "versionName": "0.2.8",
+        "componentVersionOriginName": "npmjs",
+        "componentVersionOriginId": "macaddress\/0.2.8",
+        "componentVersion": "https:\/\/int-hub02.dc1.lan\/api\/components\/8a7ea521-3477-4600-ae1b-0e89ac700f2b\/versions\/d3081fc0-2e9a-4ea4-8eef-fd41d1aa1070",
+        "newVulnerabilityCount": 1,
+        "updatedVulnerabilityCount": 0,
+        "deletedVulnerabilityCount": 0,
+        "newVulnerabilityIds": [
+          {
+            "source": "BDSA",
+            "vulnerabilityId": "BDSA-2018-2180",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/BDSA-2018-2180"
+          }
+        ],
+        "updatedVulnerabilityIds": [
+        ],
+        "deletedVulnerabilityIds": [
+        ],
+        "affectedProjectVersions": [
+          {
+            "projectVersion": "https:\/\/int-hub02.dc1.lan\/api\/projects\/d7423b53-f3fb-4c77-8c2c-12fe20cd9782\/versions\/5748b7a3-1e0e-455b-8f19-3cdc2cdbe1c4",
+            "projectName": "AggregateNew",
+            "projectVersionName": "8",
+            "componentIssueUrl": "https:\/\/int-hub02.dc1.lan\/api\/projects\/d7423b53-f3fb-4c77-8c2c-12fe20cd9782\/versions\/5748b7a3-1e0e-455b-8f19-3cdc2cdbe1c4\/components\/8a7ea521-3477-4600-ae1b-0e89ac700f2b\/component-versions\/d3081fc0-2e9a-4ea4-8eef-fd41d1aa1070\/issues",
+            "bomComponent": "https:\/\/int-hub02.dc1.lan\/api\/projects\/d7423b53-f3fb-4c77-8c2c-12fe20cd9782\/versions\/5748b7a3-1e0e-455b-8f19-3cdc2cdbe1c4\/components\/8a7ea521-3477-4600-ae1b-0e89ac700f2b\/versions\/d3081fc0-2e9a-4ea4-8eef-fd41d1aa1070"
+          }
+        ]
+      },
+      "contentType": "application\/json",
+      "type": "VULNERABILITY",
+      "createdAt": "2018-10-29T04:30:31.329Z",
+      "_meta": {
+        "allow": [
+          "GET"
+        ],
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/notifications\/3aa3b926-6113-4ed0-b9cc-09f4658129ec",
+        "links": [
+        ]
+      }
+    },
+    {
+      "content": {
+        "componentName": "Apache PDFBox",
+        "versionName": "2.0.7",
+        "componentVersionOriginName": "maven",
+        "componentVersionOriginId": "org.apache.pdfbox:pdfbox:2.0.7",
+        "componentVersion": "https:\/\/int-hub02.dc1.lan\/api\/components\/0dcfc75a-b662-4f11-9208-f86dd4747662\/versions\/ace22e04-a0bd-41ea-9488-624c53b5ffe9",
+        "newVulnerabilityCount": 0,
+        "updatedVulnerabilityCount": 0,
+        "deletedVulnerabilityCount": 2,
+        "newVulnerabilityIds": [
+        ],
+        "updatedVulnerabilityIds": [
+        ],
+        "deletedVulnerabilityIds": [
+          {
+            "source": "BDSA",
+            "vulnerabilityId": "BDSA-2018-3479",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/BDSA-2018-3479"
+          },
+          {
+            "source": "BDSA",
+            "vulnerabilityId": "BDSA-2018-2091",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/BDSA-2018-2091",
+            "relatedVulnerabilityId": "CVE-2018-8036",
+            "relatedVulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/CVE-2018-8036"
+          }
+        ],
+        "affectedProjectVersions": [
+          {
+            "projectVersion": "https:\/\/int-hub02.dc1.lan\/api\/projects\/bb681396-d963-4523-a913-1a24de211dd2\/versions\/cc068810-6491-4eba-8bb9-3094a3fb765d",
+            "projectName": "hub-common_with_project_in_bdio",
+            "projectVersionName": "27.0.0-SNAPSHOT",
+            "componentIssueUrl": "https:\/\/int-hub02.dc1.lan\/api\/projects\/bb681396-d963-4523-a913-1a24de211dd2\/versions\/cc068810-6491-4eba-8bb9-3094a3fb765d\/components\/0dcfc75a-b662-4f11-9208-f86dd4747662\/component-versions\/ace22e04-a0bd-41ea-9488-624c53b5ffe9\/issues",
+            "bomComponent": "https:\/\/int-hub02.dc1.lan\/api\/projects\/bb681396-d963-4523-a913-1a24de211dd2\/versions\/cc068810-6491-4eba-8bb9-3094a3fb765d\/components\/0dcfc75a-b662-4f11-9208-f86dd4747662\/versions\/ace22e04-a0bd-41ea-9488-624c53b5ffe9"
+          }
+        ]
+      },
+      "contentType": "application\/json",
+      "type": "VULNERABILITY",
+      "createdAt": "2018-10-28T18:46:01.458Z",
+      "_meta": {
+        "allow": [
+          "GET"
+        ],
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/notifications\/8c34f4dd-fb85-4620-84eb-f4e99f4bb424",
+        "links": [
+        ]
+      }
+    },
+    {
+      "content": {
+        "componentName": "Apache Commons FileUpload",
+        "versionName": "1.2.1",
+        "componentVersionOriginName": "maven",
+        "componentVersionOriginId": "commons-fileupload:commons-fileupload:1.2.1",
+        "componentVersion": "https:\/\/int-hub02.dc1.lan\/api\/components\/18dbecb7-a3b5-418b-9af1-44bf61ae0319\/versions\/3ef95202-5b60-4a62-ab07-02740212fd96",
+        "newVulnerabilityCount": 0,
+        "updatedVulnerabilityCount": 0,
+        "deletedVulnerabilityCount": 5,
+        "newVulnerabilityIds": [
+        ],
+        "updatedVulnerabilityIds": [
+        ],
+        "deletedVulnerabilityIds": [
+          {
+            "source": "BDSA",
+            "vulnerabilityId": "BDSA-2014-0102",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/BDSA-2014-0102",
+            "relatedVulnerabilityId": "CVE-2014-0050",
+            "relatedVulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/CVE-2014-0050"
+          },
+          {
+            "source": "NVD",
+            "vulnerabilityId": "CVE-2016-1000031",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/CVE-2016-1000031"
+          },
+          {
+            "source": "BDSA",
+            "vulnerabilityId": "BDSA-2013-0001",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/BDSA-2013-0001",
+            "relatedVulnerabilityId": "CVE-2013-0248",
+            "relatedVulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/CVE-2013-0248"
+          },
+          {
+            "source": "BDSA",
+            "vulnerabilityId": "BDSA-2013-0013",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/BDSA-2013-0013",
+            "relatedVulnerabilityId": "CVE-2013-2186",
+            "relatedVulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/CVE-2013-2186"
+          },
+          {
+            "source": "NVD",
+            "vulnerabilityId": "CVE-2016-3092",
+            "vulnerability": "https:\/\/int-hub02.dc1.lan\/api\/vulnerabilities\/CVE-2016-3092"
+          }
+        ],
+        "affectedProjectVersions": [
+          {
+            "projectVersion": "https:\/\/int-hub02.dc1.lan\/api\/projects\/ff5ea46e-7712-4e46-a8db-d8983c3a0794\/versions\/c8d8abef-f069-4768-ab4e-bf0a35e21f49",
+            "projectName": "My Recipe Project1540752306636",
+            "projectVersionName": "0.0.1-SNAPSHOT",
+            "componentIssueUrl": "https:\/\/int-hub02.dc1.lan\/api\/projects\/ff5ea46e-7712-4e46-a8db-d8983c3a0794\/versions\/c8d8abef-f069-4768-ab4e-bf0a35e21f49\/components\/18dbecb7-a3b5-418b-9af1-44bf61ae0319\/component-versions\/3ef95202-5b60-4a62-ab07-02740212fd96\/issues",
+            "bomComponent": "https:\/\/int-hub02.dc1.lan\/api\/projects\/ff5ea46e-7712-4e46-a8db-d8983c3a0794\/versions\/c8d8abef-f069-4768-ab4e-bf0a35e21f49\/components\/18dbecb7-a3b5-418b-9af1-44bf61ae0319\/versions\/3ef95202-5b60-4a62-ab07-02740212fd96"
+          }
+        ]
+      },
+      "contentType": "application\/json",
+      "type": "VULNERABILITY",
+      "createdAt": "2018-10-28T18:45:31.104Z",
+      "_meta": {
+        "allow": [
+          "GET"
+        ],
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/notifications\/0756aa83-2684-4beb-975f-b77b04c51b06",
+        "links": [
+        ]
+      }
+    }
+  ]
+}

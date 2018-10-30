@@ -49,7 +49,7 @@ public abstract class IntLogger {
     public abstract void setLogLevel(LogLevel logLevel);
 
     public void setLogLevel(final IntEnvironmentVariables variables) {
-        final String logLevel = variables.getValue("HUB_LOG_LEVEL", "INFO");
+        final String logLevel = variables.getValue("BLACK_DUCK_LOG_LEVEL", "INFO");
         try {
             setLogLevel(LogLevel.valueOf(logLevel.toUpperCase()));
         } catch (final IllegalArgumentException e) {

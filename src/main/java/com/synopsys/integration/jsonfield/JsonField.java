@@ -21,11 +21,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.validator;
+package com.synopsys.integration.jsonfield;
 
-public interface FieldEnum {
-    public String getKey();
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
 
-    public String name();
+import com.google.gson.reflect.TypeToken;
+
+public class JsonField<T> {
+    private final List<String> fieldPath;
+
+    public JsonField(final List<String> fieldPath) {
+        this.fieldPath = fieldPath;
+    }
+
+    /**
+     * @return an unmodifiable list of fields representing the path to a field nested within an object
+     */
+    public List<String> getFieldPath() {
+        return Collections.unmodifiableList(fieldPath);
+    }
+
+    public Type getGsonType() {
+        return new TypeToken<T>() {}.getType();
+    }
 
 }
