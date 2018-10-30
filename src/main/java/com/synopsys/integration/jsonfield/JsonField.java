@@ -23,16 +23,17 @@
  */
 package com.synopsys.integration.jsonfield;
 
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
-public class HierarchicalField<T> {
-    private final List<String> fieldPath;
-    private final T type;
+import com.google.gson.reflect.TypeToken;
 
-    public HierarchicalField(final List<String> fieldPath, final T type) {
+public class JsonField<T> {
+    private final List<String> fieldPath;
+
+    public JsonField(final List<String> fieldPath) {
         this.fieldPath = fieldPath;
-        this.type = type;
     }
 
     /**
@@ -42,8 +43,8 @@ public class HierarchicalField<T> {
         return Collections.unmodifiableList(fieldPath);
     }
 
-    public T getType() {
-        return type;
+    public Type getGsonType() {
+        return new TypeToken<T>() {}.getType();
     }
 
 }

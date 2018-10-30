@@ -24,6 +24,7 @@
 package com.synopsys.integration.jsonfield;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -49,6 +50,13 @@ public class JsonFieldResult<T> {
 
     public List<T> getValues() {
         return values;
+    }
+
+    public Optional<T> getFirstValue() {
+        if (!values.isEmpty() && values.get(0) != null) {
+            return Optional.of(values.get(0));
+        }
+        return Optional.empty();
     }
 
 }
