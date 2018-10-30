@@ -30,7 +30,7 @@ public class JsonFieldFactory {
         return new JsonField<>(fieldPath);
     }
 
-    public static JsonField<Double> createDoublesonField(final List<String> fieldPath) {
+    public static JsonField<Double> createDoubleJsonField(final List<String> fieldPath) {
         return new JsonField<>(fieldPath);
     }
 

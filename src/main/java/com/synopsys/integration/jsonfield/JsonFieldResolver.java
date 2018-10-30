@@ -41,6 +41,10 @@ public class JsonFieldResolver {
 
     public <T> JsonFieldResult<T> resolveValues(final String json, final JsonField<T> jsonField) {
         final JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+        return resolveValues(jsonObject, jsonField);
+    }
+
+    public <T> JsonFieldResult<T> resolveValues(final JsonObject jsonObject, final JsonField<T> jsonField) {
         final List<JsonElement> foundElements = getElements(jsonObject, jsonField.getFieldPath());
 
         final List<T> convertedObjects = new ArrayList<>();
