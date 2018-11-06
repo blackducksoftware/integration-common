@@ -25,23 +25,19 @@ package com.synopsys.integration.jsonfield;
 
 import java.util.List;
 
-import com.synopsys.integration.util.Stringable;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-public abstract class JsonField<T> extends Stringable {
-    private final List<String> fieldPath;
-    private final Class<T> fieldClass;
+public class ListJsonFieldResult<T> extends JsonFieldResult<T> {
+    private final List<T> values;
 
-    public JsonField(final List<String> fieldPath, final Class<T> fieldClass) {
-        this.fieldPath = fieldPath;
-        this.fieldClass = fieldClass;
+    public ListJsonFieldResult(final JsonObject jsonObject, final List<JsonElement> foundElements, final List<T> values) {
+        super(jsonObject, foundElements);
+        this.values = values;
     }
 
-    public List<String> getFieldPath() {
-        return fieldPath;
-    }
-
-    public Class<T> getFieldClass() {
-        return fieldClass;
+    public List<T> getValues() {
+        return values;
     }
 
 }

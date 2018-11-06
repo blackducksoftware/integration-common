@@ -24,24 +24,26 @@
 package com.synopsys.integration.jsonfield;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.synopsys.integration.util.Stringable;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-public abstract class JsonField<T> extends Stringable {
-    private final List<String> fieldPath;
-    private final Class<T> fieldClass;
+public class SingleJsonFieldResult<T> extends JsonFieldResult<T> {
+    private final T value;
 
-    public JsonField(final List<String> fieldPath, final Class<T> fieldClass) {
-        this.fieldPath = fieldPath;
-        this.fieldClass = fieldClass;
+    public SingleJsonFieldResult(final JsonObject jsonObject, final List<JsonElement> foundElements, final T value) {
+        super(jsonObject, foundElements);
+        this.value = value;
     }
 
-    public List<String> getFieldPath() {
-        return fieldPath;
+    public SingleJsonFieldResult(final JsonObject jsonObject, final List<JsonElement> foundElements) {
+        super(jsonObject, foundElements);
+        value = null;
     }
 
-    public Class<T> getFieldClass() {
-        return fieldClass;
+    public Optional<T> getValue() {
+        return Optional.ofNullable(value);
     }
 
 }

@@ -21,9 +21,9 @@
  *******************************************************************************/
 package com.synopsys.integration.log;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.util.IntEnvironmentVariables;
 

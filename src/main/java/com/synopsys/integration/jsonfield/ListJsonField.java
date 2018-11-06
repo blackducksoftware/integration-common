@@ -25,23 +25,9 @@ package com.synopsys.integration.jsonfield;
 
 import java.util.List;
 
-import com.synopsys.integration.util.Stringable;
-
-public abstract class JsonField<T> extends Stringable {
-    private final List<String> fieldPath;
-    private final Class<T> fieldClass;
-
-    public JsonField(final List<String> fieldPath, final Class<T> fieldClass) {
-        this.fieldPath = fieldPath;
-        this.fieldClass = fieldClass;
-    }
-
-    public List<String> getFieldPath() {
-        return fieldPath;
-    }
-
-    public Class<T> getFieldClass() {
-        return fieldClass;
+public class ListJsonField<T> extends JsonField<T> {
+    public ListJsonField(final List<String> fieldPath, final Class<T> fieldClass) {
+        super(fieldPath, fieldClass);
     }
 
 }

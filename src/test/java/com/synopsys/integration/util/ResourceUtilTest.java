@@ -21,11 +21,11 @@
  *******************************************************************************/
 package com.synopsys.integration.util;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ResourceUtilTest {
     private static final String TEST_RESOURCE = "/test-resource.txt";

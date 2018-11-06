@@ -23,23 +23,40 @@
  */
 package com.synopsys.integration.jsonfield;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class JsonFieldFactory {
-    public static JsonField<Integer> createIntegerJsonField(final List<String> fieldPath) {
-        return new JsonField<>(fieldPath);
+    public static SingleJsonField<String> createStringSingleJsonField(final List<String> fieldPath) {
+        return new SingleJsonField<>(fieldPath, String.class);
     }
 
-    public static JsonField<Double> createDoubleJsonField(final List<String> fieldPath) {
-        return new JsonField<>(fieldPath);
+    public static ListJsonField<String> createStringListJsonField(final List<String> fieldPath) {
+        return new ListJsonField<>(fieldPath, String.class);
     }
 
-    public static JsonField<Boolean> createBooleanJsonField(final List<String> fieldPath) {
-        return new JsonField<>(fieldPath);
+    public static SingleJsonField<String> createStringSingleJsonField(final String... fieldPath) {
+        return new SingleJsonField<>(Arrays.asList(fieldPath), String.class);
     }
 
-    public static JsonField<String> createStringJsonField(final List<String> fieldPath) {
-        return new JsonField<>(fieldPath);
+    public static ListJsonField<String> createStringListJsonField(final String... fieldPath) {
+        return new ListJsonField<>(Arrays.asList(fieldPath), String.class);
+    }
+
+    public static <T> SingleJsonField<T> createCustomSingleJsonField(final Class<T> fieldClass, final List<String> fieldPath) {
+        return new SingleJsonField<>(fieldPath, fieldClass);
+    }
+
+    public static <T> ListJsonField<T> createCustomListJsonField(final Class<T> fieldClass, final List<String> fieldPath) {
+        return new ListJsonField<>(fieldPath, fieldClass);
+    }
+
+    public static <T> SingleJsonField<T> createCustomSingleJsonField(final Class<T> fieldClass, final String... fieldPath) {
+        return new SingleJsonField<>(Arrays.asList(fieldPath), fieldClass);
+    }
+
+    public static <T> ListJsonField<T> createCustomListJsonField(final Class<T> fieldClass, final String... fieldPath) {
+        return new ListJsonField<>(Arrays.asList(fieldPath), fieldClass);
     }
 
 }

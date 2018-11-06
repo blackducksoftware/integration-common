@@ -39,21 +39,37 @@ public class JsonFieldResolver {
         this.gson = gson;
     }
 
-    public <T> JsonFieldResult<T> resolveValues(final String json, final JsonField<T> jsonField) {
+    public <T> SingleJsonFieldResult<T> resolve(final String json, final SingleJsonField<T> jsonField) {
         final JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
-        return resolveValues(jsonObject, jsonField);
+        return resolve(jsonObject, jsonField);
     }
 
-    public <T> JsonFieldResult<T> resolveValues(final JsonObject jsonObject, final JsonField<T> jsonField) {
+    public <T> ListJsonFieldResult<T> resolve(final String json, final ListJsonField<T> jsonField) {
+        final JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+        return resolve(jsonObject, jsonField);
+    }
+
+    public <T> SingleJsonFieldResult<T> resolve(final JsonObject jsonObject, final SingleJsonField<T> jsonField) {
         final List<JsonElement> foundElements = getElements(jsonObject, jsonField.getFieldPath());
 
-        final List<T> convertedObjects = new ArrayList<>();
-        for (final JsonElement element : foundElements) {
-            final T convertedElement = gson.fromJson(element, jsonField.getGsonType());
-            convertedObjects.add(convertedElement);
+        if (!foundElements.isEmpty()) {
+            final T value = gson.fromJson(foundElements.get(0), jsonField.getFieldClass());
+            return new SingleJsonFieldResult<>(jsonObject, foundElements, value);
+        } else {
+            return new SingleJsonFieldResult<>(jsonObject, foundElements);
+        }
+    }
+
+    public <T> ListJsonFieldResult<T> resolve(final JsonObject jsonObject, final ListJsonField<T> jsonField) {
+        final List<JsonElement> foundElements = getElements(jsonObject, jsonField.getFieldPath());
+
+        final List<T> values = new ArrayList<>();
+        for (final JsonElement foundElement : foundElements) {
+            final T value = gson.fromJson(foundElement, jsonField.getFieldClass());
+            values.add(value);
         }
 
-        return new JsonFieldResult<>(jsonObject, foundElements, convertedObjects);
+        return new ListJsonFieldResult<>(jsonObject, foundElements, values);
     }
 
     private List<JsonElement> getElements(final JsonElement element, final List<String> fieldPath) {
