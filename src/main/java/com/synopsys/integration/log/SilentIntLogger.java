@@ -21,27 +21,56 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.jsonfield;
+package com.synopsys.integration.log;
 
-import java.util.List;
-
-import com.synopsys.integration.util.Stringable;
-
-public abstract class JsonField<T> extends Stringable {
-    private final List<String> fieldPath;
-    private final Class<T> fieldClass;
-
-    public JsonField(final List<String> fieldPath, final Class<T> fieldClass) {
-        this.fieldPath = fieldPath;
-        this.fieldClass = fieldClass;
+public class SilentIntLogger extends IntLogger {
+    @Override
+    public void alwaysLog(final String arg0) {
     }
 
-    public List<String> getFieldPath() {
-        return fieldPath;
+    @Override
+    public void debug(final String arg0, final Throwable arg1) {
     }
 
-    public Class<T> getFieldClass() {
-        return fieldClass;
+    @Override
+    public void debug(final String arg0) {
+    }
+
+    @Override
+    public void error(final String arg0, final Throwable arg1) {
+    }
+
+    @Override
+    public void error(final String arg0) {
+    }
+
+    @Override
+    public void error(final Throwable arg0) {
+    }
+
+    @Override
+    public LogLevel getLogLevel() {
+        return LogLevel.OFF;
+    }
+
+    @Override
+    public void info(final String arg0) {
+    }
+
+    @Override
+    public void setLogLevel(final LogLevel arg0) {
+    }
+
+    @Override
+    public void trace(final String arg0, final Throwable arg1) {
+    }
+
+    @Override
+    public void trace(final String arg0) {
+    }
+
+    @Override
+    public void warn(final String arg0) {
     }
 
 }

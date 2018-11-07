@@ -33,20 +33,20 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class IntBufferedLogger extends IntLogger {
+public class BufferedIntLogger extends IntLogger {
     private final Map<LogLevel, List<String>> outputMap = new HashMap<>();
 
-    public IntBufferedLogger() {
-        outputMap.put(LogLevel.OFF, new ArrayList<String>());
-        outputMap.put(LogLevel.ERROR, new ArrayList<String>());
-        outputMap.put(LogLevel.WARN, new ArrayList<String>());
-        outputMap.put(LogLevel.INFO, new ArrayList<String>());
-        outputMap.put(LogLevel.DEBUG, new ArrayList<String>());
-        outputMap.put(LogLevel.TRACE, new ArrayList<String>());
+    public BufferedIntLogger() {
+        outputMap.put(LogLevel.OFF, new ArrayList<>());
+        outputMap.put(LogLevel.ERROR, new ArrayList<>());
+        outputMap.put(LogLevel.WARN, new ArrayList<>());
+        outputMap.put(LogLevel.INFO, new ArrayList<>());
+        outputMap.put(LogLevel.DEBUG, new ArrayList<>());
+        outputMap.put(LogLevel.TRACE, new ArrayList<>());
     }
 
     public void resetLogs(final LogLevel level) {
-        outputMap.put(level, new ArrayList<String>());
+        outputMap.put(level, new ArrayList<>());
     }
 
     public void resetAllLogs() {
