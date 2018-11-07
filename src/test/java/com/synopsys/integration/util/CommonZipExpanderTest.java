@@ -1,6 +1,7 @@
 package com.synopsys.integration.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.InputStream;
@@ -11,7 +12,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.log.IntLogger;
-import com.synopsys.integration.log.SilentLogger;
+import com.synopsys.integration.log.SilentIntLogger;
 
 public class CommonZipExpanderTest {
     @Test
@@ -20,7 +21,7 @@ public class CommonZipExpanderTest {
         final File tempDirectory = tempDirectoryPath.toFile();
         assertEquals(0, tempDirectory.listFiles().length);
 
-        final IntLogger logger = new SilentLogger();
+        final IntLogger logger = new SilentIntLogger();
         final CommonZipExpander commonZipExpander = new CommonZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
             commonZipExpander.expand(zipFileStream, tempDirectory);
