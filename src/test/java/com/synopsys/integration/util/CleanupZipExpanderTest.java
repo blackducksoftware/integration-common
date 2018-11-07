@@ -1,5 +1,7 @@
 package com.synopsys.integration.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,24 +9,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.log.IntLogger;
-import com.synopsys.integration.log.SilentLogger;
+import com.synopsys.integration.log.SilentIntLogger;
 
 public class CleanupZipExpanderTest {
     @Test
     public void testOtherDirectoriesAreDeleted() throws Exception {
         final File tempDirectory = setupFiles();
 
-        final IntLogger logger = new SilentLogger();
+        final IntLogger logger = new SilentIntLogger();
         final CommonZipExpander zipExpander = new CleanupZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
             zipExpander.expand(zipFileStream, tempDirectory);
         }
 
-        Assert.assertEquals(2, tempDirectory.listFiles().length);
+        assertEquals(2, tempDirectory.listFiles().length);
 
         FileUtils.deleteDirectory(tempDirectory);
     }
@@ -33,13 +34,13 @@ public class CleanupZipExpanderTest {
     public void testEverythingDeleted() throws Exception {
         final File tempDirectory = setupFiles();
 
-        final IntLogger logger = new SilentLogger();
+        final IntLogger logger = new SilentIntLogger();
         final CommonZipExpander zipExpander = new CleanupZipExpander(logger, true);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
             zipExpander.expand(zipFileStream, tempDirectory);
         }
 
-        Assert.assertEquals(1, tempDirectory.listFiles().length);
+        assertEquals(1, tempDirectory.listFiles().length);
 
         FileUtils.deleteDirectory(tempDirectory);
     }
@@ -47,7 +48,7 @@ public class CleanupZipExpanderTest {
     private File setupFiles() throws IOException {
         final Path tempDirectoryPath = Files.createTempDirectory("unziptesting");
         final File tempDirectory = tempDirectoryPath.toFile();
-        Assert.assertEquals(0, tempDirectory.listFiles().length);
+        assertEquals(0, tempDirectory.listFiles().length);
 
         final File extraDirectory = new File(tempDirectory, "extra");
         final File extraChild = new File(extraDirectory, "child");
@@ -57,7 +58,7 @@ public class CleanupZipExpanderTest {
         extraChild.mkdirs();
         anotherExtraDirectory.mkdirs();
         aFile.createNewFile();
-        Assert.assertEquals(3, tempDirectory.listFiles().length);
+        assertEquals(3, tempDirectory.listFiles().length);
 
         return tempDirectory;
     }

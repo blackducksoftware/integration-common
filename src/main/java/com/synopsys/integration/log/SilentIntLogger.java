@@ -21,42 +21,56 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.jsonfield;
+package com.synopsys.integration.log;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-public class JsonFieldResult<T> {
-    private final JsonObject jsonObject;
-    private final List<JsonElement> foundElements;
-    private final List<T> values;
-
-    public JsonFieldResult(final JsonObject jsonObject, final List<JsonElement> foundElements, final List<T> values) {
-        this.jsonObject = jsonObject;
-        this.foundElements = foundElements;
-        this.values = values;
+public class SilentIntLogger extends IntLogger {
+    @Override
+    public void alwaysLog(final String arg0) {
     }
 
-    public JsonObject getJsonObject() {
-        return jsonObject;
+    @Override
+    public void debug(final String arg0, final Throwable arg1) {
     }
 
-    public List<JsonElement> getFoundElements() {
-        return foundElements;
+    @Override
+    public void debug(final String arg0) {
     }
 
-    public List<T> getValues() {
-        return values;
+    @Override
+    public void error(final String arg0, final Throwable arg1) {
     }
 
-    public Optional<T> getFirstValue() {
-        if (!values.isEmpty() && values.get(0) != null) {
-            return Optional.of(values.get(0));
-        }
-        return Optional.empty();
+    @Override
+    public void error(final String arg0) {
+    }
+
+    @Override
+    public void error(final Throwable arg0) {
+    }
+
+    @Override
+    public LogLevel getLogLevel() {
+        return LogLevel.OFF;
+    }
+
+    @Override
+    public void info(final String arg0) {
+    }
+
+    @Override
+    public void setLogLevel(final LogLevel arg0) {
+    }
+
+    @Override
+    public void trace(final String arg0, final Throwable arg1) {
+    }
+
+    @Override
+    public void trace(final String arg0) {
+    }
+
+    @Override
+    public void warn(final String arg0) {
     }
 
 }

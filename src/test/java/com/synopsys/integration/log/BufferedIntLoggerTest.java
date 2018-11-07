@@ -1,17 +1,17 @@
 package com.synopsys.integration.log;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class IntBufferedLoggerTest {
+public class BufferedIntLoggerTest {
     @Test
     public void testLogger() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        final IntBufferedLogger logger = new IntBufferedLogger();
+        final BufferedIntLogger logger = new BufferedIntLogger();
         assertNull(logger.getLogLevel());
 
         assertLogLevel(logger, "debug", LogLevel.DEBUG, new Throwable("debug throwable"));
@@ -34,7 +34,7 @@ public class IntBufferedLoggerTest {
         logger.setLogLevel(LogLevel.OFF);
     }
 
-    private void assertLogLevel(final IntBufferedLogger logger, final String testString, final LogLevel testLevel, final Throwable throwable)
+    private void assertLogLevel(final BufferedIntLogger logger, final String testString, final LogLevel testLevel, final Throwable throwable)
             throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         assertLogLevelsEmpty(logger);
 
@@ -55,12 +55,12 @@ public class IntBufferedLoggerTest {
         logger.resetAllLogs();
     }
 
-    private void assertLogLevelsEmpty(final IntBufferedLogger logger) {
+    private void assertLogLevelsEmpty(final BufferedIntLogger logger) {
         final EnumSet<LogLevel> allLogLevels = EnumSet.allOf(LogLevel.class);
         allLogLevels.forEach(level -> assertNull(logger.getOutputString(level)));
     }
 
-    private void assertLogLevelsEmptyExcept(final IntBufferedLogger logger, final LogLevel exceptLogLevel) {
+    private void assertLogLevelsEmptyExcept(final BufferedIntLogger logger, final LogLevel exceptLogLevel) {
         final EnumSet<LogLevel> allLogLevelsExcept = EnumSet.allOf(LogLevel.class);
         allLogLevelsExcept.remove(exceptLogLevel);
         allLogLevelsExcept.forEach(level -> assertNull(logger.getOutputString(level)));

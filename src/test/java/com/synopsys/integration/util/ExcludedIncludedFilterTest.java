@@ -21,43 +21,44 @@
  *******************************************************************************/
 package com.synopsys.integration.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 public class ExcludedIncludedFilterTest {
     @Test
     public void testConstructor() {
         ExcludedIncludedFilter excludedIncludedFilter = new ExcludedIncludedFilter("", "");
-        Assert.assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
+        assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
 
         excludedIncludedFilter = new ExcludedIncludedFilter(null, null);
-        Assert.assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
+        assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
     }
 
     @Test
     public void testExcluded() {
         ExcludedIncludedFilter excludedIncludedFilter = new ExcludedIncludedFilter("bad", "");
-        Assert.assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
-        Assert.assertFalse(excludedIncludedFilter.shouldInclude("bad"));
+        assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
+        assertFalse(excludedIncludedFilter.shouldInclude("bad"));
 
         excludedIncludedFilter = new ExcludedIncludedFilter("really_bad,also_really_bad", null);
-        Assert.assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
-        Assert.assertFalse(excludedIncludedFilter.shouldInclude("really_bad"));
-        Assert.assertFalse(excludedIncludedFilter.shouldInclude("also_really_bad"));
+        assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
+        assertFalse(excludedIncludedFilter.shouldInclude("really_bad"));
+        assertFalse(excludedIncludedFilter.shouldInclude("also_really_bad"));
     }
 
     @Test
     public void testIncludedAndExcluded() {
         ExcludedIncludedFilter excludedIncludedFilter = new ExcludedIncludedFilter("bad", "good,bad");
-        Assert.assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
-        Assert.assertTrue(excludedIncludedFilter.shouldInclude("good"));
-        Assert.assertFalse(excludedIncludedFilter.shouldInclude("bad"));
+        assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
+        assertTrue(excludedIncludedFilter.shouldInclude("good"));
+        assertFalse(excludedIncludedFilter.shouldInclude("bad"));
 
         excludedIncludedFilter = new ExcludedIncludedFilter("really_bad,also_really_bad", "good");
-        Assert.assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
-        Assert.assertTrue(excludedIncludedFilter.shouldInclude("good"));
-        Assert.assertFalse(excludedIncludedFilter.shouldInclude("really_bad"));
-        Assert.assertFalse(excludedIncludedFilter.shouldInclude("also_really_bad"));
+        assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
+        assertTrue(excludedIncludedFilter.shouldInclude("good"));
+        assertFalse(excludedIncludedFilter.shouldInclude("really_bad"));
+        assertFalse(excludedIncludedFilter.shouldInclude("also_really_bad"));
     }
 
 }

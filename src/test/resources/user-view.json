@@ -1,0 +1,56 @@
+{
+  "userName": "ekerwin",
+  "firstName": "Eric",
+  "lastName": "Kerwin",
+  "email": "ekerwin@synopsys.com",
+  "type": "INTERNAL",
+  "active": true,
+  "_meta": {
+    "allow": [
+      "GET"
+    ],
+    "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214",
+    "links": [
+      {
+        "rel": "change-password",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/changepassword"
+      },
+      {
+        "rel": "reset-password",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/resetpassword"
+      },
+      {
+        "rel": "roles",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/roles"
+      },
+      {
+        "rel": "usergroups",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/usergroups"
+      },
+      {
+        "rel": "inherited-roles",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/inherited-roles"
+      },
+      {
+        "rel": "notifications",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/notifications"
+      },
+      {
+        "rel": "notification-counts",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/notification-counts"
+      },
+      {
+        "rel": "notification-states",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/notification-states"
+      },
+      {
+        "rel": "notification-subscriptions",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/notification-subscriptions"
+      },
+      {
+        "rel": "projects",
+        "href": "https:\/\/int-hub02.dc1.lan\/api\/users\/241d0608-1f1e-472a-bbb7-d0b244747214\/projects"
+      }
+    ]
+  }
+}
