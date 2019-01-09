@@ -23,13 +23,23 @@
  */
 package com.synopsys.integration.util;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.text.WordUtils;
 
 public class EnumUtils {
-    public static String prettyPrint(final Enum<?> enumValue) {
-        final String name = enumValue.name();
-        final String prettyName = WordUtils.capitalizeFully(name.replace("_", " "));
+    public static String prettyPrint(Enum<?> enumValue) {
+        String name = enumValue.name();
+        String prettyName = WordUtils.capitalizeFully(name.replace("_", " "));
         return prettyName;
+    }
+
+    public static <T extends Enum<T>> List<T> parseCommaDelimitted(String commaDelimittedEnumString, Class<T> enumClass) {
+        return Arrays.stream(commaDelimittedEnumString.split(","))
+                       .map(token -> Enum.valueOf(enumClass, token.trim()))
+                       .collect(Collectors.toList());
     }
 
 }
