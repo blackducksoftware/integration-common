@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
 public class EnumUtils {
@@ -38,7 +39,9 @@ public class EnumUtils {
 
     public static <T extends Enum<T>> List<T> parseCommaDelimitted(String commaDelimittedEnumString, Class<T> enumClass) {
         return Arrays.stream(commaDelimittedEnumString.split(","))
-                       .map(token -> Enum.valueOf(enumClass, token.trim()))
+                       .map(String::trim)
+                       .filter(StringUtils::isNotBlank)
+                       .map(token -> Enum.valueOf(enumClass, token))
                        .collect(Collectors.toList());
     }
 

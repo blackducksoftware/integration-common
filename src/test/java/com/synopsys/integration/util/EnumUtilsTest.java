@@ -1,6 +1,6 @@
 package com.synopsys.integration.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -21,6 +21,31 @@ public class EnumUtilsTest {
         assertEquals(2, enumValues.size());
         assertEquals(TestEnum.VALUE_ONE, enumValues.get(0));
         assertEquals(TestEnum.value_three, enumValues.get(1));
+    }
+
+    @Test
+    public void testParsingEmptyString() {
+        String testing = "";
+        List<TestEnum> enumValues = EnumUtils.parseCommaDelimitted(testing, TestEnum.class);
+        assertTrue(enumValues.isEmpty());
+    }
+
+    @Test
+    public void testParsingBadValues() {
+        String testing = "notAValidValue,anotherBadValue";
+        try {
+            List<TestEnum> enumValues = EnumUtils.parseCommaDelimitted(testing, TestEnum.class);
+            fail();
+        } catch (Exception e) {
+            assertTrue(e instanceof IllegalArgumentException);
+        }
+    }
+
+    @Test
+    public void testParsingOnlyCommas() {
+        String testing = ",,,,";
+        List<TestEnum> enumValues = EnumUtils.parseCommaDelimitted(testing, TestEnum.class);
+        assertTrue(enumValues.isEmpty());
     }
 
     private enum TestEnum {
