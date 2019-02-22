@@ -38,7 +38,17 @@ public class EnumUtils {
     }
 
     public static <T extends Enum<T>> List<T> parseCommaDelimitted(String commaDelimittedEnumString, Class<T> enumClass) {
-        return Arrays.stream(commaDelimittedEnumString.split(","))
+        return Arrays
+                       .stream(commaDelimittedEnumString.split(","))
+                       .map(String::trim)
+                       .filter(StringUtils::isNotBlank)
+                       .map(token -> Enum.valueOf(enumClass, token))
+                       .collect(Collectors.toList());
+    }
+
+    public static <T extends Enum<T>> List<T> convert(List<String> values, Class<T> enumClass) {
+        return values
+                       .stream()
                        .map(String::trim)
                        .filter(StringUtils::isNotBlank)
                        .map(token -> Enum.valueOf(enumClass, token))

@@ -23,7 +23,16 @@
  */
 package com.synopsys.integration.util;
 
-public abstract class IntegrationBuilder<T extends Buildable> {
+import java.util.HashMap;
+import java.util.Map;
+
+public abstract class IntegrationBuilder<T extends Buildable, E extends Enum<E>> {
+    public static String convertToPropertyKey(String environmentVariableKey) {
+        return environmentVariableKey.toLowerCase().replace("_", ".");
+    }
+
+    protected Map<E, String> values = new HashMap<>();
+
     public T build() throws IllegalArgumentException {
         assertValid();
 
@@ -39,7 +48,7 @@ public abstract class IntegrationBuilder<T extends Buildable> {
     protected abstract void validate(BuilderStatus builderStatus);
 
     public final void assertValid() throws IllegalArgumentException {
-        final BuilderStatus builderStatus = validateAndGetBuilderStatus();
+        BuilderStatus builderStatus = validateAndGetBuilderStatus();
 
         if (!builderStatus.isValid()) {
             throw new IllegalArgumentException(builderStatus.getFullErrorMessage());
@@ -47,16 +56,24 @@ public abstract class IntegrationBuilder<T extends Buildable> {
     }
 
     public final boolean isValid() {
-        final BuilderStatus builderStatus = validateAndGetBuilderStatus();
+        BuilderStatus builderStatus = validateAndGetBuilderStatus();
         return builderStatus.isValid();
     }
 
     public final BuilderStatus validateAndGetBuilderStatus() {
-        final BuilderStatus builderStatus = new BuilderStatus();
+        BuilderStatus builderStatus = new BuilderStatus();
 
         validate(builderStatus);
 
         return builderStatus;
+    }
+
+    public String get(E key) {
+        return values.get(key);
+    }
+
+    public void put(E key, String value) {
+        values.put(key, value);
     }
 
 }
