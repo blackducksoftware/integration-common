@@ -23,12 +23,8 @@
  */
 package com.synopsys.integration.util;
 
-import java.util.function.BiConsumer;
-
 /**
  * A marker interface for any class that should be constructed by an IntegrationBuilder.
  */
 public interface Buildable {
-    public void setProperties(BiConsumer<String, String> biConsumer);
-
 }

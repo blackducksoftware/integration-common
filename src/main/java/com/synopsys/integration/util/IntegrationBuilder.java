@@ -25,6 +25,7 @@ package com.synopsys.integration.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public abstract class IntegrationBuilder<T extends Buildable, E extends Enum<E>> {
     public static String convertToPropertyKey(String environmentVariableKey) {
@@ -67,6 +68,8 @@ public abstract class IntegrationBuilder<T extends Buildable, E extends Enum<E>>
 
         return builderStatus;
     }
+
+    public abstract void setProperties(BiConsumer<String, String> biConsumer);
 
     public String get(E key) {
         return values.get(key);
