@@ -1,0 +1,87 @@
+/**
+ * integration-common
+ *
+ * Copyright (C) 2019 Black Duck Software, Inc.
+ * http://www.blackducksoftware.com/
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package com.synopsys.integration.builder;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
+public class BuilderProperties {
+    private final String prefix;
+    private final Map<BuilderPropertyKey, String> values = new HashMap<>();
+
+    /**
+     * @throws IllegalArgumentException if the prefix or keys contain characters other than uppercase letters or underscores.
+     */
+    public static BuilderProperties createWithPrefixAndStrings(String prefix, Set<String> keys) {
+        Set<BuilderPropertyKey> builderPropertyKeys = keys.stream().map(BuilderPropertyKey::new).collect(Collectors.toSet());
+        return new BuilderProperties(prefix, builderPropertyKeys);
+    }
+
+    /**
+     * @throws IllegalArgumentException if the keys contain characters other than uppercase letters or underscores.
+     */
+    public static BuilderProperties createWithStrings(Set<String> keys) {
+        Set<BuilderPropertyKey> builderPropertyKeys = keys.stream().map(BuilderPropertyKey::new).collect(Collectors.toSet());
+        return new BuilderProperties(builderPropertyKeys);
+    }
+
+    /**
+     * @throws IllegalArgumentException if the prefix contains characters other than uppercase letters or underscores.
+     */
+    public BuilderProperties(String prefix, Set<BuilderPropertyKey> keys) {
+        if (StringUtils.isNotBlank(prefix) && !BuilderPropertyKey.isValidKey(prefix)) {
+            throw new IllegalArgumentException(BuilderPropertyKey.INVALID_KEY_ERROR_MESSAGE);
+        }
+
+        this.prefix = StringUtils.isNotBlank(prefix) && !prefix.endsWith("_") ? prefix + "_" : prefix;
+
+        keys.forEach(key -> values.put(key, null));
+    }
+
+    public BuilderProperties(Set<BuilderPropertyKey> keys) {
+        this("", keys);
+    }
+
+    public String get(BuilderPropertyKey key) {
+        return values.get(key);
+    }
+
+    public void set(BuilderPropertyKey key, String value) {
+        values.put(key, value);
+    }
+
+    public Set<String> getPropertyKeys() {
+        return values.keySet().stream().map(key -> prefix + key.getKey()).map(key -> key.toLowerCase().replace("_", ".")).collect(Collectors.toSet());
+    }
+
+    public Set<String> getEnvironmentVariableKeys() {
+        return values.keySet().stream().map(key -> prefix + key.getKey()).collect(Collectors.toSet());
+    }
+
+}

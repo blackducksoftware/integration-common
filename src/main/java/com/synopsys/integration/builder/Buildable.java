@@ -21,7 +21,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util;
+package com.synopsys.integration.builder;
 
 /**
  * A marker interface for any class that should be constructed by an IntegrationBuilder.

@@ -21,38 +21,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.synopsys.integration.builder;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class BuilderStatus {
-    private final List<String> errorMessages = new ArrayList<>();
+import com.synopsys.integration.util.Stringable;
 
-    public boolean isValid() {
-        return errorMessages.isEmpty();
+public class BuilderPropertyKey extends Stringable {
+    public static final String INVALID_KEY_ERROR_MESSAGE = "Keys must contain only uppercase letters and underscores.";
+
+    public static boolean isValidKey(String key) {
+        return !StringUtils.isBlank(key) && key.replaceAll("[A-Z]|_", "").isEmpty();
     }
 
-    public void addErrorMessage(final String errorMessage) {
-        errorMessages.add(errorMessage);
+    private final String key;
+
+    /**
+     * @throws IllegalArgumentException if the key contains characters other than uppercase letters or underscores.
+     */
+    public BuilderPropertyKey(String key) {
+        if (!isValidKey(key)) {
+            throw new IllegalArgumentException(INVALID_KEY_ERROR_MESSAGE);
+        }
+        this.key = key;
     }
 
-    public void addAllErrorMessages(final List<String> errorMessages) {
-        this.errorMessages.addAll(errorMessages);
-    }
-
-    public List<String> getErrorMessages() {
-        return errorMessages;
-    }
-
-    public String getFullErrorMessage() {
-        return getFullErrorMessage(" ");
-    }
-
-    public String getFullErrorMessage(final String errorMessageSeparator) {
-        return StringUtils.join(errorMessages, errorMessageSeparator);
+    public String getKey() {
+        return key;
     }
 
 }

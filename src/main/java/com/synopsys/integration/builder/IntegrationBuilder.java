@@ -21,18 +21,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.synopsys.integration.util;
+package com.synopsys.integration.builder;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.Set;
 
-public abstract class IntegrationBuilder<T extends Buildable, E extends Enum<E>> {
-    public static String convertToPropertyKey(String environmentVariableKey) {
-        return environmentVariableKey.toLowerCase().replace("_", ".");
+public abstract class IntegrationBuilder<T extends Buildable> {
+    protected BuilderProperties builderProperties;
+
+    public IntegrationBuilder(BuilderProperties builderProperties) {
+        this.builderProperties = builderProperties;
     }
-
-    protected Map<E, String> values = new HashMap<>();
 
     public T build() throws IllegalArgumentException {
         assertValid();
@@ -69,14 +67,20 @@ public abstract class IntegrationBuilder<T extends Buildable, E extends Enum<E>>
         return builderStatus;
     }
 
-    public abstract void setProperties(BiConsumer<String, String> biConsumer);
-
-    public String get(E key) {
-        return values.get(key);
+    public String get(final BuilderPropertyKey key) {
+        return builderProperties.get(key);
     }
 
-    public void put(E key, String value) {
-        values.put(key, value);
+    public void set(final BuilderPropertyKey key, final String value) {
+        builderProperties.set(key, value);
+    }
+
+    public Set<String> getPropertyKeys() {
+        return builderProperties.getPropertyKeys();
+    }
+
+    public Set<String> getEnvironmentVariableKeys() {
+        return builderProperties.getEnvironmentVariableKeys();
     }
 
 }
