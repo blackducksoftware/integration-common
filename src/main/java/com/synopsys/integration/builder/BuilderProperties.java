@@ -86,7 +86,7 @@ public class BuilderProperties {
         return values.keySet().stream().map(key -> prefix + key.getKey()).collect(Collectors.toSet());
     }
 
-    public void setProperties(Set<Map.Entry<String, String>> propertyEntries) {
+    public void setProperties(Set<? extends Map.Entry<String, String>> propertyEntries) {
         propertyEntries
                 .stream()
                 .map(entry -> {
@@ -99,7 +99,7 @@ public class BuilderProperties {
     private BuilderPropertyKey calculateKeyFromString(String key) {
         String cleanedKey = key;
         if (StringUtils.isNotBlank(prefix) && key.startsWith(prefix)) {
-            cleanedKey = cleanedKey.substring(prefix.length() + 1, cleanedKey.length());
+            cleanedKey = cleanedKey.substring(prefix.length(), cleanedKey.length());
         }
         cleanedKey = cleanedKey.toUpperCase().replace(".", "_");
 
