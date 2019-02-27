@@ -23,10 +23,12 @@
  */
 package com.synopsys.integration.builder;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -82,6 +84,26 @@ public class BuilderProperties {
 
     public Set<String> getEnvironmentVariableKeys() {
         return values.keySet().stream().map(key -> prefix + key.getKey()).collect(Collectors.toSet());
+    }
+
+    public void setProperties(Set<Map.Entry<String, String>> propertyEntries) {
+        propertyEntries
+                .stream()
+                .map(entry -> {
+                    BuilderPropertyKey builderPropertyKey = calculateKeyFromString(entry.getKey());
+                    return new AbstractMap.SimpleEntry<>(builderPropertyKey, entry.getValue());
+                })
+                .forEach(entry -> set(entry.getKey(), entry.getValue()));
+    }
+
+    private BuilderPropertyKey calculateKeyFromString(String key) {
+        String cleanedKey = key;
+        if (StringUtils.isNotBlank(prefix) && key.startsWith(prefix)) {
+            cleanedKey = cleanedKey.substring(prefix.length() + 1, cleanedKey.length());
+        }
+        cleanedKey = cleanedKey.toUpperCase().replace(".", "_");
+
+        return new BuilderPropertyKey(cleanedKey);
     }
 
 }

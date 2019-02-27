@@ -23,15 +23,7 @@
  */
 package com.synopsys.integration.builder;
 
-import java.util.Set;
-
 public abstract class IntegrationBuilder<T extends Buildable> {
-    protected BuilderProperties builderProperties;
-
-    public IntegrationBuilder(BuilderProperties builderProperties) {
-        this.builderProperties = builderProperties;
-    }
-
     public T build() throws IllegalArgumentException {
         assertValid();
 
@@ -65,22 +57,6 @@ public abstract class IntegrationBuilder<T extends Buildable> {
         validate(builderStatus);
 
         return builderStatus;
-    }
-
-    public String get(final BuilderPropertyKey key) {
-        return builderProperties.get(key);
-    }
-
-    public void set(final BuilderPropertyKey key, final String value) {
-        builderProperties.set(key, value);
-    }
-
-    public Set<String> getPropertyKeys() {
-        return builderProperties.getPropertyKeys();
-    }
-
-    public Set<String> getEnvironmentVariableKeys() {
-        return builderProperties.getEnvironmentVariableKeys();
     }
 
 }
