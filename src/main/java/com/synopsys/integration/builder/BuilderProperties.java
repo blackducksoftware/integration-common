@@ -97,11 +97,10 @@ public class BuilderProperties {
     }
 
     private BuilderPropertyKey calculateKeyFromString(String key) {
-        String cleanedKey = key;
-        if (StringUtils.isNotBlank(prefix) && key.startsWith(prefix)) {
+        String cleanedKey = key.toUpperCase().replace(".", "_");
+        if (StringUtils.isNotBlank(prefix) && cleanedKey.startsWith(prefix)) {
             cleanedKey = cleanedKey.substring(prefix.length(), cleanedKey.length());
         }
-        cleanedKey = cleanedKey.toUpperCase().replace(".", "_");
 
         return new BuilderPropertyKey(cleanedKey);
     }
