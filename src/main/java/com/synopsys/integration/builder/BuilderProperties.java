@@ -86,6 +86,13 @@ public class BuilderProperties {
         return values.keySet().stream().map(key -> prefix + key.getKey()).collect(Collectors.toSet());
     }
 
+    public Map<BuilderPropertyKey, String> getProperties() {
+        Map<BuilderPropertyKey, String> copy = new HashMap<>();
+        copy.putAll(values);
+
+        return copy;
+    }
+
     public void setProperties(Set<? extends Map.Entry<String, String>> propertyEntries) {
         propertyEntries
                 .stream()
