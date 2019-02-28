@@ -78,6 +78,11 @@ public class BuilderProperties {
         values.put(key, value);
     }
 
+    public void setProperty(String key, String value) {
+        BuilderPropertyKey builderPropertyKey = calculateKeyFromString(key);
+        set(builderPropertyKey, value);
+    }
+
     public Set<BuilderPropertyKey> getKeys() {
         return values.keySet().stream().collect(Collectors.toSet());
     }
