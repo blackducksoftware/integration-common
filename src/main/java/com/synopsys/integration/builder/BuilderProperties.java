@@ -78,6 +78,10 @@ public class BuilderProperties {
         values.put(key, value);
     }
 
+    public Set<BuilderPropertyKey> getKeys() {
+        return values.keySet().stream().collect(Collectors.toSet());
+    }
+
     public Set<String> getPropertyKeys() {
         return values.keySet().stream().map(key -> prefix + key.getKey()).map(key -> key.toLowerCase().replace("_", ".")).collect(Collectors.toSet());
     }
@@ -87,10 +91,7 @@ public class BuilderProperties {
     }
 
     public Map<BuilderPropertyKey, String> getProperties() {
-        Map<BuilderPropertyKey, String> copy = new HashMap<>();
-        copy.putAll(values);
-
-        return copy;
+        return values.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
     }
 
     public void setProperties(Set<? extends Map.Entry<String, String>> propertyEntries) {
