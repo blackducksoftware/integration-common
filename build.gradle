@@ -11,7 +11,7 @@ buildscript {
 project.ext.moduleName = 'com.synopsys.integration.integration-common'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '16.0.0'
+version = '16.0.1-SNAPSHOT'
 description = 'The base library for all other integration libraries to encompass and export common dependencies and code.'
 
 apply plugin: 'com.blackducksoftware.integration.library'
