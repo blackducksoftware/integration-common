@@ -28,22 +28,14 @@ import org.apache.commons.lang3.StringUtils;
 import com.synopsys.integration.util.Stringable;
 
 public class BuilderPropertyKey extends Stringable {
-    public static final String INVALID_KEY_ERROR_MESSAGE = "Keys must contain only uppercase letters and underscores.";
-
-    public static boolean isValidKey(String key) {
-        return !StringUtils.isBlank(key) && key.replaceAll("[A-Z]|_", "").isEmpty();
+    public static final String createKey(String key) {
+        return StringUtils.trimToEmpty(key).toUpperCase().replace(".", "_");
     }
 
     private final String key;
 
-    /**
-     * @throws IllegalArgumentException if the key contains characters other than uppercase letters or underscores.
-     */
     public BuilderPropertyKey(String key) {
-        if (!isValidKey(key)) {
-            throw new IllegalArgumentException(INVALID_KEY_ERROR_MESSAGE);
-        }
-        this.key = key;
+        this.key = createKey(key);
     }
 
     public String getKey() {

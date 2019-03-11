@@ -37,31 +37,23 @@ public class BuilderProperties {
     private final String prefix;
     private final Map<BuilderPropertyKey, String> values = new HashMap<>();
 
-    /**
-     * @throws IllegalArgumentException if the prefix or keys contain characters other than uppercase letters or underscores.
-     */
     public static BuilderProperties createWithPrefixAndStrings(String prefix, Set<String> keys) {
         Set<BuilderPropertyKey> builderPropertyKeys = keys.stream().map(BuilderPropertyKey::new).collect(Collectors.toSet());
         return new BuilderProperties(prefix, builderPropertyKeys);
     }
 
-    /**
-     * @throws IllegalArgumentException if the keys contain characters other than uppercase letters or underscores.
-     */
     public static BuilderProperties createWithStrings(Set<String> keys) {
         Set<BuilderPropertyKey> builderPropertyKeys = keys.stream().map(BuilderPropertyKey::new).collect(Collectors.toSet());
         return new BuilderProperties(builderPropertyKeys);
     }
 
-    /**
-     * @throws IllegalArgumentException if the prefix contains characters other than uppercase letters or underscores.
-     */
     public BuilderProperties(String prefix, Set<BuilderPropertyKey> keys) {
-        if (StringUtils.isNotBlank(prefix) && !BuilderPropertyKey.isValidKey(prefix)) {
-            throw new IllegalArgumentException(BuilderPropertyKey.INVALID_KEY_ERROR_MESSAGE);
+        if (StringUtils.isNotBlank(prefix)) {
+            prefix = new BuilderPropertyKey(prefix).getKey();
+            this.prefix = prefix.endsWith("_") ? prefix : prefix + "_";
+        } else {
+            this.prefix = "";
         }
-
-        this.prefix = StringUtils.isNotBlank(prefix) && !prefix.endsWith("_") ? prefix + "_" : prefix;
 
         keys.forEach(key -> values.put(key, null));
     }
@@ -110,12 +102,11 @@ public class BuilderProperties {
     }
 
     private BuilderPropertyKey calculateKeyFromString(String key) {
-        String cleanedKey = key.toUpperCase().replace(".", "_");
-        if (StringUtils.isNotBlank(prefix) && cleanedKey.startsWith(prefix)) {
-            cleanedKey = cleanedKey.substring(prefix.length(), cleanedKey.length());
+        if (StringUtils.isNotBlank(prefix) && key.startsWith(prefix)) {
+            key = key.substring(prefix.length());
         }
 
-        return new BuilderPropertyKey(cleanedKey);
+        return new BuilderPropertyKey(key);
     }
 
 }
