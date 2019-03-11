@@ -29,7 +29,7 @@ import com.synopsys.integration.util.Stringable;
 
 public class BuilderPropertyKey extends Stringable {
     public static final String createKey(String key) {
-        return StringUtils.trimToEmpty(key).toUpperCase().replace(".", "_");
+        return StringUtils.trimToEmpty(key).toUpperCase().replaceAll("[^A-Za-z0-9]", "_");
     }
 
     private final String key;

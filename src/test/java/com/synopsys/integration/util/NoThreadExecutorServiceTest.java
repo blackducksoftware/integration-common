@@ -39,4 +39,5 @@ class NoThreadExecutorServiceTest {
         executorService.submit(counter::incrementAndGet);
         assertEquals(2, counter.get());
     }
+
 }
