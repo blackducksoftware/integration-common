@@ -34,32 +34,15 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 public class BuilderProperties {
-    private final String prefix;
     private final Map<BuilderPropertyKey, String> values = new HashMap<>();
-
-    public static BuilderProperties createWithPrefixAndStrings(String prefix, Set<String> keys) {
-        Set<BuilderPropertyKey> builderPropertyKeys = keys.stream().map(BuilderPropertyKey::new).collect(Collectors.toSet());
-        return new BuilderProperties(prefix, builderPropertyKeys);
-    }
 
     public static BuilderProperties createWithStrings(Set<String> keys) {
         Set<BuilderPropertyKey> builderPropertyKeys = keys.stream().map(BuilderPropertyKey::new).collect(Collectors.toSet());
         return new BuilderProperties(builderPropertyKeys);
     }
 
-    public BuilderProperties(String prefix, Set<BuilderPropertyKey> keys) {
-        if (StringUtils.isNotBlank(prefix)) {
-            prefix = new BuilderPropertyKey(prefix).getKey();
-            this.prefix = prefix.endsWith("_") ? prefix : prefix + "_";
-        } else {
-            this.prefix = "";
-        }
-
-        keys.forEach(key -> values.put(key, null));
-    }
-
     public BuilderProperties(Set<BuilderPropertyKey> keys) {
-        this("", keys);
+        keys.forEach(key -> values.put(key, null));
     }
 
     public String get(BuilderPropertyKey key) {
@@ -71,7 +54,7 @@ public class BuilderProperties {
     }
 
     public void setProperty(String key, String value) {
-        BuilderPropertyKey builderPropertyKey = calculateKeyFromString(key);
+        BuilderPropertyKey builderPropertyKey = new BuilderPropertyKey(key);
         set(builderPropertyKey, value);
     }
 
@@ -80,11 +63,11 @@ public class BuilderProperties {
     }
 
     public Set<String> getPropertyKeys() {
-        return values.keySet().stream().map(key -> prefix + key.getKey()).map(key -> key.toLowerCase().replace("_", ".")).collect(Collectors.toSet());
+        return values.keySet().stream().map(BuilderPropertyKey::getKey).map(key -> key.toLowerCase().replace("_", ".")).collect(Collectors.toSet());
     }
 
     public Set<String> getEnvironmentVariableKeys() {
-        return values.keySet().stream().map(key -> prefix + key.getKey()).collect(Collectors.toSet());
+        return values.keySet().stream().map(BuilderPropertyKey::getKey).collect(Collectors.toSet());
     }
 
     public Map<BuilderPropertyKey, String> getProperties() {
@@ -95,18 +78,10 @@ public class BuilderProperties {
         propertyEntries
                 .stream()
                 .map(entry -> {
-                    BuilderPropertyKey builderPropertyKey = calculateKeyFromString(entry.getKey());
+                    BuilderPropertyKey builderPropertyKey = new BuilderPropertyKey(entry.getKey());
                     return new AbstractMap.SimpleEntry<>(builderPropertyKey, entry.getValue());
                 })
                 .forEach(entry -> set(entry.getKey(), entry.getValue()));
-    }
-
-    private BuilderPropertyKey calculateKeyFromString(String key) {
-        if (StringUtils.isNotBlank(prefix) && key.startsWith(prefix)) {
-            key = key.substring(prefix.length());
-        }
-
-        return new BuilderPropertyKey(key);
     }
 
 }
