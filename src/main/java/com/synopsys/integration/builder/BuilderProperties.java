@@ -27,21 +27,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
 
 public class BuilderProperties {
     private final Map<BuilderPropertyKey, String> values = new HashMap<>();
 
+    public BuilderProperties(Set<BuilderPropertyKey> keys) {
+        keys.forEach(key -> values.put(key, null));
+    }
+
     public static BuilderProperties createWithStrings(Set<String> keys) {
         Set<BuilderPropertyKey> builderPropertyKeys = keys.stream().map(BuilderPropertyKey::new).collect(Collectors.toSet());
         return new BuilderProperties(builderPropertyKeys);
-    }
-
-    public BuilderProperties(Set<BuilderPropertyKey> keys) {
-        keys.forEach(key -> values.put(key, null));
     }
 
     public String get(BuilderPropertyKey key) {
@@ -58,7 +55,7 @@ public class BuilderProperties {
     }
 
     public Set<BuilderPropertyKey> getKeys() {
-        return values.keySet().stream().collect(Collectors.toSet());
+        return new HashSet<>(values.keySet());
     }
 
     public Set<String> getPropertyKeys() {
@@ -70,17 +67,17 @@ public class BuilderProperties {
     }
 
     public Map<BuilderPropertyKey, String> getProperties() {
-        return values.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+        return new HashMap<>(values);
     }
 
     public void setProperties(Set<? extends Map.Entry<String, String>> propertyEntries) {
         propertyEntries
-                .stream()
-                .map(entry -> {
-                    BuilderPropertyKey builderPropertyKey = new BuilderPropertyKey(entry.getKey());
-                    return new AbstractMap.SimpleEntry<>(builderPropertyKey, entry.getValue());
-                })
-                .forEach(entry -> set(entry.getKey(), entry.getValue()));
+            .stream()
+            .map(entry -> {
+                BuilderPropertyKey builderPropertyKey = new BuilderPropertyKey(entry.getKey());
+                return new AbstractMap.SimpleEntry<>(builderPropertyKey, entry.getValue());
+            })
+            .forEach(entry -> set(entry.getKey(), entry.getValue()));
     }
 
 }

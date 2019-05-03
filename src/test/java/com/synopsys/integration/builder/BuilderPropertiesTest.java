@@ -31,4 +31,12 @@ public class BuilderPropertiesTest {
         assertEquals(expectedPropertyKeys, properties.getPropertyKeys());
     }
 
+    @Test
+    public void testGetProperties() {
+        BuilderProperties properties = BuilderProperties.createWithStrings(new HashSet<>(Arrays.asList("ONE", "TWO", "THREE_FOUR")));
+
+        properties.getProperties()
+            .forEach((k, v) -> assertEquals(properties.get(k), v));
+    }
+
 }
