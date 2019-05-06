@@ -32,13 +32,13 @@ import java.util.stream.Collectors;
 public class BuilderProperties {
     private final Map<BuilderPropertyKey, String> values = new HashMap<>();
 
-    public BuilderProperties(Set<BuilderPropertyKey> keys) {
-        keys.forEach(key -> values.put(key, null));
-    }
-
     public static BuilderProperties createWithStrings(Set<String> keys) {
         Set<BuilderPropertyKey> builderPropertyKeys = keys.stream().map(BuilderPropertyKey::new).collect(Collectors.toSet());
         return new BuilderProperties(builderPropertyKeys);
+    }
+
+    public BuilderProperties(Set<BuilderPropertyKey> keys) {
+        keys.forEach(key -> values.put(key, null));
     }
 
     public String get(BuilderPropertyKey key) {
