@@ -28,12 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-public class ExecutableRunner {
+public class ProcessBuilderRunner {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public ExecutableOutput execute(ProcessBuilder processBuilder) throws ExecutableRunnerException {
@@ -43,8 +40,29 @@ public class ExecutableRunner {
 
     public ExecutableOutput execute(final Executable executable) throws ExecutableRunnerException {
         logger.info(String.format("Running executable >%s", getMaskedCommand(executable.getCommandWithArguments())));
-        final ProcessBuilder processBuilder = executable.createProcessBuilder();
+        final ProcessBuilder processBuilder = createProcessBuilder(executable);
         return executeProcessBuilder(processBuilder);
+    }
+
+    public ProcessBuilder createProcessBuilder(Executable executable) {
+        final ProcessBuilder processBuilder = new ProcessBuilder(executable.getCommandWithArguments());
+        processBuilder.directory(executable.getWorkingDirectory());
+        final Map<String, String> processBuilderEnvironment = processBuilder.environment();
+        for (final String key : executable.getEnvironmentVariables().keySet()) {
+            populateEnvironmentMap(processBuilderEnvironment, key, executable.getEnvironmentVariables().get(key));
+        }
+        return processBuilder;
+    }
+
+    private void populateEnvironmentMap(final Map<String, String> environment, final Object key, final Object value) {
+        // ProcessBuilder's environment's keys and values must be non-null java.lang.String's
+        if (key != null && value != null) {
+            final String keyString = key.toString();
+            final String valueString = value.toString();
+            if (keyString != null && valueString != null) {
+                environment.put(keyString, valueString);
+            }
+        }
     }
 
     public String getMaskedCommand(List<String> commandWithArguments) {
