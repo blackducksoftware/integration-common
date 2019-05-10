@@ -1,5 +1,5 @@
 /**
- * detectable
+ * integration-common
  *
  * Copyright (c) 2019 Synopsys, Inc.
  *
