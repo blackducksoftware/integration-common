@@ -5,9 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.synopsys.integration.log.LogLevel;
+import com.synopsys.integration.log.PrintStreamIntLogger;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +18,16 @@ import com.synopsys.integration.log.IntLogger;
 import com.synopsys.integration.log.SilentIntLogger;
 
 public class CommonZipExpanderTest {
+    @Test
+    public void testDownloading() throws Exception {
+        IntLogger logger = new PrintStreamIntLogger(System.out, LogLevel.DEBUG);
+        CommonZipExpander commonZipExpander = new CommonZipExpander(logger);
+        URL scannerUrl = new URL("https://int-hub02.dc1.lan/download/scan.cli-windows.zip");
+        try (InputStream zipStream = scannerUrl.openConnection().getInputStream()) {
+            commonZipExpander.expand(zipStream, new File("C:\\Users\\ekerwin\\Documents\\working\\test_download"));
+        }
+    }
+
     @Test
     public void testZipFileIsExtracted() throws Exception {
         final Path tempDirectoryPath = Files.createTempDirectory("unziptesting");

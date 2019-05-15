@@ -1,8 +1,8 @@
 /**
  * integration-common
- *
+ * <p>
  * Copyright (c) 2019 Synopsys, Inc.
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -10,9 +10,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,13 +22,13 @@
  */
 package com.synopsys.integration.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
 
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.examples.Expander;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -42,23 +42,19 @@ import com.synopsys.integration.log.IntLogger;
  */
 public class CommonZipExpander {
     protected final IntLogger logger;
+    private final Expander expander;
 
-    public CommonZipExpander(final IntLogger logger) {
+    public CommonZipExpander(IntLogger logger) {
+        this(logger, new Expander());
+    }
+
+    public CommonZipExpander(IntLogger logger, Expander expander) {
         this.logger = logger;
+        this.expander = expander;
     }
 
     public void expand(final File sourceArchiveFile, final File targetExpansionDirectory) throws IOException, ArchiveException, IntegrationException {
-        beforeExpansion(sourceArchiveFile, targetExpansionDirectory);
-
-        final Expander expander = new Expander();
-        try {
-            expander.expand(sourceArchiveFile, targetExpansionDirectory);
-        } catch (IOException | ArchiveException e) {
-            logger.error("Couldn't extract the zip file - check the file's permissions: " + e.getMessage());
-            throw e;
-        }
-
-        afterExpansion(sourceArchiveFile, targetExpansionDirectory);
+        expandUnknownFile(sourceArchiveFile, targetExpansionDirectory);
     }
 
     public void expand(final InputStream sourceArchiveStream, final File targetExpansionDirectory) throws IOException, ArchiveException, IntegrationException {
@@ -77,10 +73,36 @@ public class CommonZipExpander {
                 throw new IntegrationException("The zip file was not created correctly. Please try again.");
             }
 
-            expand(tempZipFile, targetExpansionDirectory);
+            expandUnknownFile(tempZipFile, targetExpansionDirectory);
         } finally {
             FileUtils.deleteQuietly(tempZipFile);
         }
+    }
+
+    private void expandUnknownFile(File unknownFile, File targetExpansionDirectory) throws IOException, IntegrationException, ArchiveException {
+        String format;
+        // we need to use an InputStream where inputStream.markSupported() == true
+        try (InputStream i = new BufferedInputStream(Files.newInputStream(unknownFile.toPath()))) {
+            format = new ArchiveStreamFactory().detect(i);
+        }
+
+        beforeExpansion(unknownFile, targetExpansionDirectory);
+
+        // in the case of zip files, commons-compress creates, but does not close, the ZipFile. To avoid this unclosed resource, we handle it ourselves.
+        try {
+            if (ArchiveStreamFactory.ZIP.equals(format)) {
+                try (ZipFile zipFile = new ZipFile(unknownFile)) {
+                    expander.expand(zipFile, targetExpansionDirectory);
+                }
+            } else {
+                expander.expand(unknownFile, targetExpansionDirectory);
+            }
+        } catch (IOException | ArchiveException e) {
+            logger.error("Couldn't extract the archive file - check the file's permissions: " + e.getMessage());
+            throw e;
+        }
+
+        afterExpansion(unknownFile, targetExpansionDirectory);
     }
 
     public void beforeExpansion(final File sourceArchiveFile, final File targetExpansionDirectory) throws IntegrationException {
