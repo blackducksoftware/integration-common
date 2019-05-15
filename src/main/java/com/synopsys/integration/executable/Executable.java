@@ -1,5 +1,5 @@
 /**
- * detectable
+ * integration-common
  *
  * Copyright (c) 2019 Synopsys, Inc.
  *
@@ -73,32 +73,20 @@ public class Executable {
         this.commandWithArguments.addAll(commandWithArguments);
     }
 
-    public ProcessBuilder createProcessBuilder() {
-        final ProcessBuilder processBuilder = new ProcessBuilder(commandWithArguments);
-        processBuilder.directory(workingDirectory);
-        final Map<String, String> processBuilderEnvironment = processBuilder.environment();
-        for (final String key : environmentVariables.keySet()) {
-            populateEnvironmentMap(processBuilderEnvironment, key, environmentVariables.get(key));
-        }
-        return processBuilder;
-    }
-
     public String getExecutableDescription() {
         return StringUtils.join(commandWithArguments, ' ');
+    }
+
+    public File getWorkingDirectory() {
+        return workingDirectory;
+    }
+
+    public Map<String, String> getEnvironmentVariables() {
+        return environmentVariables;
     }
 
     public List<String> getCommandWithArguments() {
         return commandWithArguments;
     }
 
-    private void populateEnvironmentMap(final Map<String, String> environment, final Object key, final Object value) {
-        // ProcessBuilder's environment's keys and values must be non-null java.lang.String's
-        if (key != null && value != null) {
-            final String keyString = key.toString();
-            final String valueString = value.toString();
-            if (keyString != null && valueString != null) {
-                environment.put(keyString, valueString);
-            }
-        }
-    }
 }
