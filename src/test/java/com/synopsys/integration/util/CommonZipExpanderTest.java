@@ -3,15 +3,22 @@ package com.synopsys.integration.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.synopsys.integration.log.LogLevel;
-import com.synopsys.integration.log.PrintStreamIntLogger;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveOutputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.log.IntLogger;
@@ -52,4 +59,38 @@ public class CommonZipExpanderTest {
         FileUtils.deleteDirectory(tempDirectory);
     }
 
+    @Test
+    public void testExpanderClosesZipFile() {
+        final ByteArrayOutputStream errOutputStream = new ByteArrayOutputStream();
+
+        try {
+            final File sourceArchiveFile = createSampleZip();
+            final File targetExpansionDirectory = File.createTempFile("dest.zip", null);
+
+            try (PrintStream ps = new PrintStream(errOutputStream, true, "UTF-8")) {
+                System.setErr(ps);
+
+                CommonZipExpander expander = new CommonZipExpander(new SilentIntLogger());
+                expander.expand(sourceArchiveFile, targetExpansionDirectory);
+
+                System.gc();
+                System.runFinalization();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        String stderr = new String(errOutputStream.toByteArray(), StandardCharsets.UTF_8);
+        assertTrue(StringUtils.isBlank(stderr), "Nothing should have been written to stderr, but this was: " + stderr);
+    }
+
+    private File createSampleZip() throws IOException, ArchiveException {
+        final File sourceArchiveFile = File.createTempFile("example.zip", null);
+        OutputStream archiveStream = new FileOutputStream(sourceArchiveFile);
+        ArchiveOutputStream archive = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP, archiveStream);
+
+        archive.finish();
+        archiveStream.close();
+
+        return sourceArchiveFile;
+    }
 }
