@@ -30,7 +30,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.*;
 
-public class ProcessBuilderRunner {
+public class ProcessBuilderRunner implements ExecutableRunner {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public ExecutableOutput execute(ProcessBuilder processBuilder) throws ExecutableRunnerException {
@@ -63,19 +63,6 @@ public class ProcessBuilderRunner {
                 environment.put(keyString, valueString);
             }
         }
-    }
-
-    public String getMaskedCommand(List<String> commandWithArguments) {
-        final List<String> pieces = new ArrayList<>();
-        for (final String argument : commandWithArguments) {
-            if (argument.matches(".*password.*=.*")) {
-                final String maskedArgument = argument.substring(0, argument.indexOf('=') + 1) + "********";
-                pieces.add(maskedArgument);
-            } else {
-                pieces.add(argument);
-            }
-        }
-        return StringUtils.join(pieces, ' ');
     }
 
     private ExecutableOutput executeProcessBuilder(ProcessBuilder processBuilder) throws ExecutableRunnerException {

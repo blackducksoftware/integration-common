@@ -73,7 +73,27 @@ public class Executable {
         this.commandWithArguments.addAll(commandWithArguments);
     }
 
+    public String getMaskedCommand(List<String> commandWithArguments) {
+        final List<String> pieces = new ArrayList<>();
+        for (final String argument : commandWithArguments) {
+            if (argument.matches(".*password.*=.*")) {
+                final String maskedArgument = argument.substring(0, argument.indexOf('=') + 1) + "********";
+                pieces.add(maskedArgument);
+            } else {
+                pieces.add(argument);
+            }
+        }
+        return StringUtils.join(pieces, ' ');
+    }
+
     public String getExecutableDescription() {
+        return getMaskedCommand(commandWithArguments);
+    }
+
+    /**
+     * As some executables can contain password arguments, this method is not recommended for production runtimes.
+     */
+    public String getUnmaskedInsecureExecutableDescription() {
         return StringUtils.join(commandWithArguments, ' ');
     }
 
