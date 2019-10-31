@@ -34,12 +34,12 @@ public class ProcessBuilderRunner implements ExecutableRunner {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public ExecutableOutput execute(ProcessBuilder processBuilder) throws ExecutableRunnerException {
-        logger.info(String.format("Running process builder >%s", getMaskedCommand(processBuilder.command())));
+        logger.info(String.format("Running process builder >%s", Executable.getMaskedCommand(processBuilder.command())));
         return executeProcessBuilder(processBuilder);
     }
 
     public ExecutableOutput execute(final Executable executable) throws ExecutableRunnerException {
-        logger.info(String.format("Running executable >%s", getMaskedCommand(executable.getCommandWithArguments())));
+        logger.info(String.format("Running executable >%s", executable.getExecutableDescription()));
         final ProcessBuilder processBuilder = createProcessBuilder(executable);
         return executeProcessBuilder(processBuilder);
     }

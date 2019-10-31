@@ -1,20 +1,20 @@
 package com.synopsys.integration.executable;
 
-import com.synopsys.integration.log.IntLogger;
+import java.util.function.Consumer;
 
 /**
- * This will log the commands to execute at info level without actually executing anything. Any parameter with 'password' will be masked. Empty output will be returned.
+ * This will provide the command to execute to the provided Consumer without actually executing anything. Any parameter with 'password' will be masked. Empty output will be returned.
  */
 public class DryRunExecutableRunner implements ExecutableRunner {
-    private IntLogger logger;
+    private Consumer<String> loggingMethod;
 
-    public DryRunExecutableRunner(IntLogger logger) {
-        this.logger = logger;
+    public DryRunExecutableRunner(Consumer<String> loggingMethod) {
+        this.loggingMethod = loggingMethod;
     }
 
     @Override
     public ExecutableOutput execute(Executable executable) {
-        logger.info(executable.getExecutableDescription());
+        loggingMethod.accept(executable.getExecutableDescription());
         return new ExecutableOutput("", "");
     }
 

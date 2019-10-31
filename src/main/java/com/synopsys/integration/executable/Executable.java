@@ -67,13 +67,7 @@ public class Executable {
         return create(workingDirectory, executableFile.getAbsolutePath(), arguments);
     }
 
-    public Executable(final File workingDirectory, final Map<String, String> environmentVariables, final List<String> commandWithArguments) {
-        this.workingDirectory = workingDirectory;
-        this.environmentVariables.putAll(environmentVariables);
-        this.commandWithArguments.addAll(commandWithArguments);
-    }
-
-    public String getMaskedCommand(List<String> commandWithArguments) {
+    public static String getMaskedCommand(List<String> commandWithArguments) {
         final List<String> pieces = new ArrayList<>();
         for (final String argument : commandWithArguments) {
             if (argument.matches(".*password.*=.*")) {
@@ -86,8 +80,14 @@ public class Executable {
         return StringUtils.join(pieces, ' ');
     }
 
+    public Executable(final File workingDirectory, final Map<String, String> environmentVariables, final List<String> commandWithArguments) {
+        this.workingDirectory = workingDirectory;
+        this.environmentVariables.putAll(environmentVariables);
+        this.commandWithArguments.addAll(commandWithArguments);
+    }
+
     public String getExecutableDescription() {
-        return getMaskedCommand(commandWithArguments);
+        return Executable.getMaskedCommand(commandWithArguments);
     }
 
     /**
