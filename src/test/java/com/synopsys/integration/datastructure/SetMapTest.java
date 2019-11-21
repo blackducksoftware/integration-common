@@ -40,7 +40,7 @@ public class SetMapTest {
 
         setMap.add(key1, values[0]);
         setMap.put(key2, key2_set);
-        setMap.addAll(key2, key3_set);
+        setMap.addAll(key3, key3_set);
         setMap.putAll(key4_map);
 
         String[] actualValues = setMap.entrySet().stream()
@@ -66,13 +66,15 @@ public class SetMapTest {
     @Test
     public void testCombine() {
         SetMap<String, String> setMap1 = SetMap.createDefault();
-        setMap1.add("key1", "value1");
+        String key1 = "key1";
+        String key2 = "key2";
+        setMap1.add(key1, "value1");
         SetMap<String, String> setMap2 = SetMap.createDefault();
-        setMap2.add("key2", "value2");
+        setMap2.add(key2, "value2");
         setMap1.combine(setMap2);
 
         assertEquals(2, setMap1.size());
-        assertEquals(1, setMap1.get("key1").size());
-        assertEquals(1, setMap1.get("key2").size());
+        assertEquals(setMap1.getValue(key1), setMap1.get(key1));
+        assertEquals(setMap1.getValue(key2), setMap1.get(key2));
     }
 }
