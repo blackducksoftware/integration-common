@@ -25,19 +25,24 @@ package com.synopsys.integration.util;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
 public class ExcludedIncludedFilter {
     private final Set<String> excludedSet;
     private final Set<String> includedSet;
+    private final Pattern regexToExclude;
+    private final Pattern regexToInclude;
 
     /**
      * Provide a comma-separated list of names to exclude and/or a comma-separated list of names to include. Exclusion rules always win.
      */
-    public ExcludedIncludedFilter(final String toExclude, final String toInclude) {
+    public ExcludedIncludedFilter(final String toExclude, final String toInclude, String regexToExclude, String regexToInclude) {
         excludedSet = createSetFromString(toExclude);
         includedSet = createSetFromString(toInclude);
+        this.regexToExclude = regexToExclude != null ? Pattern.compile(regexToExclude) : Pattern.compile("");
+        this.regexToInclude = regexToInclude != null ? Pattern.compile(regexToInclude) : Pattern.compile("");
     }
 
     public boolean shouldInclude(final String itemName) {
@@ -46,6 +51,14 @@ public class ExcludedIncludedFilter {
         }
 
         if (includedSet.size() > 0 && !includedSet.contains(itemName)) {
+            return false;
+        }
+
+        if (regexToExclude.matcher(itemName).matches()) {
+            return false;
+        }
+
+        if (regexToInclude.pattern().length() > 0 && !regexToInclude.matcher(itemName).matches()) {
             return false;
         }
 
