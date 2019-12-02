@@ -38,6 +38,14 @@ public class ExcludedIncludedFilter {
     /**
      * Provide a comma-separated list of names to exclude and/or a comma-separated list of names to include. Exclusion rules always win.
      */
+
+    public ExcludedIncludedFilter(final String toExclude, final String toInclude) {
+        excludedSet = createSetFromString(toExclude);
+        includedSet = createSetFromString(toInclude);
+        this.regexToExclude = Pattern.compile("");
+        this.regexToInclude = Pattern.compile("");
+    }
+
     public ExcludedIncludedFilter(final String toExclude, final String toInclude, String regexToExclude, String regexToInclude) {
         excludedSet = createSetFromString(toExclude);
         includedSet = createSetFromString(toInclude);

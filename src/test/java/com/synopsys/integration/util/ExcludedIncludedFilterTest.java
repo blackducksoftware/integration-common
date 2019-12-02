@@ -10,13 +10,23 @@ public class ExcludedIncludedFilterTest {
         ExcludedIncludedFilter excludedIncludedFilter = new ExcludedIncludedFilter("", "", "", "");
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
 
+        excludedIncludedFilter = new ExcludedIncludedFilter("", "");
+        assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
+
         excludedIncludedFilter = new ExcludedIncludedFilter(null, null, null, null);
+        assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
+
+        excludedIncludedFilter = new ExcludedIncludedFilter(null, null);
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
     }
 
     @Test
     public void testExcluded() {
         ExcludedIncludedFilter excludedIncludedFilter = new ExcludedIncludedFilter("bad", "", "", "");
+        assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
+        assertFalse(excludedIncludedFilter.shouldInclude("bad"));
+
+        excludedIncludedFilter = new ExcludedIncludedFilter("bad", "");
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
         assertFalse(excludedIncludedFilter.shouldInclude("bad"));
 
@@ -34,6 +44,11 @@ public class ExcludedIncludedFilterTest {
     @Test
     public void testIncludedAndExcluded() {
         ExcludedIncludedFilter excludedIncludedFilter = new ExcludedIncludedFilter("bad", "good,bad", "", "");
+        assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
+        assertTrue(excludedIncludedFilter.shouldInclude("good"));
+        assertFalse(excludedIncludedFilter.shouldInclude("bad"));
+
+        excludedIncludedFilter = new ExcludedIncludedFilter("bad", "good,bad");
         assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
         assertTrue(excludedIncludedFilter.shouldInclude("good"));
         assertFalse(excludedIncludedFilter.shouldInclude("bad"));
