@@ -40,12 +40,13 @@ public class ExcludedIncludedFilter {
      */
 
     public ExcludedIncludedFilter(final String toExclude, final String toInclude) {
-        excludedSet = createSetFromString(toExclude);
-        includedSet = createSetFromString(toInclude);
-        this.regexToExclude = Pattern.compile("");
-        this.regexToInclude = Pattern.compile("");
+        this(toExclude, toInclude, null, null);
     }
 
+    /**
+     * Provide a comma-separated list of names to exclude and/or a comma-separated list of names to include.  In addition, may provide a regular
+     * expression describing a pattern of names to exclude and/or a pattern of names to include. Exclusion rules always win.
+     */
     public ExcludedIncludedFilter(final String toExclude, final String toInclude, String regexToExclude, String regexToInclude) {
         excludedSet = createSetFromString(toExclude);
         includedSet = createSetFromString(toInclude);
