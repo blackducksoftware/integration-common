@@ -45,11 +45,7 @@ public class ExcludedIncludedFilter {
             return false;
         }
 
-        if (includedSet.size() > 0 && !includedSet.contains(itemName)) {
-            return false;
-        }
-
-        return true;
+        return includedSet.isEmpty() || includedSet.contains(itemName);
     }
 
     private Set<String> createSetFromString(final String s) {

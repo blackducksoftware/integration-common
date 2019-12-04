@@ -22,13 +22,11 @@
  */
 package com.synopsys.integration.executable;
 
-import org.apache.commons.lang3.StringUtils;
+import java.io.InputStream;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.*;
 
 public class ProcessBuilderRunner implements ExecutableRunner {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -38,6 +36,7 @@ public class ProcessBuilderRunner implements ExecutableRunner {
         return executeProcessBuilder(processBuilder);
     }
 
+    @Override
     public ExecutableOutput execute(final Executable executable) throws ExecutableRunnerException {
         logger.info(String.format("Running executable >%s", executable.getExecutableDescription()));
         final ProcessBuilder processBuilder = createProcessBuilder(executable);
@@ -77,7 +76,7 @@ public class ProcessBuilderRunner implements ExecutableRunner {
                 errorOutputThread.start();
 
                 final int returnCode = process.waitFor();
-                logger.info("process finished: " + returnCode);
+                logger.info(String.format("process finished: %d", returnCode));
 
                 standardOutputThread.join();
                 errorOutputThread.join();
