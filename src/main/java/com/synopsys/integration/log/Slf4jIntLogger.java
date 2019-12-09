@@ -34,21 +34,21 @@ public class Slf4jIntLogger extends IntLogger {
     @Override
     public void alwaysLog(final String txt) {
         switch (this.getLogLevel()) {
-        case TRACE:
-            logger.trace(txt);
-            break;
-        case DEBUG:
-            logger.debug(txt);
-            break;
-        case INFO:
-            logger.info(txt);
-            break;
-        case WARN:
-            logger.warn(txt);
-            break;
-        default:
-            logger.error(txt);
-            break;
+            case TRACE:
+                logger.trace(txt);
+                break;
+            case DEBUG:
+                logger.debug(txt);
+                break;
+            case INFO:
+                logger.info(txt);
+                break;
+            case WARN:
+                logger.warn(txt);
+                break;
+            default:
+                logger.error(txt);
+                break;
         }
     }
 
@@ -99,6 +99,7 @@ public class Slf4jIntLogger extends IntLogger {
 
     @Override
     public void setLogLevel(final LogLevel logLevel) {
+        // Not supported.
     }
 
     @Override

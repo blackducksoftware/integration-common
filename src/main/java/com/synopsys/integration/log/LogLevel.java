@@ -41,6 +41,7 @@ public enum LogLevel {
             try {
                 return LogLevel.valueOf(level.toUpperCase());
             } catch (final IllegalArgumentException e) {
+                // Ignored
             }
         }
         return LogLevel.INFO;

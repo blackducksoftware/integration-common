@@ -59,10 +59,6 @@ public class ExcludedIncludedFilter {
             return false;
         }
 
-        if (includedSet.size() > 0 && !includedSet.contains(itemName)) {
-            return false;
-        }
-
         if (regexToExclude.matcher(itemName).matches()) {
             return false;
         }
@@ -71,7 +67,7 @@ public class ExcludedIncludedFilter {
             return false;
         }
 
-        return true;
+        return (includedSet.isEmpty() || includedSet.contains(itemName));
     }
 
     private Set<String> createSetFromString(final String s) {

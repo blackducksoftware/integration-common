@@ -22,7 +22,11 @@
  */
 package com.synopsys.integration.util;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -83,7 +87,7 @@ public class CommonZipExpander {
         String format;
         // we need to use an InputStream where inputStream.markSupported() == true
         try (InputStream i = new BufferedInputStream(Files.newInputStream(unknownFile.toPath()))) {
-            format = new ArchiveStreamFactory().detect(i);
+            format = ArchiveStreamFactory.detect(i);
         }
 
         beforeExpansion(unknownFile, targetExpansionDirectory);
@@ -106,9 +110,11 @@ public class CommonZipExpander {
     }
 
     public void beforeExpansion(final File sourceArchiveFile, final File targetExpansionDirectory) throws IntegrationException {
+        // Can be overridden by a subclass for additional processing.
     }
 
     public void afterExpansion(final File sourceArchiveFile, final File targetExpansionDirectory) throws IntegrationException {
+        // Can be overridden by a subclass for additional processing.
     }
 
 }

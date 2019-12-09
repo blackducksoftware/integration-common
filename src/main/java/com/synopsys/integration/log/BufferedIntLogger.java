@@ -49,7 +49,7 @@ public class BufferedIntLogger extends IntLogger {
     }
 
     public void resetAllLogs() {
-        EnumSet.allOf(LogLevel.class).forEach(logLevel -> resetLogs(logLevel));
+        EnumSet.allOf(LogLevel.class).forEach(this::resetLogs);
     }
 
     public List<String> getOutputList(final LogLevel level) {
@@ -121,10 +121,12 @@ public class BufferedIntLogger extends IntLogger {
 
     @Override
     public void setLogLevel(final LogLevel level) {
+        // Not supported.
     }
 
     @Override
     public LogLevel getLogLevel() {
+        // Not supported.
         return null;
     }
 
