@@ -30,44 +30,37 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 public class ExcludedIncludedFilter {
-    private final Set<String> excludedSet;
-    private final Set<String> includedSet;
-    private final Pattern regexToExclude;
-    private final Pattern regexToInclude;
+    protected final Set<String> excludedSet;
+    protected final Set<String> includedSet;
 
     /**
      * Provide a comma-separated list of names to exclude and/or a comma-separated list of names to include. Exclusion rules always win.
      */
-
     public ExcludedIncludedFilter(final String toExclude, final String toInclude) {
-        this(toExclude, toInclude, null, null);
-    }
-
-    /**
-     * Provide a comma-separated list of names to exclude and/or a comma-separated list of names to include.  In addition, may provide a regular
-     * expression describing a pattern of names to exclude and/or a pattern of names to include. Exclusion rules always win.
-     */
-    public ExcludedIncludedFilter(final String toExclude, final String toInclude, String regexToExclude, String regexToInclude) {
         excludedSet = createSetFromString(toExclude);
         includedSet = createSetFromString(toInclude);
-        this.regexToExclude = regexToExclude != null ? Pattern.compile(regexToExclude) : Pattern.compile("");
-        this.regexToInclude = regexToInclude != null ? Pattern.compile(regexToInclude) : Pattern.compile("");
     }
 
-    public boolean shouldInclude(final String itemName) {
+    public boolean willExclude(final String itemName) {
         if (excludedSet.contains(itemName)) {
-            return false;
+            return true;
         }
+        return false;
+    }
 
-        if (regexToExclude.matcher(itemName).matches()) {
-            return false;
+    public boolean willInclude(final String itemName) {
+        if (includedSet.isEmpty() || includedSet.contains(itemName)) {
+            return true;
         }
+        return false;
+    }
 
-        if (regexToInclude.pattern().length() > 0 && !regexToInclude.matcher(itemName).matches()) {
+    public final boolean shouldInclude(final String itemName) {
+        if (willExclude(itemName)) {
             return false;
+        } else {
+            return willInclude(itemName);
         }
-
-        return (includedSet.isEmpty() || includedSet.contains(itemName));
     }
 
     private Set<String> createSetFromString(final String s) {
