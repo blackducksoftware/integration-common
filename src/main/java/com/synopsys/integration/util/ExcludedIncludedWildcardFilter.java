@@ -22,7 +22,9 @@
  */
 package com.synopsys.integration.util;
 
+import java.lang.reflect.Method;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -33,22 +35,22 @@ public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
 
     @Override
     public boolean willExclude(final String itemName) {
-        return setContains(itemName, excludedSet, super.willExclude(itemName));
+        return setContains(itemName, excludedSet, super::willExclude);
     }
 
     @Override
     public boolean willInclude(final String itemName) {
-        return setContains(itemName, includedSet, super.willInclude(itemName));
+        return setContains(itemName, includedSet, super::willInclude);
     }
 
-    public boolean setContains(final String itemName, final Set<String> includedExcludedSet, boolean defaultResult) {
+    public boolean setContains(final String itemName, final Set<String> includedExcludedSet, Function<String, Boolean> superMethod) {
         for (String includeToken : includedExcludedSet) {
             if (FilenameUtils.wildcardMatch(itemName, includeToken)) {
                 return true;
             }
         }
 
-        return defaultResult;
+        return superMethod.apply(itemName);
     }
 
 }
