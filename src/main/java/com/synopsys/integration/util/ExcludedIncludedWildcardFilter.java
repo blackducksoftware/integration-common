@@ -43,9 +43,9 @@ public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
         return setContains(itemName, includedSet, super::willInclude);
     }
 
-    public boolean setContains(final String itemName, final Set<String> includedExcludedSet, Function<String, Boolean> superMethod) {
-        for (String includeToken : includedExcludedSet) {
-            if (FilenameUtils.wildcardMatch(itemName, includeToken)) {
+    private boolean setContains(final String itemName, final Set<String> tokenSet, Function<String, Boolean> superMethod) {
+        for (String token : tokenSet) {
+            if (FilenameUtils.wildcardMatch(itemName, token)) {
                 return true;
             }
         }
