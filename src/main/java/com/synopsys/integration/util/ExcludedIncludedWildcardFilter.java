@@ -28,10 +28,8 @@ import java.util.function.Function;
 
 import org.apache.commons.io.FilenameUtils;
 
-/***
- * ExcludedIncludedWildcardFiler enhances functionality of ExcludedIncludedFilter by allowing users to pass in expressions, using '*' and '?' wildcard characters,
- * that describe a set of Strings according to the implementation of FilenameUtils.wildcardMatch
- * <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.5/org/apache/commons/io/FilenameUtils.html#wildcardMatch(java.lang.String,%20java.lang.String)">FilenameUtils.wildcardMatch</a>
+/**
+ * Uses '*' and '?' characters for matching, as defined here: <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.5/org/apache/commons/io/FilenameUtils.html#wildcardMatch(java.lang.String,%20java.lang.String)">FilenameUtils.wildcardMatch</a>
  */
 public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
     public ExcludedIncludedWildcardFilter(final String toExclude, final String toInclude) {
