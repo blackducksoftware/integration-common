@@ -31,22 +31,24 @@ public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
         super(toExclude, toInclude);
     }
 
+    @Override
     public boolean willExclude(final String itemName) {
-        return determineInclusion(itemName, excludedSet, super.willExclude(itemName));
+        return setContains(itemName, excludedSet, super.willExclude(itemName));
     }
 
+    @Override
     public boolean willInclude(final String itemName) {
-        return determineInclusion(itemName, includedSet, super.willInclude(itemName));
+        return setContains(itemName, includedSet, super.willInclude(itemName));
     }
 
-    public boolean determineInclusion(final String itemName, final Set<String> includedExcludedSet, boolean defaultJudgement) {
+    public boolean setContains(final String itemName, final Set<String> includedExcludedSet, boolean defaultResult) {
         for (String includeToken : includedExcludedSet) {
             if (FilenameUtils.wildcardMatch(itemName, includeToken)) {
                 return true;
             }
         }
 
-        return defaultJudgement;
+        return defaultResult;
     }
 
 }
