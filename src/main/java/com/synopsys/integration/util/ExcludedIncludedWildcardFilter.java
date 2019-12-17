@@ -22,6 +22,8 @@
  */
 package com.synopsys.integration.util;
 
+import java.util.Set;
+
 import org.apache.commons.io.FilenameUtils;
 
 public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
@@ -30,23 +32,21 @@ public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
     }
 
     public boolean willExclude(final String itemName) {
-        for (String excludeToken : excludedSet) {
-            if (FilenameUtils.wildcardMatch(itemName, excludeToken)) {
-                return true;
-            }
-        }
-
-        return super.willExclude(itemName);
+        return determineInclusion(itemName, excludedSet, super.willExclude(itemName));
     }
 
     public boolean willInclude(final String itemName) {
-        for (String includeToken : includedSet) {
+        return determineInclusion(itemName, includedSet, super.willInclude(itemName));
+    }
+
+    public boolean determineInclusion(final String itemName, final Set<String> includedExcludedSet, boolean defaultJudgement) {
+        for (String includeToken : includedExcludedSet) {
             if (FilenameUtils.wildcardMatch(itemName, includeToken)) {
                 return true;
             }
         }
 
-        return super.willInclude(itemName);
+        return defaultJudgement;
     }
 
 }
