@@ -22,9 +22,8 @@
  */
 package com.synopsys.integration.util;
 
-import java.lang.reflect.Method;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -46,14 +45,14 @@ public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
         return setContains(itemName, includedSet, super::willInclude);
     }
 
-    private boolean setContains(final String itemName, final Set<String> tokenSet, Function<String, Boolean> superMethod) {
+    private boolean setContains(final String itemName, final Set<String> tokenSet, final Predicate<String> superMethod) {
         for (String token : tokenSet) {
             if (FilenameUtils.wildcardMatch(itemName, token)) {
                 return true;
             }
         }
 
-        return superMethod.apply(itemName);
+        return superMethod.test(itemName);
     }
 
 }
