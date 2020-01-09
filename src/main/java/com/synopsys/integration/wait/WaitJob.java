@@ -56,12 +56,12 @@ public class WaitJob {
         IntLogger intLogger = waitJobConfig.getIntLogger();
 
         while (currentDuration.compareTo(maximumDuration) <= 0) {
-            intLogger.info(String.format("Try #%s (elapsed: %s)...", ++attempts, DurationFormatUtils.formatDurationHMS(currentDuration.toMillis())));
+            String attemptMessagePrefix = String.format("Try #%s (elapsed: %s)...", ++attempts, DurationFormatUtils.formatDurationHMS(currentDuration.toMillis()));
             if (waitJobConfig.getWaitJobTask().isComplete()) {
-                intLogger.info("...complete!");
+                intLogger.info(String.format("%scomplete!", attemptMessagePrefix));
                 return true;
             } else {
-                intLogger.info(String.format("...not done yet, waiting %s seconds and trying again...", waitJobConfig.getWaitIntervalInSeconds()));
+                intLogger.info(String.format("%snot done yet, waiting %s seconds and trying again...", attemptMessagePrefix, waitJobConfig.getWaitIntervalInSeconds()));
                 Thread.sleep(waitJobConfig.getWaitIntervalInSeconds() * 1000);
                 currentDuration = Duration.ofMillis(System.currentTimeMillis() - startTime);
             }
