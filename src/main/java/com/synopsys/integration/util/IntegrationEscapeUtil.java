@@ -27,19 +27,22 @@ import java.util.List;
 
 public class IntegrationEscapeUtil {
     /**
-     * Do a poor man's URI escaping. We aren't terribly interested in precision here, or in introducing a library that would do it better.
+     * Replaces any/all non-alphanumeric characters with underscores.
      */
-    public List<String> escapePiecesForUri(final List<String> pieces) {
+    public List<String> replaceWithUnderscore(final List<String> pieces) {
         final List<String> escapedPieces = new ArrayList<>(pieces.size());
         for (final String piece : pieces) {
-            final String escaped = escapeForUri(piece);
+            final String escaped = replaceWithUnderscore(piece);
             escapedPieces.add(escaped);
         }
 
         return escapedPieces;
     }
 
-    public String escapeForUri(final String s) {
+    /**
+     * Replaces any/all non-alphanumeric characters with underscores.
+     */
+    public String replaceWithUnderscore(final String s) {
         if (s == null) {
             return null;
         }
