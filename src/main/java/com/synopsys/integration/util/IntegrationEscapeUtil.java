@@ -30,6 +30,10 @@ public class IntegrationEscapeUtil {
      * Replaces any/all non-alphanumeric characters with underscores.
      */
     public List<String> replaceWithUnderscore(final List<String> pieces) {
+        if (null == pieces || pieces.isEmpty()) {
+            return pieces;
+        }
+
         final List<String> escapedPieces = new ArrayList<>(pieces.size());
         for (final String piece : pieces) {
             final String escaped = replaceWithUnderscore(piece);
@@ -43,7 +47,7 @@ public class IntegrationEscapeUtil {
      * Replaces any/all non-alphanumeric characters with underscores.
      */
     public String replaceWithUnderscore(final String s) {
-        if (s == null) {
+        if (null == s) {
             return null;
         }
 
