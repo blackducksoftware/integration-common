@@ -9,7 +9,7 @@ buildscript {
 project.ext.moduleName = 'com.synopsys.integration.integration-common'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '19.1.0-SNAPSHOT'
+version = '20.0.1-SNAPSHOT'
 description = 'The base library for all other integration libraries to encompass and export common dependencies and code.'
 
 apply plugin: 'com.synopsys.integration.library'
