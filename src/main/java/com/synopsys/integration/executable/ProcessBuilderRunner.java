@@ -25,11 +25,14 @@ package com.synopsys.integration.executable;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.synopsys.integration.log.IntLogger;
 
 public class ProcessBuilderRunner implements ExecutableRunner {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final IntLogger logger;
+
+    public ProcessBuilderRunner(final IntLogger logger) {
+        this.logger = logger;
+    }
 
     public ExecutableOutput execute(ProcessBuilder processBuilder) throws ExecutableRunnerException {
         logger.info(String.format("Running process builder >%s", Executable.getMaskedCommand(processBuilder.command())));
