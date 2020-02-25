@@ -44,6 +44,18 @@ public class WaitJob {
         return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, WaitJobConfig.CURRENT_TIME_SUPPLIER, waitIntervalInSeconds, waitJobTask));
     }
 
+    public static WaitJob create(IntLogger intLogger, long timeoutInSeconds, long startTime, int waitIntervalInSeconds, String taskName, WaitJobTask waitJobTask) {
+        return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, startTime, waitIntervalInSeconds, taskName, waitJobTask));
+    }
+
+    public static WaitJob create(IntLogger intLogger, long timeoutInSeconds, Supplier<Long> startTimeSupplier, int waitIntervalInSeconds, String taskName, WaitJobTask waitJobTask) {
+        return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, startTimeSupplier, waitIntervalInSeconds, taskName, waitJobTask));
+    }
+
+    public static WaitJob createUsingSystemTimeWhenInvoked(IntLogger intLogger, long timeoutInSeconds, int waitIntervalInSeconds, String taskName, WaitJobTask waitJobTask) {
+        return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, WaitJobConfig.CURRENT_TIME_SUPPLIER, waitIntervalInSeconds, taskName, waitJobTask));
+    }
+
     public WaitJob(WaitJobConfig waitJobConfig) {
         this.waitJobConfig = waitJobConfig;
     }
@@ -55,8 +67,12 @@ public class WaitJob {
         Duration maximumDuration = Duration.ofMillis(waitJobConfig.getTimeoutInSeconds() * 1000);
         IntLogger intLogger = waitJobConfig.getIntLogger();
 
+        String taskDescription = waitJobConfig
+                .getTaskName()
+                .map(s -> String.format("for task %s ", s))
+                .orElse("");
         while (currentDuration.compareTo(maximumDuration) <= 0) {
-            String attemptMessagePrefix = String.format("Try #%s (elapsed: %s)...", ++attempts, DurationFormatUtils.formatDurationHMS(currentDuration.toMillis()));
+            String attemptMessagePrefix = String.format("Try #%s %s(elapsed: %s)...", ++attempts, taskDescription, DurationFormatUtils.formatDurationHMS(currentDuration.toMillis()));
             if (waitJobConfig.getWaitJobTask().isComplete()) {
                 intLogger.info(String.format("%scomplete!", attemptMessagePrefix));
                 return true;
