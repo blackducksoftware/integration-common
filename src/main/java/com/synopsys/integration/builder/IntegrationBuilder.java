@@ -23,7 +23,7 @@
 package com.synopsys.integration.builder;
 
 public abstract class IntegrationBuilder<T extends Buildable> {
-    public T build() throws IllegalArgumentException {
+    public final T build() throws IllegalArgumentException {
         assertValid();
 
         return buildWithoutValidation();
