@@ -6,7 +6,7 @@ buildscript {
 project.ext.moduleName = 'com.synopsys.integration.integration-common'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '20.1.2-SNAPSHOT'
+version = '21.0.0-SNAPSHOT'
 description = 'The base library for all other integration libraries to encompass and export common dependencies and code.'
 
 apply plugin: 'com.synopsys.integration.library'
@@ -23,6 +23,4 @@ dependencies {
     api 'com.jayway.jsonpath:json-path:2.4.0'
     api 'org.slf4j:slf4j-api:1.7.25'
     api 'com.flipkart.zjsonpatch:zjsonpatch:0.4.8'
-
-    testCompile 'com.flipkart.zjsonpatch:zjsonpatch:0.4.8'
 }
