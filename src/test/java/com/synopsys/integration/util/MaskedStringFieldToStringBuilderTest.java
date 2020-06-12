@@ -1,26 +1,23 @@
 package com.synopsys.integration.util;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MaskedStringFieldToStringBuilderTest {
     @Test
     void testMasking() {
         SomeValues someValues = new SomeValues("", "");
         String blank = someValues.toString();
-        assertEquals("{\"shouldShowUp\":\"\",\"shouldBeHidden\":\"\"}", blank);
+        assertEquals("{\"shouldBeHidden\":\"\",\"shouldShowUp\":\"\"}", blank);
 
         SomeValues someValues2 = new SomeValues("hello!", null);
         String onlyOne = someValues2.toString();
-        assertEquals("{\"shouldShowUp\":\"hello!\",\"shouldBeHidden\":null}", onlyOne);
+        assertEquals("{\"shouldBeHidden\":null,\"shouldShowUp\":\"hello!\"}", onlyOne);
 
         SomeValues someValues3 = new SomeValues("hello!", "goodbye!");
         String filled = someValues3.toString();
-        assertEquals("{\"shouldShowUp\":\"hello!\",\"shouldBeHidden\":\"" + MaskedStringFieldToStringBuilder.MASKED_VALUE + "\"}", filled);
+        assertEquals("{\"shouldBeHidden\":\"" + MaskedStringFieldToStringBuilder.MASKED_VALUE + "\",\"shouldShowUp\":\"hello!\"}", filled);
     }
 
     private class SomeValues {
