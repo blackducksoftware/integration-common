@@ -6,7 +6,7 @@ buildscript {
 project.ext.moduleName = 'com.synopsys.integration.integration-common'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '22.1.0-SNAPSHOT'
+version = '22.2.0-SNAPSHOT'
 description = 'The base library for all other integration libraries to encompass and export common dependencies and code.'
 
 apply plugin: 'com.synopsys.integration.library'
@@ -21,6 +21,7 @@ dependencies {
     api 'commons-codec:commons-codec:1.14'
     api 'commons-beanutils:commons-beanutils:1.9.4'
     api 'com.google.code.gson:gson:2.8.6'
+    api 'org.jetbrains:annotations:19.0.0'
     api 'com.jayway.jsonpath:json-path:2.4.0'
     api 'org.slf4j:slf4j-api:1.7.30'
     api 'com.flipkart.zjsonpatch:zjsonpatch:0.4.10'
