@@ -1,8 +1,8 @@
 /**
  * integration-common
- *
+ * <p>
  * Copyright (c) 2020 Synopsys, Inc.
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -10,9 +10,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -30,36 +30,37 @@ public class IntEnvironmentVariables {
 
     private final Map<String, String> environmentVariables = new HashMap<>();
 
-    /**
-     * By default, initialize with all system environment variables.
-     */
-    public IntEnvironmentVariables() {
-        putAll(System.getenv());
+    public static final IntEnvironmentVariables includeSystemEnv() {
+        IntEnvironmentVariables intEnvironmentVariables = new IntEnvironmentVariables();
+        intEnvironmentVariables.putAll(System.getenv());
+        return intEnvironmentVariables;
     }
 
-    public IntEnvironmentVariables(final boolean inheritSystemEnvironment) {
-        if (inheritSystemEnvironment) {
-            putAll(System.getenv());
-        }
+    public static final IntEnvironmentVariables empty() {
+        return new IntEnvironmentVariables();
     }
 
-    public void putAll(final Map<String, String> map) {
+    private IntEnvironmentVariables() {
+        // for clarity, the static creators are required
+    }
+
+    public void putAll(Map<String, String> map) {
         environmentVariables.putAll(map);
     }
 
-    public void put(final String key, final String value) {
+    public void put(String key, String value) {
         environmentVariables.put(key, value);
     }
 
-    public boolean containsKey(final String key) {
+    public boolean containsKey(String key) {
         return environmentVariables.containsKey(key);
     }
 
-    public String getValue(final String key) {
+    public String getValue(String key) {
         return getValue(key, null);
     }
 
-    public String getValue(final String key, final String defaultValue) {
+    public String getValue(String key, String defaultValue) {
         String value = environmentVariables.get(key);
         if (value == null && defaultValue != null) {
             value = defaultValue;
@@ -68,7 +69,7 @@ public class IntEnvironmentVariables {
     }
 
     public Map<String, String> getVariables() {
-        final Map<String, String> variables = new HashMap<>();
+        Map<String, String> variables = new HashMap<>();
         variables.putAll(environmentVariables);
         return variables;
     }
