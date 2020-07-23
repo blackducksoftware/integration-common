@@ -1,22 +1,17 @@
 package com.synopsys.integration.datastructure;
 
+import org.junit.jupiter.api.Test;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.junit.jupiter.api.Test;
-
 public class SetMapTest {
-
     @Test
     public void testLinkedMap() {
-        String[] values = { "value1", "value2", "value3", "value4", "value5", "value6", "value7", "value8", "value9", "value10" };
+        String[] values = {"value1", "value2", "value3", "value4", "value5", "value6", "value7", "value8", "value9", "value10"};
         SetMap<String, String> setMap = SetMap.createLinked();
         String key1 = "key_1";
         String key2 = "key_2";
@@ -31,7 +26,7 @@ public class SetMapTest {
         key3_set.add(values[4]);
         key3_set.add(values[5]);
         Map<String, Set<String>> key4_map = new HashMap<>();
-        LinkedHashSet key4_set = new LinkedHashSet<>();
+        LinkedHashSet<String> key4_set = new LinkedHashSet<>();
         key4_set.add(values[6]);
         key4_set.add(values[7]);
         key4_set.add(values[8]);
@@ -44,10 +39,10 @@ public class SetMapTest {
         setMap.putAll(key4_map);
 
         String[] actualValues = setMap.entrySet().stream()
-                                    .map(Map.Entry::getValue)
-                                    .flatMap(Set::stream)
-                                    .collect(Collectors.toList())
-                                    .toArray(new String[values.length]);
+                .map(Map.Entry::getValue)
+                .flatMap(Set::stream)
+                .collect(Collectors.toList())
+                .toArray(new String[values.length]);
 
         assertTrue(Arrays.equals(values, actualValues));
     }
@@ -55,8 +50,8 @@ public class SetMapTest {
     @Test
     public void testGetMap() {
         Map<String, Set<String>> expectedMap = new HashMap<>();
-        LinkedHashSet set1 = new LinkedHashSet<>();
-        LinkedHashSet set2 = new LinkedHashSet<>();
+        LinkedHashSet<String> set1 = new LinkedHashSet<>();
+        LinkedHashSet<String> set2 = new LinkedHashSet<>();
         expectedMap.put("key1", set1);
         expectedMap.put("key2", set2);
         SetMap<String, String> setMap = new SetMap<>(expectedMap);
@@ -77,4 +72,5 @@ public class SetMapTest {
         assertEquals(setMap1.getValue(key1), setMap1.get(key1));
         assertEquals(setMap1.getValue(key2), setMap1.get(key2));
     }
+
 }

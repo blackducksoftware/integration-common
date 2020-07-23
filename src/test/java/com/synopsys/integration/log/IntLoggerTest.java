@@ -1,16 +1,15 @@
 package com.synopsys.integration.log;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.synopsys.integration.util.IntEnvironmentVariables;
 import org.junit.jupiter.api.Test;
 
-import com.synopsys.integration.util.IntEnvironmentVariables;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IntLoggerTest {
     @Test
     public void testSetLogLevelWithVariables() {
-        final IntLogger logger = new PrintStreamIntLogger(System.out, LogLevel.INFO);
-        final IntEnvironmentVariables variables = new IntEnvironmentVariables(false);
+        IntLogger logger = new PrintStreamIntLogger(System.out, LogLevel.INFO);
+        IntEnvironmentVariables variables = IntEnvironmentVariables.empty();
         logger.setLogLevel(variables);
         assertEquals(LogLevel.INFO, logger.getLogLevel());
 
