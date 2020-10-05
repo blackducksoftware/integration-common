@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class ExcludedIncludedFilter {
@@ -54,8 +53,8 @@ public class ExcludedIncludedFilter {
      * Provide a list of names to exclude and/or a list of names to include. Exclusion rules always win.
      */
     public ExcludedIncludedFilter(List<String> toExcludeList, List<String> toIncludeList) {
-        excludedSet = createSetFromList(toExcludeList);
-        includedSet = createSetFromList(toIncludeList);
+        excludedSet = new HashSet<>(toExcludeList);
+        includedSet = new HashSet<>(toIncludeList);
     }
 
     public boolean willExclude(String itemName) {
@@ -89,9 +88,4 @@ public class ExcludedIncludedFilter {
         return set;
     }
 
-    private Set<String> createSetFromList(List<String> list) {
-        Set<String> set = new HashSet<>();
-        CollectionUtils.addAll(set, list);
-        return set;
-    }
 }
