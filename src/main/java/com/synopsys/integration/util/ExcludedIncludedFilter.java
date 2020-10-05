@@ -25,7 +25,6 @@ package com.synopsys.integration.util;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,26 +35,26 @@ public class ExcludedIncludedFilter {
     /**
      * Provide a comma-separated list of names to exclude and/or a comma-separated list of names to include. Exclusion rules always win.
      */
-    public ExcludedIncludedFilter(final String toExclude, final String toInclude) {
+    public ExcludedIncludedFilter(String toExclude, String toInclude) {
         excludedSet = createSetFromString(toExclude);
         includedSet = createSetFromString(toInclude);
     }
 
-    public boolean willExclude(final String itemName) {
+    public boolean willExclude(String itemName) {
         if (excludedSet.contains(itemName)) {
             return true;
         }
         return false;
     }
 
-    public boolean willInclude(final String itemName) {
+    public boolean willInclude(String itemName) {
         if (includedSet.isEmpty() || includedSet.contains(itemName)) {
             return true;
         }
         return false;
     }
 
-    public final boolean shouldInclude(final String itemName) {
+    public final boolean shouldInclude(String itemName) {
         if (willExclude(itemName)) {
             return false;
         } else {
@@ -63,9 +62,9 @@ public class ExcludedIncludedFilter {
         }
     }
 
-    private Set<String> createSetFromString(final String s) {
-        final Set<String> set = new HashSet<>();
-        final StringTokenizer stringTokenizer = new StringTokenizer(StringUtils.trimToEmpty(s), ",");
+    private Set<String> createSetFromString(String s) {
+        Set<String> set = new HashSet<>();
+        StringTokenizer stringTokenizer = new StringTokenizer(StringUtils.trimToEmpty(s), ",");
         while (stringTokenizer.hasMoreTokens()) {
             set.add(StringUtils.trimToEmpty(stringTokenizer.nextToken()));
         }

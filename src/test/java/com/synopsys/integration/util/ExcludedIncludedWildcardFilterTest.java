@@ -3,8 +3,6 @@ package com.synopsys.integration.util;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Ignore;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class ExcludedIncludedWildcardFilterTest {
@@ -39,5 +37,4 @@ public class ExcludedIncludedWildcardFilterTest {
         assertFalse(excludedIncludedFilter.shouldInclude("bad\\"));
         assertFalse(excludedIncludedFilter.shouldInclude("bad\\Monkey"));
     }
-
 }
