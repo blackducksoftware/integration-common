@@ -32,7 +32,7 @@ import org.apache.commons.io.FilenameUtils;
  * Uses '*' and '?' characters for matching, as defined here: <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.5/org/apache/commons/io/FilenameUtils.html#wildcardMatch(java.lang.String,%20java.lang.String)">FilenameUtils.wildcardMatch</a>
  */
 public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
-
+    
     public ExcludedIncludedWildcardFilter() {
         super();
     }

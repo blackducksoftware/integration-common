@@ -35,9 +35,13 @@ public class ExcludedIncludedFilter {
     protected final Set<String> excludedSet;
     protected final Set<String> includedSet;
 
+    /**
+     * Construct a filter with no excludes (and no includes).
+     */
     public ExcludedIncludedFilter() {
         this(Collections.emptyList(), Collections.emptyList());
     }
+
     /**
      * Provide a comma-separated list of names to exclude and/or a comma-separated list of names to include. Exclusion rules always win.
      */
@@ -45,11 +49,14 @@ public class ExcludedIncludedFilter {
         excludedSet = createSetFromString(toExclude);
         includedSet = createSetFromString(toInclude);
     }
+
+    /**
+     * Provide a list of names to exclude and/or a list of names to include. Exclusion rules always win.
+     */
     public ExcludedIncludedFilter(List<String> toExcludeList, List<String> toIncludeList) {
         excludedSet = createSetFromList(toExcludeList);
         includedSet = createSetFromList(toIncludeList);
     }
-
 
     public boolean willExclude(String itemName) {
         if (excludedSet.contains(itemName)) {
@@ -81,8 +88,9 @@ public class ExcludedIncludedFilter {
         }
         return set;
     }
+
     private Set<String> createSetFromList(List<String> list) {
-        final Set<String> set = new HashSet<>();
+        Set<String> set = new HashSet<>();
         CollectionUtils.addAll(set, list);
         return set;
     }
