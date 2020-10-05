@@ -22,6 +22,7 @@
  */
 package com.synopsys.integration.util;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -31,8 +32,15 @@ import org.apache.commons.io.FilenameUtils;
  * Uses '*' and '?' characters for matching, as defined here: <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.5/org/apache/commons/io/FilenameUtils.html#wildcardMatch(java.lang.String,%20java.lang.String)">FilenameUtils.wildcardMatch</a>
  */
 public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
+    public ExcludedIncludedWildcardFilter() {
+        super();
+    }
+
     public ExcludedIncludedWildcardFilter(final String toExclude, final String toInclude) {
         super(toExclude, toInclude);
+    }
+    public ExcludedIncludedWildcardFilter(List<String> toExcludeList, List<String> toIncludeList) {
+        super(toExcludeList, toIncludeList);
     }
 
     @Override

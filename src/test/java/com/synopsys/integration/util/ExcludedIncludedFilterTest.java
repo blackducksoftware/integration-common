@@ -13,10 +13,10 @@ public class ExcludedIncludedFilterTest {
         excludedIncludedFilter = new ExcludedIncludedFilter("", "");
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
 
-        excludedIncludedFilter = new ExcludedIncludedFilter(null, null);
+        excludedIncludedFilter = new ExcludedIncludedFilter();
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
 
-        excludedIncludedFilter = new ExcludedIncludedFilter(null, null);
+        excludedIncludedFilter = new ExcludedIncludedFilter();
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
     }
 

@@ -3,6 +3,9 @@ package com.synopsys.integration.util;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -38,6 +41,32 @@ public class ExcludedIncludedWildcardFilterTest {
         assertTrue(excludedIncludedFilter.shouldInclude("bad*"));
         assertFalse(excludedIncludedFilter.shouldInclude("bad\\"));
         assertFalse(excludedIncludedFilter.shouldInclude("bad\\Monkey"));
+    }
+
+    @Test
+    public void testIncludedAndExcludedList() {
+        List<String> toExclude = Arrays.asList("redherring", "*bad*");
+        List<String> toInclude = Arrays.asList("good*", "bad");
+        ExcludedIncludedFilter excludedIncludedFilter = new ExcludedIncludedWildcardFilter(toExclude, toInclude);
+        assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
+        assertTrue(excludedIncludedFilter.shouldInclude("good"));
+        assertTrue(excludedIncludedFilter.shouldInclude("goodMonkey"));
+        assertFalse(excludedIncludedFilter.shouldInclude("bad"));
+        assertFalse(excludedIncludedFilter.shouldInclude("goodbad"));
+        assertFalse(excludedIncludedFilter.shouldInclude("really_bad"));
+        assertFalse(excludedIncludedFilter.shouldInclude("also_really_bad"));
+    }
+
+    @Test
+    public void testNothingIncludedOrExcluded() {
+        ExcludedIncludedFilter excludedIncludedFilter = new ExcludedIncludedWildcardFilter();
+        assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
+        assertTrue(excludedIncludedFilter.shouldInclude("good"));
+        assertTrue(excludedIncludedFilter.shouldInclude("goodMonkey"));
+        assertTrue(excludedIncludedFilter.shouldInclude("bad"));
+        assertTrue(excludedIncludedFilter.shouldInclude("goodbad"));
+        assertTrue(excludedIncludedFilter.shouldInclude("really_bad"));
+        assertTrue(excludedIncludedFilter.shouldInclude("also_really_bad"));
     }
 
 }
