@@ -32,28 +32,30 @@ import org.apache.commons.io.FilenameUtils;
  * Uses '*' and '?' characters for matching, as defined here: <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.5/org/apache/commons/io/FilenameUtils.html#wildcardMatch(java.lang.String,%20java.lang.String)">FilenameUtils.wildcardMatch</a>
  */
 public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
+
     public ExcludedIncludedWildcardFilter() {
         super();
     }
 
-    public ExcludedIncludedWildcardFilter(final String toExclude, final String toInclude) {
+    public ExcludedIncludedWildcardFilter(String toExclude, String toInclude) {
         super(toExclude, toInclude);
     }
+
     public ExcludedIncludedWildcardFilter(List<String> toExcludeList, List<String> toIncludeList) {
         super(toExcludeList, toIncludeList);
     }
 
     @Override
-    public boolean willExclude(final String itemName) {
+    public boolean willExclude(String itemName) {
         return setContains(itemName, excludedSet, super::willExclude);
     }
 
     @Override
-    public boolean willInclude(final String itemName) {
+    public boolean willInclude(String itemName) {
         return setContains(itemName, includedSet, super::willInclude);
     }
 
-    private boolean setContains(final String itemName, final Set<String> tokenSet, final Predicate<String> superMethod) {
+    private boolean setContains(String itemName, Set<String> tokenSet, Predicate<String> superMethod) {
         for (String token : tokenSet) {
             if (FilenameUtils.wildcardMatch(itemName, token)) {
                 return true;

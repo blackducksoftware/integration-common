@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Ignore;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class ExcludedIncludedWildcardFilterTest {
@@ -68,5 +66,4 @@ public class ExcludedIncludedWildcardFilterTest {
         assertTrue(excludedIncludedFilter.shouldInclude("really_bad"));
         assertTrue(excludedIncludedFilter.shouldInclude("also_really_bad"));
     }
-
 }
