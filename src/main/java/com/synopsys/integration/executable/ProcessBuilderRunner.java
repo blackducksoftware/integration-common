@@ -24,24 +24,27 @@ package com.synopsys.integration.executable;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.synopsys.integration.log.IntLogger;
 
 public class ProcessBuilderRunner implements ExecutableRunner {
-    private final IntLogger logger;
+    private final Consumer<String> outputConsumer;
+    private final Consumer<String> traceConsumer;
 
     public ProcessBuilderRunner(final IntLogger logger) {
-        this.logger = logger;
+        this.outputConsumer = logger::info;
+        this.traceConsumer = logger::trace;
     }
 
     public ExecutableOutput execute(ProcessBuilder processBuilder) throws ExecutableRunnerException {
-        logger.info(String.format("Running process builder >%s", Executable.getMaskedCommand(processBuilder.command())));
+        outputConsumer.accept(String.format("Running process builder >%s", Executable.getMaskedCommand(processBuilder.command())));
         return executeProcessBuilder(processBuilder);
     }
 
     @Override
     public ExecutableOutput execute(final Executable executable) throws ExecutableRunnerException {
-        logger.info(String.format("Running executable >%s", executable.getExecutableDescription()));
+        outputConsumer.accept(String.format("Running executable >%s", executable.getExecutableDescription()));
         final ProcessBuilder processBuilder = createProcessBuilder(executable);
         return executeProcessBuilder(processBuilder);
     }
@@ -72,14 +75,14 @@ public class ProcessBuilderRunner implements ExecutableRunner {
             final Process process = processBuilder.start();
 
             try (InputStream standardOutputStream = process.getInputStream(); InputStream standardErrorStream = process.getErrorStream()) {
-                final ExecutableStreamThread standardOutputThread = new ExecutableStreamThread(standardOutputStream, logger::info, logger::trace);
+                final ExecutableStreamThread standardOutputThread = new ExecutableStreamThread(standardOutputStream, outputConsumer, traceConsumer);
                 standardOutputThread.start();
 
-                final ExecutableStreamThread errorOutputThread = new ExecutableStreamThread(standardErrorStream, logger::info, logger::trace);
+                final ExecutableStreamThread errorOutputThread = new ExecutableStreamThread(standardErrorStream, outputConsumer, traceConsumer);
                 errorOutputThread.start();
 
                 final int returnCode = process.waitFor();
-                logger.info(String.format("process finished: %d", returnCode));
+                outputConsumer.accept(String.format("process finished: %d", returnCode));
 
                 standardOutputThread.join();
                 errorOutputThread.join();
