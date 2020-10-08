@@ -24,14 +24,25 @@ package com.synopsys.integration.executable;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.synopsys.integration.log.IntLogger;
 
 public class ProcessBuilderRunner implements ExecutableRunner {
     private final IntLogger logger;
+    private final Consumer<String> threadOutputConsumer;
+    private final Consumer<String> threadTraceConsumer;
 
     public ProcessBuilderRunner(final IntLogger logger) {
         this.logger = logger;
+        this.threadOutputConsumer = logger::info;
+        this.threadTraceConsumer = logger::trace;
+    }
+
+    public ProcessBuilderRunner(final IntLogger logger, final Consumer<String> threadOutputConsumer, final Consumer<String> threadTraceConsumer) {
+        this.logger = logger;
+        this.threadOutputConsumer = threadOutputConsumer;
+        this.threadTraceConsumer = threadTraceConsumer;
     }
 
     public ExecutableOutput execute(ProcessBuilder processBuilder) throws ExecutableRunnerException {
@@ -72,14 +83,14 @@ public class ProcessBuilderRunner implements ExecutableRunner {
             final Process process = processBuilder.start();
 
             try (InputStream standardOutputStream = process.getInputStream(); InputStream standardErrorStream = process.getErrorStream()) {
-                final ExecutableStreamThread standardOutputThread = new ExecutableStreamThread(standardOutputStream, logger::info, logger::trace);
+                final ExecutableStreamThread standardOutputThread = new ExecutableStreamThread(standardOutputStream, threadOutputConsumer, threadTraceConsumer);
                 standardOutputThread.start();
 
-                final ExecutableStreamThread errorOutputThread = new ExecutableStreamThread(standardErrorStream, logger::info, logger::trace);
+                final ExecutableStreamThread errorOutputThread = new ExecutableStreamThread(standardErrorStream, threadOutputConsumer, threadTraceConsumer);
                 errorOutputThread.start();
 
                 final int returnCode = process.waitFor();
-                logger.info(String.format("process finished: %d", returnCode));
+                logger.info(String.format("Process finished: %d", returnCode));
 
                 standardOutputThread.join();
                 errorOutputThread.join();
