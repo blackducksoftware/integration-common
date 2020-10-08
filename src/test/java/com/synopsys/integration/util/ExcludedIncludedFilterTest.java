@@ -8,26 +8,26 @@ import org.junit.jupiter.api.Test;
 public class ExcludedIncludedFilterTest {
     @Test
     public void testConstructor() {
-        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("", "");
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedFilter.fromCommaSeparatedStrings("", "");
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
 
-        excludedIncludedFilter = ExcludedIncludedFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("", "");
+        excludedIncludedFilter = ExcludedIncludedFilter.fromCommaSeparatedStrings("", "");
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
 
-        excludedIncludedFilter = ExcludedIncludedFilter.CREATE_EMPTY();
+        excludedIncludedFilter = ExcludedIncludedFilter.EMPTY;
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
 
-        excludedIncludedFilter = ExcludedIncludedFilter.CREATE_EMPTY();
+        excludedIncludedFilter = ExcludedIncludedFilter.EMPTY;
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
     }
 
     @Test
     public void testExcluded() {
-        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("bad", "");
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedFilter.fromCommaSeparatedStrings("bad", "");
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
         assertFalse(excludedIncludedFilter.shouldInclude("bad"));
 
-        excludedIncludedFilter = ExcludedIncludedFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("really_bad,also_really_bad", null);
+        excludedIncludedFilter = ExcludedIncludedFilter.fromCommaSeparatedStrings("really_bad,also_really_bad", null);
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
         assertFalse(excludedIncludedFilter.shouldInclude("really_bad"));
         assertFalse(excludedIncludedFilter.shouldInclude("also_really_bad"));
@@ -35,7 +35,7 @@ public class ExcludedIncludedFilterTest {
 
     @Test
     public void testExcludedWithAsterix() {
-        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("*bad*", "");
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedFilter.fromCommaSeparatedStrings("*bad*", "");
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
         assertTrue(excludedIncludedFilter.shouldInclude("bad"));
 
@@ -44,12 +44,12 @@ public class ExcludedIncludedFilterTest {
 
     @Test
     public void testIncludedAndExcluded() {
-        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("bad", "good,bad");
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedFilter.fromCommaSeparatedStrings("bad", "good,bad");
         assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
         assertTrue(excludedIncludedFilter.shouldInclude("good"));
         assertFalse(excludedIncludedFilter.shouldInclude("bad"));
 
-        excludedIncludedFilter = ExcludedIncludedFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("really_bad,also_really_bad", "good");
+        excludedIncludedFilter = ExcludedIncludedFilter.fromCommaSeparatedStrings("really_bad,also_really_bad", "good");
         assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
         assertTrue(excludedIncludedFilter.shouldInclude("good"));
         assertFalse(excludedIncludedFilter.shouldInclude("really_bad"));

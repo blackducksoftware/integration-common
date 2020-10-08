@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class ExcludedIncludedWildcardFilterTest {
     @Test
     public void testExcluded() {
-        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("*bad*", "");
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.fromCommaSeparatedStrings("*bad*", "");
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
         assertFalse(excludedIncludedFilter.shouldInclude("bad"));
         assertFalse(excludedIncludedFilter.shouldInclude("badMonkey"));
@@ -21,7 +21,7 @@ public class ExcludedIncludedWildcardFilterTest {
 
     @Test
     public void testIncludedAndExcluded() {
-        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("*bad*", "good*,bad");
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.fromCommaSeparatedStrings("*bad*", "good*,bad");
         assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
         assertTrue(excludedIncludedFilter.shouldInclude("good"));
         assertTrue(excludedIncludedFilter.shouldInclude("goodMonkey"));
@@ -33,7 +33,7 @@ public class ExcludedIncludedWildcardFilterTest {
 
     @Test
     public void testExcludedEscapeCharactersNotSupported() {
-        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.CREATE_FROM_COMMA_SEPARATED_STRINGS("bad\\*", "");
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.fromCommaSeparatedStrings("bad\\*", "");
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
         assertTrue(excludedIncludedFilter.shouldInclude("bad"));
         assertTrue(excludedIncludedFilter.shouldInclude("bad*"));
@@ -45,7 +45,7 @@ public class ExcludedIncludedWildcardFilterTest {
     public void testIncludedAndExcludedList() {
         List<String> toExclude = Arrays.asList("redherring", "*bad*");
         List<String> toInclude = Arrays.asList("good*", "bad");
-        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.CREATE_FROM_COLLECTIONS(toExclude, toInclude);
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.fromCollections(toExclude, toInclude);
         assertFalse(excludedIncludedFilter.shouldInclude("whatever"));
         assertTrue(excludedIncludedFilter.shouldInclude("good"));
         assertTrue(excludedIncludedFilter.shouldInclude("goodMonkey"));
@@ -57,7 +57,7 @@ public class ExcludedIncludedWildcardFilterTest {
 
     @Test
     public void testNothingIncludedOrExcluded() {
-        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.CREATE_EMPTY();
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedWildcardFilter.EMPTY;
         assertTrue(excludedIncludedFilter.shouldInclude("whatever"));
         assertTrue(excludedIncludedFilter.shouldInclude("good"));
         assertTrue(excludedIncludedFilter.shouldInclude("goodMonkey"));

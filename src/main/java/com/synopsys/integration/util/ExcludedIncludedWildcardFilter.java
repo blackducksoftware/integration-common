@@ -35,23 +35,21 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class ExcludedIncludedWildcardFilter extends ExcludedIncludedFilter {
     /**
-     * Construct a filter with no excludes or includes.
+     * An empty filter with no excludes or includes.
      */
-    public static ExcludedIncludedFilter CREATE_EMPTY() {
-        return new ExcludedIncludedWildcardFilter(Collections.emptyList(), Collections.emptyList());
-    }
+    public static final ExcludedIncludedWildcardFilter EMPTY = new ExcludedIncludedWildcardFilter(Collections.emptyList(), Collections.emptyList());
 
     /**
      * Provide a comma-separated string of values to exclude and/or a comma-separated string of values to include. Exclusion rules always win.
      */
-    public static ExcludedIncludedFilter CREATE_FROM_COMMA_SEPARATED_STRINGS(String toExclude, String toInclude) {
+    public static ExcludedIncludedWildcardFilter fromCommaSeparatedStrings(String toExclude, String toInclude) {
         return new ExcludedIncludedWildcardFilter(TokenizerUtils.createSetFromString(toExclude), TokenizerUtils.createSetFromString(toInclude));
     }
 
     /**
      * Provide a collection of values to exclude and/or a collection of values to include. Exclusion rules always win.
      */
-    public static ExcludedIncludedFilter CREATE_FROM_COLLECTIONS(Collection<String> toExclude, Collection<String> toInclude) {
+    public static ExcludedIncludedWildcardFilter fromCollections(Collection<String> toExclude, Collection<String> toInclude) {
         return new ExcludedIncludedWildcardFilter(toExclude, toInclude);
     }
 
