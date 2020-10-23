@@ -27,7 +27,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.*;
 
-public class Executable {
+import com.synopsys.integration.util.Stringable;
+
+public class Executable extends Stringable {
     private final File workingDirectory;
     private final Map<String, String> environmentVariables = new HashMap<>();
     private final List<String> commandWithArguments = new ArrayList<>();
