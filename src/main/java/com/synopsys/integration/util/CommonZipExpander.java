@@ -74,7 +74,7 @@ public class CommonZipExpander {
             }
 
             if (!tempZipFile.exists() || tempZipFile.length() <= 0) {
-                throw new IntegrationException("The zip file was not created correctly. Please try again.");
+                throw new IntegrationException(String.format("The zip file (%s) was not created correctly. Please try again.", tempZipFile.getAbsolutePath()));
             }
 
             expandUnknownFile(tempZipFile, targetExpansionDirectory);
@@ -102,7 +102,7 @@ public class CommonZipExpander {
                 expander.expand(unknownFile, targetExpansionDirectory);
             }
         } catch (IOException | ArchiveException e) {
-            logger.error("Couldn't extract the archive file - check the file's permissions: " + e.getMessage());
+            logger.error(String.format("Couldn't extract the archive file (%s) - validate the contents and permissions: " + e.getMessage(), unknownFile.getAbsolutePath()));
             throw e;
         }
 

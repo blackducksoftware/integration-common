@@ -47,6 +47,11 @@ public abstract class IntLogger {
 
     public abstract void setLogLevel(LogLevel logLevel);
 
+    public void errorAndDebug(String txt, Throwable t) {
+        error(txt);
+        debug(t.getMessage(), t);
+    }
+
     public void setLogLevel(final IntEnvironmentVariables variables) {
         final String logLevel = variables.getValue("BLACK_DUCK_LOG_LEVEL", "INFO");
         try {
