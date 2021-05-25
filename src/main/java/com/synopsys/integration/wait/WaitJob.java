@@ -7,68 +7,66 @@
  */
 package com.synopsys.integration.wait;
 
-import com.synopsys.integration.exception.IntegrationException;
-import com.synopsys.integration.log.IntLogger;
+import java.time.Duration;
+
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
-import java.time.Duration;
-import java.util.function.Supplier;
+import com.synopsys.integration.exception.IntegrationException;
+import com.synopsys.integration.log.IntLogger;
 
-public class WaitJob {
-    private WaitJobConfig waitJobConfig;
+public class WaitJob<T extends Object> {
+    public static final BooleanWaitJobCompleter BOOLEAN_COMPLETER = new BooleanWaitJobCompleter();
 
-    public static WaitJob create(IntLogger intLogger, long timeoutInSeconds, long startTime, int waitIntervalInSeconds, WaitJobTask waitJobTask) {
-        return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, startTime, waitIntervalInSeconds, waitJobTask));
+    public static final WaitJob<Boolean> createSimpleWait(WaitJobConfig waitJobConfig, WaitJobCondition waitJobCondition) {
+        return new WaitJob<>(waitJobConfig, waitJobCondition, BOOLEAN_COMPLETER);
     }
 
-    public static WaitJob create(IntLogger intLogger, long timeoutInSeconds, Supplier<Long> startTimeSupplier, int waitIntervalInSeconds, WaitJobTask waitJobTask) {
-        return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, startTimeSupplier, waitIntervalInSeconds, waitJobTask));
-    }
+    private final WaitJobConfig waitJobConfig;
+    private final WaitJobCondition waitJobCondition;
+    private final WaitJobCompleter<T> waitJobCompleter;
 
-    public static WaitJob createUsingSystemTimeWhenInvoked(IntLogger intLogger, long timeoutInSeconds, int waitIntervalInSeconds, WaitJobTask waitJobTask) {
-        return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, WaitJobConfig.CURRENT_TIME_SUPPLIER, waitIntervalInSeconds, waitJobTask));
-    }
-
-    public static WaitJob create(IntLogger intLogger, long timeoutInSeconds, long startTime, int waitIntervalInSeconds, String taskName, WaitJobTask waitJobTask) {
-        return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, startTime, waitIntervalInSeconds, taskName, waitJobTask));
-    }
-
-    public static WaitJob create(IntLogger intLogger, long timeoutInSeconds, Supplier<Long> startTimeSupplier, int waitIntervalInSeconds, String taskName, WaitJobTask waitJobTask) {
-        return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, startTimeSupplier, waitIntervalInSeconds, taskName, waitJobTask));
-    }
-
-    public static WaitJob createUsingSystemTimeWhenInvoked(IntLogger intLogger, long timeoutInSeconds, int waitIntervalInSeconds, String taskName, WaitJobTask waitJobTask) {
-        return new WaitJob(new WaitJobConfig(intLogger, timeoutInSeconds, WaitJobConfig.CURRENT_TIME_SUPPLIER, waitIntervalInSeconds, taskName, waitJobTask));
-    }
-
-    public WaitJob(WaitJobConfig waitJobConfig) {
+    public WaitJob(WaitJobConfig waitJobConfig, WaitJobCondition waitJobCondition, WaitJobCompleter<T> waitJobCompleter) {
         this.waitJobConfig = waitJobConfig;
+        this.waitJobCondition = waitJobCondition;
+        this.waitJobCompleter = waitJobCompleter;
     }
 
-    public boolean waitFor() throws InterruptedException, IntegrationException {
+    public T waitFor() throws InterruptedException, IntegrationException {
         int attempts = 0;
+        IntLogger intLogger = waitJobConfig.getIntLogger();
         long startTime = waitJobConfig.getStartTime();
         Duration currentDuration = Duration.ZERO;
         Duration maximumDuration = Duration.ofMillis(waitJobConfig.getTimeoutInSeconds() * 1000);
-        IntLogger intLogger = waitJobConfig.getIntLogger();
+        String taskDescription = waitJobConfig.getTaskDescription();
 
-        String taskDescription = waitJobConfig
-                .getTaskName()
-                .map(s -> String.format("for task %s ", s))
-                .orElse("");
+        boolean allCompleted = waitJobCondition.isComplete();
+        if (allCompleted) {
+            String attemptPrefix = createAttemptPrefix(attempts, currentDuration, taskDescription);
+            return complete(intLogger, attemptPrefix);
+        }
+
         while (currentDuration.compareTo(maximumDuration) <= 0) {
-            String attemptMessagePrefix = String.format("Try #%s %s(elapsed: %s)...", ++attempts, taskDescription, DurationFormatUtils.formatDurationHMS(currentDuration.toMillis()));
-            if (waitJobConfig.getWaitJobTask().isComplete()) {
-                intLogger.info(String.format("%scomplete!", attemptMessagePrefix));
-                return true;
+            attempts++;
+            String attemptPrefix = createAttemptPrefix(attempts, currentDuration, taskDescription);
+            if (waitJobCondition.isComplete()) {
+                return complete(intLogger, attemptPrefix);
             } else {
-                intLogger.info(String.format("%snot done yet, waiting %s seconds and trying again...", attemptMessagePrefix, waitJobConfig.getWaitIntervalInSeconds()));
+                intLogger.info(String.format("%snot done yet, waiting %s seconds and trying again...", attemptPrefix, waitJobConfig.getWaitIntervalInSeconds()));
                 Thread.sleep(waitJobConfig.getWaitIntervalInSeconds() * 1000);
                 currentDuration = Duration.ofMillis(System.currentTimeMillis() - startTime);
             }
         }
 
-        return false;
+        return waitJobCompleter.handleTimeout();
+    }
+
+    private T complete(IntLogger intLogger, String attemptPrefix) throws IntegrationException {
+        intLogger.info(String.format("%scomplete!", attemptPrefix));
+        return waitJobCompleter.complete();
+    }
+
+    private String createAttemptPrefix(int attempts, Duration currentDuration, String taskDescription) {
+        return String.format("Try #%s %s(elapsed: %s)...", attempts, taskDescription, DurationFormatUtils.formatDurationHMS(currentDuration.toMillis()));
     }
 
 }

@@ -1,43 +1,66 @@
 package com.synopsys.integration.wait;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import com.synopsys.integration.exception.IntegrationException;
 import com.synopsys.integration.log.BufferedIntLogger;
 import com.synopsys.integration.log.LogLevel;
+
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 public class WaitJobTest {
-    @Test
-    public void testTaskNameLogged() throws IntegrationException, InterruptedException {
-        BufferedIntLogger testingLogger = new BufferedIntLogger();
+    private final BufferedIntLogger testingLogger = new BufferedIntLogger();
+    private final WaitJobConfig waitJobConfig = new WaitJobConfig(testingLogger, "holypants", 5, WaitJobConfig.CURRENT_TIME_SUPPLIER, 1);
 
-        WaitJob waitJob = WaitJob.createUsingSystemTimeWhenInvoked(testingLogger, 5, 1, "holypants", createTask());
-        waitJob.waitFor();
+    @Test
+    public void testTaskCompletesImmediately() throws IntegrationException, InterruptedException {
+        WaitJobCondition waitJobCondition = () -> true;
+        WaitJob<Boolean> waitJob = new WaitJob(waitJobConfig, waitJobCondition, WaitJob.BOOLEAN_COMPLETER);
+        boolean completed = waitJob.waitFor();
+
+        assertTrue(completed);
 
         String output = testingLogger.getOutputString(LogLevel.INFO);
-        Assert.assertTrue(output.contains("holypants"));
+        assertTrue(output.contains("holypants"));
+        assertTrue(output.contains("complete!"));
+        assertFalse(output.contains("not done yet"));
     }
 
     @Test
-    public void testTaskNameNotLogged() throws IntegrationException, InterruptedException {
-        BufferedIntLogger testingLogger = new BufferedIntLogger();
-
-        WaitJob waitJob = WaitJob.createUsingSystemTimeWhenInvoked(testingLogger, 5, 1, createTask());
-        waitJob.waitFor();
-
-        String output = testingLogger.getOutputString(LogLevel.INFO);
-        Assert.assertFalse(output.contains("holypants"));
-    }
-
-    private WaitJobTask createTask() {
-        return new WaitJobTask() {
+    public void testTaskCompletesEventually() throws IntegrationException, InterruptedException {
+        WaitJobCondition waitJobCondition = new WaitJobCondition() {
             private int count = 0;
 
             @Override
-            public boolean isComplete() throws IntegrationException {
-                return ++count > 1;
+            public boolean isComplete() {
+                return ++count > 2;
             }
         };
+        WaitJob<Boolean> waitJob = new WaitJob(waitJobConfig, waitJobCondition, WaitJob.BOOLEAN_COMPLETER);
+        boolean completed = waitJob.waitFor();
+
+        assertTrue(completed);
+
+        String output = testingLogger.getOutputString(LogLevel.INFO);
+        assertTrue(output.contains("holypants"));
+        assertTrue(output.contains("complete!"));
+        assertTrue(output.contains("not done yet"));
+    }
+
+    @Test
+    public void testTaskCompletesNever() throws IntegrationException, InterruptedException {
+        WaitJobCondition waitJobCondition = () -> false;
+        WaitJob<Boolean> waitJob = new WaitJob(waitJobConfig, waitJobCondition, WaitJob.BOOLEAN_COMPLETER);
+        boolean completed = waitJob.waitFor();
+
+        assertFalse(completed);
+
+        String output = testingLogger.getOutputString(LogLevel.INFO);
+        assertTrue(output.contains("holypants"));
+        assertFalse(output.contains("complete!"));
+        assertTrue(output.contains("not done yet"));
     }
 
 }

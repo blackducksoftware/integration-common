@@ -9,7 +9,8 @@ package com.synopsys.integration.wait;
 
 import com.synopsys.integration.exception.IntegrationException;
 
-public interface WaitJobTask {
+@FunctionalInterface
+public interface WaitJobCondition {
     boolean isComplete() throws IntegrationException;
 
 }
