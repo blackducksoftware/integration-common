@@ -29,7 +29,7 @@ public class BufferedIntLogger extends IntLogger {
         outputMap.put(LogLevel.TRACE, new ArrayList<>());
     }
 
-    public void resetLogs(final LogLevel level) {
+    public void resetLogs(LogLevel level) {
         outputMap.put(level, new ArrayList<>());
     }
 
@@ -37,75 +37,75 @@ public class BufferedIntLogger extends IntLogger {
         EnumSet.allOf(LogLevel.class).forEach(this::resetLogs);
     }
 
-    public List<String> getOutputList(final LogLevel level) {
+    public List<String> getOutputList(LogLevel level) {
         return outputMap.get(level);
     }
 
-    public String getOutputString(final LogLevel level) {
+    public String getOutputString(LogLevel level) {
         return StringUtils.trimToNull(StringUtils.join(getOutputList(level), '\n'));
     }
 
-    public String getErrorOutputString(final Throwable e) {
-        final StringWriter sw = new StringWriter();
+    public String getErrorOutputString(Throwable e) {
+        StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         return sw.toString();
     }
 
     @Override
-    public void alwaysLog(final String txt) {
+    public void alwaysLog(String txt) {
         outputMap.get(LogLevel.OFF).add(txt);
     }
 
     @Override
-    public void debug(final String txt) {
+    public void debug(String txt) {
         outputMap.get(LogLevel.DEBUG).add(txt);
     }
 
     @Override
-    public void debug(final String txt, final Throwable e) {
+    public void debug(String txt, Throwable e) {
         outputMap.get(LogLevel.DEBUG).add(txt);
         outputMap.get(LogLevel.DEBUG).add(getErrorOutputString(e));
     }
 
     @Override
-    public void error(final Throwable e) {
+    public void error(Throwable e) {
         outputMap.get(LogLevel.ERROR).add(getErrorOutputString(e));
     }
 
     @Override
-    public void error(final String txt) {
+    public void error(String txt) {
         outputMap.get(LogLevel.ERROR).add(txt);
     }
 
     @Override
-    public void error(final String txt, final Throwable e) {
+    public void error(String txt, Throwable e) {
         outputMap.get(LogLevel.ERROR).add(txt);
         outputMap.get(LogLevel.ERROR).add(getErrorOutputString(e));
     }
 
     @Override
-    public void info(final String txt) {
+    public void info(String txt) {
         outputMap.get(LogLevel.INFO).add(txt);
     }
 
     @Override
-    public void trace(final String txt) {
+    public void trace(String txt) {
         outputMap.get(LogLevel.TRACE).add(txt);
     }
 
     @Override
-    public void trace(final String txt, final Throwable e) {
+    public void trace(String txt, Throwable e) {
         outputMap.get(LogLevel.TRACE).add(txt);
         outputMap.get(LogLevel.TRACE).add(getErrorOutputString(e));
     }
 
     @Override
-    public void warn(final String txt) {
+    public void warn(String txt) {
         outputMap.get(LogLevel.WARN).add(txt);
     }
 
     @Override
-    public void setLogLevel(final LogLevel level) {
+    public void setLogLevel(LogLevel level) {
         // Not supported.
     }
 
