@@ -32,7 +32,7 @@ public class WaitJob<T extends Object> {
     }
 
     public T waitFor() throws InterruptedException, IntegrationException {
-        int attempts = 0;
+        int attempts = 1;
         IntLogger intLogger = waitJobConfig.getIntLogger();
         long startTime = waitJobConfig.getStartTime();
         Duration currentDuration = Duration.ZERO;
@@ -46,7 +46,6 @@ public class WaitJob<T extends Object> {
         }
 
         while (currentDuration.compareTo(maximumDuration) <= 0) {
-            attempts++;
             String attemptPrefix = createAttemptPrefix(attempts, currentDuration, taskDescription);
             if (waitJobCondition.isComplete()) {
                 return complete(intLogger, attemptPrefix);
@@ -55,6 +54,7 @@ public class WaitJob<T extends Object> {
                 Thread.sleep(waitJobConfig.getWaitIntervalInSeconds() * 1000);
                 currentDuration = Duration.ofMillis(System.currentTimeMillis() - startTime);
             }
+            attempts++;
         }
 
         return waitJobCompleter.handleTimeout();

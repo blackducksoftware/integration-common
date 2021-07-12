@@ -23,6 +23,10 @@ public class WaitJobTest {
         assertTrue(completed);
 
         String output = testingLogger.getOutputString(LogLevel.INFO);
+        assertFalse(output.contains("Try #0"));
+        assertTrue(output.contains("Try #1"));
+        assertFalse(output.contains("Try #2"));
+
         assertTrue(output.contains("holypants"));
         assertTrue(output.contains("complete!"));
         assertFalse(output.contains("not done yet"));
@@ -44,6 +48,10 @@ public class WaitJobTest {
         assertTrue(completed);
 
         String output = testingLogger.getOutputString(LogLevel.INFO);
+        assertFalse(output.contains("Try #0"));
+        assertTrue(output.contains("Try #1"));
+        assertTrue(output.contains("Try #2"));
+
         assertTrue(output.contains("holypants"));
         assertTrue(output.contains("complete!"));
         assertTrue(output.contains("not done yet"));
@@ -58,6 +66,10 @@ public class WaitJobTest {
         assertFalse(completed);
 
         String output = testingLogger.getOutputString(LogLevel.INFO);
+        assertFalse(output.contains("Try #0"));
+        assertTrue(output.contains("Try #1"));
+        assertTrue(output.contains("Try #2"));
+
         assertTrue(output.contains("holypants"));
         assertFalse(output.contains("complete!"));
         assertTrue(output.contains("not done yet"));
