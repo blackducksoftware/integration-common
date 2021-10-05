@@ -8,6 +8,8 @@
 package com.synopsys.integration.util;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -20,8 +22,16 @@ public class TokenizerUtils {
         return INSTANCE.createSet(s);
     }
 
+    public static List<String> createListFromString(String s) {
+        return INSTANCE.createList(s);
+    }
+
     public Set<String> createSet(String s) {
-        Set<String> set = new HashSet<>();
+        return new HashSet<>(createList(s));
+    }
+
+    public List<String> createList(String s) {
+        List<String> set = new LinkedList<>();
         StringTokenizer stringTokenizer = new StringTokenizer(StringUtils.trimToEmpty(s), ",");
         while (stringTokenizer.hasMoreTokens()) {
             set.add(StringUtils.trimToEmpty(stringTokenizer.nextToken()));
