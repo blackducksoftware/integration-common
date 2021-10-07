@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 
 import org.junit.jupiter.api.Test;
@@ -27,8 +29,8 @@ public class EnumSetFactoryTest {
 
     @Test
     public void testAll() {
-        ExcludedIncludedFilter includeAll = ExcludedIncludedFilter.fromCommaSeparatedStrings("", "ALL");
-        ExcludedIncludedFilter excludeAll = ExcludedIncludedFilter.fromCommaSeparatedStrings("ALL", "");
+        ExcludedIncludedFilter includeAll = new ExcludedIncludedAllNoneFilter(Collections.emptyList(), Arrays.asList("ALL"));
+        ExcludedIncludedFilter excludeAll = new ExcludedIncludedAllNoneFilter(Arrays.asList("ALL"), Collections.emptyList());
 
         EnumSet<BestTvShows> all = EnumSet.allOf(BestTvShows.class);
         EnumSet<BestTvShows> none = EnumSet.noneOf(BestTvShows.class);
@@ -40,8 +42,8 @@ public class EnumSetFactoryTest {
 
     @Test
     public void testNone() {
-        ExcludedIncludedFilter includeNone = ExcludedIncludedFilter.fromCommaSeparatedStrings("", "NONE");
-        ExcludedIncludedFilter excludeNone = ExcludedIncludedFilter.fromCommaSeparatedStrings("NONE", "");
+        ExcludedIncludedFilter includeNone = new ExcludedIncludedAllNoneFilter(Collections.emptyList(), Arrays.asList("NONE"));
+        ExcludedIncludedFilter excludeNone = new ExcludedIncludedAllNoneFilter(Arrays.asList("NONE"), Collections.emptyList());
 
         EnumSet<BestTvShows> all = EnumSet.allOf(BestTvShows.class);
         EnumSet<BestTvShows> none = EnumSet.noneOf(BestTvShows.class);

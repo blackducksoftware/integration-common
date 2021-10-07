@@ -7,6 +7,7 @@
  */
 package com.synopsys.integration.util;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,10 +19,10 @@ public class EnumSetFactory<E extends Enum<E>> {
         this.enumClass = enumClass;
 
         Set<String> names = EnumSet.allOf(enumClass)
-            .stream()
-            .map(Enum::name)
-            .map(String::toUpperCase)
-            .collect(Collectors.toSet());
+                                .stream()
+                                .map(Enum::name)
+                                .map(String::toUpperCase)
+                                .collect(Collectors.toSet());
 
         if (names.contains("ALL") || names.contains("NONE")) {
             throw new IllegalArgumentException("EnumSetFactory can not support an enum with 'all' or 'none' as values.");
@@ -29,39 +30,20 @@ public class EnumSetFactory<E extends Enum<E>> {
     }
 
     public EnumSet<E> parseIncludedValues(String enumValues) {
-        if ("ALL".equalsIgnoreCase(enumValues)) {
-            return EnumSet.allOf(enumClass);
-        } else if ("NONE".equalsIgnoreCase(enumValues)) {
-            return EnumSet.noneOf(enumClass);
-        } else {
-            return EnumSet.copyOf(EnumUtils.parseCommaDelimitted(enumValues, enumClass));
-        }
+        ExcludedIncludedAllNoneFilter filter = new ExcludedIncludedAllNoneFilter(Collections.emptySet(), TokenizerUtils.createSetFromString(enumValues));
+        return parse(filter);
     }
 
     public EnumSet<E> parse(ExcludedIncludedFilter excludedIncludedFilter) {
-        if (1 == excludedIncludedFilter.excludedSet.size() && excludedIncludedFilter.includedSet.isEmpty()) {
-            String excludedValue = excludedIncludedFilter.excludedSet.iterator().next();
-            if ("ALL".equalsIgnoreCase(excludedValue)) {
-                return EnumSet.noneOf(enumClass);
-            } else if ("NONE".equalsIgnoreCase(excludedValue)) {
-                return EnumSet.allOf(enumClass);
-            }
-        }
-
-        if (1 == excludedIncludedFilter.includedSet.size() && excludedIncludedFilter.excludedSet.isEmpty()) {
-            String includedValue = excludedIncludedFilter.includedSet.iterator().next();
-            if ("ALL".equalsIgnoreCase(includedValue)) {
-                return EnumSet.allOf(enumClass);
-            } else if ("NONE".equalsIgnoreCase(includedValue)) {
-                return EnumSet.noneOf(enumClass);
-            }
-        }
-
         Set<String> namesToInclude = EnumSet.allOf(enumClass)
-            .stream()
-            .map(Enum::name)
-            .filter(excludedIncludedFilter::shouldInclude)
-            .collect(Collectors.toSet());
+                                         .stream()
+                                         .map(Enum::name)
+                                         .filter(excludedIncludedFilter::shouldInclude)
+                                         .collect(Collectors.toSet());
+
+        if (namesToInclude.isEmpty()) {
+            return EnumSet.noneOf(enumClass);
+        }
 
         return EnumSet.copyOf(EnumUtils.convert(namesToInclude, enumClass));
     }

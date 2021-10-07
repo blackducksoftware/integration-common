@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -22,24 +23,62 @@ public class ExcludedIncludedFilter {
      */
     public static final ExcludedIncludedFilter EMPTY = new ExcludedIncludedFilter(Collections.emptyList(), Collections.emptyList());
 
+    /**
+     * A filter that will include everything.
+     */
+    public static final ExcludedIncludedFilter INCLUDE_EVERYTHING = new ExcludedIncludedFilter(Collections.emptyList(), Collections.emptyList()) {
+        @Override
+        public boolean willExclude(String itemName) {
+            return false;
+        }
+        @Override
+        public boolean willInclude(String itemName) {
+            return true;
+        }
+    };
+
+    /**
+     * A filter that will exclude everything.
+     */
+    public static final ExcludedIncludedFilter INCLUDE_NOTHING = new ExcludedIncludedFilter(Collections.emptyList(), Collections.emptyList()) {
+        @Override
+        public boolean willExclude(String itemName) {
+            return true;
+        }
+        @Override
+        public boolean willInclude(String itemName) {
+            return false;
+        }
+    };
+
     protected final Set<String> excludedSet;
     protected final Set<String> includedSet;
 
     /**
-     * Provide a comma-separated string of values to exclude and/or a comma-separated string of values to include. Exclusion rules always win.
+     * Provide a comma-separated string of values to exclude and/or a
+     * comma-separated string of values to include. Exclusion rules always win.
      */
     public static ExcludedIncludedFilter fromCommaSeparatedStrings(String toExclude, String toInclude) {
         return new ExcludedIncludedFilter(TokenizerUtils.createSetFromString(toExclude), TokenizerUtils.createSetFromString(toInclude));
     }
 
     /**
-     * Provide a collection of values to exclude and/or a collection of values to include. Exclusion rules always win.
+     * Provide a collection of values to exclude and/or a collection of values
+     * to include. Exclusion rules always win.
      */
     public static ExcludedIncludedFilter fromCollections(Collection<String> toExclude, Collection<String> toInclude) {
         return new ExcludedIncludedFilter(toExclude, toInclude);
     }
 
-    protected ExcludedIncludedFilter(Collection<String> toExcludeList, Collection<String> toIncludeList) {
+    /**
+     * An empty filter with no excludes or includes.
+     */
+    protected ExcludedIncludedFilter() {
+        excludedSet = Collections.emptySet();
+        includedSet = Collections.emptySet();
+    }
+
+    public ExcludedIncludedFilter(Collection<String> toExcludeList, Collection<String> toIncludeList) {
         excludedSet = new HashSet<>(toExcludeList);
         includedSet = new HashSet<>(toIncludeList);
     }
