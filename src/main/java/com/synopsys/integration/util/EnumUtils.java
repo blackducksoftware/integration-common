@@ -7,7 +7,7 @@
  */
 package com.synopsys.integration.util;
 
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,21 +22,21 @@ public class EnumUtils {
     }
 
     public static <T extends Enum<T>> List<T> parseCommaDelimitted(String commaDelimittedEnumString, Class<T> enumClass) {
-        return Arrays
-                       .stream(commaDelimittedEnumString.split(","))
-                       .map(String::trim)
-                       .filter(StringUtils::isNotBlank)
-                       .map(token -> Enum.valueOf(enumClass, token))
-                       .collect(Collectors.toList());
+        return TokenizerUtils
+                   .createListFromString(commaDelimittedEnumString)
+                   .stream()
+                   .filter(StringUtils::isNotBlank)
+                   .map(token -> Enum.valueOf(enumClass, token))
+                   .collect(Collectors.toList());
     }
 
-    public static <T extends Enum<T>> List<T> convert(List<String> values, Class<T> enumClass) {
+    public static <T extends Enum<T>> List<T> convert(Collection<String> values, Class<T> enumClass) {
         return values
-                       .stream()
-                       .map(String::trim)
-                       .filter(StringUtils::isNotBlank)
-                       .map(token -> Enum.valueOf(enumClass, token))
-                       .collect(Collectors.toList());
+                   .stream()
+                   .map(String::trim)
+                   .filter(StringUtils::isNotBlank)
+                   .map(token -> Enum.valueOf(enumClass, token))
+                   .collect(Collectors.toList());
     }
 
 }
