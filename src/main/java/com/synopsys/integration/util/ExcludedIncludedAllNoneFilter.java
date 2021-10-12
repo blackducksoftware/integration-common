@@ -18,8 +18,8 @@ public class ExcludedIncludedAllNoneFilter extends ExcludedIncludedFilter {
     private final boolean allNoneSpecified;
     private final boolean excludeAll;
 
-    public ExcludedIncludedAllNoneFilter(Collection<String> toExcludeList, Collection<String> toIncludeList) {
-        super(toExcludeList, toIncludeList);
+    public ExcludedIncludedAllNoneFilter(Collection<String> toExcludeList, Collection<String> toIncludeList, boolean lenient) {
+        super(toExcludeList, toIncludeList, lenient);
 
         Set<String> excludingAllOrNone = reduceToAllOrNone(toExcludeList);
         Set<String> includingAllOrNone = reduceToAllOrNone(toIncludeList);
@@ -34,6 +34,10 @@ public class ExcludedIncludedAllNoneFilter extends ExcludedIncludedFilter {
             allNoneSpecified = false;
             excludeAll = false;
         }
+    }
+
+    public ExcludedIncludedAllNoneFilter(Collection<String> toExcludeList, Collection<String> toIncludeList) {
+        this(toExcludeList, toIncludeList, true);
     }
 
     private Set<String> reduceToAllOrNone(Collection<String> list) {

@@ -30,7 +30,12 @@ public class EnumSetFactory<E extends Enum<E>> {
     }
 
     public EnumSet<E> parseIncludedValues(String enumValues) {
-        ExcludedIncludedAllNoneFilter filter = new ExcludedIncludedAllNoneFilter(Collections.emptySet(), TokenizerUtils.createSetFromString(enumValues));
+        Set<String> valuesToInclude = TokenizerUtils.createSetFromString(enumValues);
+        if (valuesToInclude.isEmpty()) {
+            return EnumSet.noneOf(enumClass);
+        }
+
+        ExcludedIncludedAllNoneFilter filter = new ExcludedIncludedAllNoneFilter(Collections.emptySet(), valuesToInclude, false);
         return parse(filter);
     }
 

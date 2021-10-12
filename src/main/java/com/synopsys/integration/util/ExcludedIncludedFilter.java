@@ -17,70 +17,47 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * This filter makes it possible to choose the smallest set for filtering:
+ * either the items to include or items to exclude from the full set. Exclusion
+ * rules always win.
+ *
+ * If you provide no Strings to either list, nothing will be filtered. This
+ * default can be overridden by setting lenient = false.
+ */
 public class ExcludedIncludedFilter {
-    /**
-     * An empty filter with no excludes or includes.
-     */
     public static final ExcludedIncludedFilter EMPTY = new ExcludedIncludedFilter(Collections.emptyList(), Collections.emptyList());
-
-    /**
-     * A filter that will include everything.
-     */
-    public static final ExcludedIncludedFilter INCLUDE_EVERYTHING = new ExcludedIncludedFilter(Collections.emptyList(), Collections.emptyList()) {
-        @Override
-        public boolean willExclude(String itemName) {
-            return false;
-        }
-        @Override
-        public boolean willInclude(String itemName) {
-            return true;
-        }
-    };
-
-    /**
-     * A filter that will exclude everything.
-     */
-    public static final ExcludedIncludedFilter INCLUDE_NOTHING = new ExcludedIncludedFilter(Collections.emptyList(), Collections.emptyList()) {
-        @Override
-        public boolean willExclude(String itemName) {
-            return true;
-        }
-        @Override
-        public boolean willInclude(String itemName) {
-            return false;
-        }
-    };
 
     protected final Set<String> excludedSet;
     protected final Set<String> includedSet;
+    protected final boolean lenient;
 
     /**
      * Provide a comma-separated string of values to exclude and/or a
-     * comma-separated string of values to include. Exclusion rules always win.
+     * comma-separated string of values to include.
      */
     public static ExcludedIncludedFilter fromCommaSeparatedStrings(String toExclude, String toInclude) {
         return new ExcludedIncludedFilter(TokenizerUtils.createSetFromString(toExclude), TokenizerUtils.createSetFromString(toInclude));
     }
 
+    public ExcludedIncludedFilter(Collection<String> toExcludeList, Collection<String> toIncludeList) {
+        this(toExcludeList, toIncludeList, true);
+    }
+
     /**
      * Provide a collection of values to exclude and/or a collection of values
      * to include. Exclusion rules always win.
+     *
+     * If lenient = true (default case), no filtering will occur and
+     * all items will be included.
+     *
+     * If lenient = false, unless items are specifically included, they
+     * will be excluded.
      */
-    public static ExcludedIncludedFilter fromCollections(Collection<String> toExclude, Collection<String> toInclude) {
-        return new ExcludedIncludedFilter(toExclude, toInclude);
-    }
-
-    /**
-     * An empty filter with no excludes or includes.
-     */
-    protected ExcludedIncludedFilter() {
-        excludedSet = Collections.emptySet();
-        includedSet = Collections.emptySet();
-    }
-
-    public ExcludedIncludedFilter(Collection<String> toExcludeList, Collection<String> toIncludeList) {
+    public ExcludedIncludedFilter(Collection<String> toExcludeList, Collection<String> toIncludeList, boolean lenient) {
         excludedSet = new HashSet<>(toExcludeList);
         includedSet = new HashSet<>(toIncludeList);
+        this.lenient = lenient;
     }
 
     public boolean willExclude(String itemName) {
@@ -91,10 +68,11 @@ public class ExcludedIncludedFilter {
     }
 
     public boolean willInclude(String itemName) {
-        if (includedSet.isEmpty() || includedSet.contains(itemName)) {
-            return true;
+        if (includedSet.isEmpty()) {
+            return lenient;
         }
-        return false;
+
+        return includedSet.contains(itemName);
     }
 
     public final boolean shouldInclude(String itemName) {

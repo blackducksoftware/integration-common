@@ -14,6 +14,18 @@ public class EnumSetFactoryTest {
     private final EnumSetFactory<BestTvShows> bestShowsFactory = new EnumSetFactory<>(BestTvShows.class);
 
     @Test
+    public void testEmptyString() {
+        EnumSet<BestTvShows> noShows = bestShowsFactory.parseIncludedValues("");
+        assertTrue(noShows.isEmpty());
+    }
+
+    @Test
+    public void testTerribleShow() {
+        EnumSet<BestTvShows> terribleShows = bestShowsFactory.parseIncludedValues("THE_INCREDIBLE_HULK");
+        assertTrue(terribleShows.isEmpty());
+    }
+
+    @Test
     public void testSimpleString() {
         String values = "BATMAN_THE_ANIMATED_SERIES, MURDER_SHE_WROTE, GET_SMART, FIREFLY, EUREKA";
         EnumSet<BestTvShows> selectShows = bestShowsFactory.parseIncludedValues(values);

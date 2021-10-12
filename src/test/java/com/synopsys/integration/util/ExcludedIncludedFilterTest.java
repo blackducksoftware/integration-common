@@ -56,4 +56,13 @@ public class ExcludedIncludedFilterTest {
         assertFalse(excludedIncludedFilter.shouldInclude("also_really_bad"));
     }
 
+    public void testNothingSetExplicitly() {
+        ExcludedIncludedFilter excludedIncludedFilter = ExcludedIncludedFilter.EMPTY;
+
+        assertTrue(excludedIncludedFilter.shouldInclude("steak"));
+        assertTrue(excludedIncludedFilter.shouldInclude("chicken"));
+        //wow, this filter will include *anything*
+        assertTrue(excludedIncludedFilter.shouldInclude("tofu"));
+    }
+
 }
