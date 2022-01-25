@@ -86,6 +86,9 @@ public class ProcessBuilderRunner implements ExecutableRunner {
                 final ExecutableOutput output = new ExecutableOutput(returnCode, standardOutput, errorOutput);
                 return output;
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new ExecutableRunnerException(e);
         } catch (final Exception e) {
             throw new ExecutableRunnerException(e);
         }
