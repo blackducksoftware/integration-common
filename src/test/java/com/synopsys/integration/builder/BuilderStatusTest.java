@@ -37,15 +37,15 @@ public class BuilderStatusTest {
     public void testMultipleErrors() {
         BuilderStatus builderStatus = new BuilderStatus();
         String errorOne = "Error 1";
-        String errorTwo = "Error 1";
+        String errorTwo = "Error 2";
         List<String> expectedErrors = new ArrayList<>();
         expectedErrors.add(errorOne);
         expectedErrors.add(errorTwo);
         builderStatus.addAllErrorMessages(expectedErrors);
 
         assertFalse(builderStatus.isValid());
-        assertEquals(errorOne, builderStatus.getErrorMessages().get(0));
-        assertEquals(errorTwo, builderStatus.getErrorMessages().get(1));
+        assertTrue(builderStatus.getErrorMessages().contains(errorOne));
+        assertTrue(builderStatus.getErrorMessages().contains(errorTwo));
         assertEquals(expectedErrors, builderStatus.getErrorMessages());
         assertEquals(StringUtils.join(expectedErrors, ":"), builderStatus.getFullErrorMessage(":"));
     }
