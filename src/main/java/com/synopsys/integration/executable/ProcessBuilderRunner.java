@@ -75,7 +75,7 @@ public class ProcessBuilderRunner implements ExecutableRunner {
                 errorOutputThread.start();
 
                 final int returnCode = process.waitFor();
-                logger.info(String.format("Process finished: %d", returnCode));
+                logger.info(String.format("Process return code: %d", returnCode));
 
                 standardOutputThread.join();
                 errorOutputThread.join();
