@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BuilderProperties {
+public final class BuilderProperties {
     private final Map<BuilderPropertyKey, String> values = new HashMap<>();
 
     public static BuilderProperties createWithStrings(Set<String> keys) {
@@ -31,7 +31,9 @@ public class BuilderProperties {
     }
 
     public void set(BuilderPropertyKey key, String value) {
-        values.put(key, value);
+        if (values.containsKey(key)) {
+            values.put(key, value);
+        }
     }
 
     public void setProperty(String key, String value) {
