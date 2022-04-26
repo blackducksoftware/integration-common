@@ -10,9 +10,14 @@ package com.synopsys.integration.wait;
 import com.synopsys.integration.exception.IntegrationException;
 import com.synopsys.integration.exception.IntegrationTimeoutException;
 
-public interface WaitJobCompleter<T extends Object> {
-    T complete() throws IntegrationException;
+public interface ResilientJob<T> {
+    void attemptJob() throws IntegrationException;
 
-    T handleTimeout() throws IntegrationTimeoutException;
+    boolean wasJobCompleted();
 
+    T onTimeout() throws IntegrationTimeoutException;
+
+    T onComplete();
+
+    String getName();
 }

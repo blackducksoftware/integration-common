@@ -11,22 +11,20 @@ import java.util.function.Supplier;
 
 import com.synopsys.integration.log.IntLogger;
 
-public class WaitJobConfig {
+public class ResilientJobConfig {
     public static final Supplier<Long> CURRENT_TIME_SUPPLIER = System::currentTimeMillis;
 
     private final IntLogger intLogger;
-    private final String taskName;
     private final long timeoutInSeconds;
     private final Supplier<Long> startTimeSupplier;
     private final int waitIntervalInSeconds;
 
-    public WaitJobConfig(IntLogger intLogger, String taskName, long timeoutInSeconds, long startTime, int waitIntervalInSeconds) {
-        this(intLogger, taskName, timeoutInSeconds, () -> startTime, waitIntervalInSeconds);
+    public ResilientJobConfig(IntLogger intLogger, long timeoutInSeconds, long startTime, int waitIntervalInSeconds) {
+        this(intLogger, timeoutInSeconds, () -> startTime, waitIntervalInSeconds);
     }
 
-    public WaitJobConfig(IntLogger intLogger, String taskName, long timeoutInSeconds, Supplier<Long> startTimeSupplier, int waitIntervalInSeconds) {
+    public ResilientJobConfig(IntLogger intLogger, long timeoutInSeconds, Supplier<Long> startTimeSupplier, int waitIntervalInSeconds) {
         this.intLogger = intLogger;
-        this.taskName = taskName;
         this.timeoutInSeconds = timeoutInSeconds;
         this.startTimeSupplier = startTimeSupplier;
 
@@ -40,14 +38,6 @@ public class WaitJobConfig {
 
     public IntLogger getIntLogger() {
         return intLogger;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public String getTaskDescription() {
-        return String.format("for task %s ", taskName);
     }
 
     public long getTimeoutInSeconds() {

@@ -7,66 +7,47 @@
  */
 package com.synopsys.integration.wait;
 
-import java.time.Duration;
-
-import org.apache.commons.lang3.time.DurationFormatUtils;
-
 import com.synopsys.integration.exception.IntegrationException;
-import com.synopsys.integration.log.IntLogger;
+import com.synopsys.integration.exception.IntegrationTimeoutException;
 
-public class WaitJob<T extends Object> {
-    public static final BooleanWaitJobCompleter BOOLEAN_COMPLETER = new BooleanWaitJobCompleter();
-
-    public static final WaitJob<Boolean> createSimpleWait(WaitJobConfig waitJobConfig, WaitJobCondition waitJobCondition) {
-        return new WaitJob<>(waitJobConfig, waitJobCondition, BOOLEAN_COMPLETER);
-    }
-
-    private final WaitJobConfig waitJobConfig;
+public class WaitJob implements ResilientJob<Boolean> {
     private final WaitJobCondition waitJobCondition;
-    private final WaitJobCompleter<T> waitJobCompleter;
+    private final String name;
+    private boolean complete;
 
-    public WaitJob(WaitJobConfig waitJobConfig, WaitJobCondition waitJobCondition, WaitJobCompleter<T> waitJobCompleter) {
-        this.waitJobConfig = waitJobConfig;
+    public WaitJob(final WaitJobCondition waitJobCondition, String name) {
         this.waitJobCondition = waitJobCondition;
-        this.waitJobCompleter = waitJobCompleter;
+        this.name = name;
     }
 
-    public T waitFor() throws InterruptedException, IntegrationException {
-        int attempts = 1;
-        IntLogger intLogger = waitJobConfig.getIntLogger();
-        long startTime = waitJobConfig.getStartTime();
-        Duration currentDuration = Duration.ZERO;
-        Duration maximumDuration = Duration.ofMillis(waitJobConfig.getTimeoutInSeconds() * 1000);
-        String taskDescription = waitJobConfig.getTaskDescription();
-
-        boolean allCompleted = waitJobCondition.isComplete();
-        if (allCompleted) {
-            String attemptPrefix = createAttemptPrefix(attempts, currentDuration, taskDescription);
-            return complete(intLogger, attemptPrefix);
-        }
-
-        while (currentDuration.compareTo(maximumDuration) <= 0) {
-            String attemptPrefix = createAttemptPrefix(attempts, currentDuration, taskDescription);
-            if (waitJobCondition.isComplete()) {
-                return complete(intLogger, attemptPrefix);
-            } else {
-                intLogger.info(String.format("%snot done yet, waiting %s seconds and trying again...", attemptPrefix, waitJobConfig.getWaitIntervalInSeconds()));
-                Thread.sleep(waitJobConfig.getWaitIntervalInSeconds() * 1000);
-                currentDuration = Duration.ofMillis(System.currentTimeMillis() - startTime);
-            }
-            attempts++;
-        }
-
-        return waitJobCompleter.handleTimeout();
+    public static Boolean waitFor(ResilientJobConfig jobConfig, WaitJobCondition waitJobCondition, String name) throws IntegrationException, InterruptedException {
+        WaitJob waitJob = new WaitJob(waitJobCondition, name);
+        ResilientJobExecutor jobExecutor = new ResilientJobExecutor(jobConfig);
+        return jobExecutor.executeJob(waitJob);
     }
 
-    private T complete(IntLogger intLogger, String attemptPrefix) throws IntegrationException {
-        intLogger.info(String.format("%scomplete!", attemptPrefix));
-        return waitJobCompleter.complete();
+    @Override
+    public void attemptJob() throws IntegrationException {
+        complete = waitJobCondition.isComplete();
     }
 
-    private String createAttemptPrefix(int attempts, Duration currentDuration, String taskDescription) {
-        return String.format("Try #%s %s(elapsed: %s)...", attempts, taskDescription, DurationFormatUtils.formatDurationHMS(currentDuration.toMillis()));
+    @Override
+    public boolean wasJobCompleted() {
+        return complete;
     }
 
+    @Override
+    public Boolean onTimeout() throws IntegrationTimeoutException {
+        throw new IntegrationTimeoutException();
+    }
+
+    @Override
+    public Boolean onComplete() {
+        return complete;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
 }
