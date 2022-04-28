@@ -4,21 +4,21 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.synopsys.integration.exception.IntegrationException;
+import com.synopsys.integration.exception.IntegrationTimeoutException;
 import com.synopsys.integration.log.BufferedIntLogger;
 import com.synopsys.integration.log.LogLevel;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class WaitJobTest {
     private final BufferedIntLogger testingLogger = new BufferedIntLogger();
-    private final WaitJobConfig waitJobConfig = new WaitJobConfig(testingLogger, "holypants", 5, WaitJobConfig.CURRENT_TIME_SUPPLIER, 1);
+    private final ResilientJobConfig waitJobConfig = new ResilientJobConfig(testingLogger, 5, ResilientJobConfig.CURRENT_TIME_SUPPLIER, 1);
 
     @Test
     public void testTaskCompletesImmediately() throws IntegrationException, InterruptedException {
         WaitJobCondition waitJobCondition = () -> true;
-        WaitJob<Boolean> waitJob = new WaitJob(waitJobConfig, waitJobCondition, WaitJob.BOOLEAN_COMPLETER);
-        boolean completed = waitJob.waitFor();
+        boolean completed = WaitJob.waitFor(waitJobConfig, waitJobCondition, "holypants");
 
         assertTrue(completed);
 
@@ -42,8 +42,7 @@ public class WaitJobTest {
                 return ++count > 2;
             }
         };
-        WaitJob<Boolean> waitJob = new WaitJob(waitJobConfig, waitJobCondition, WaitJob.BOOLEAN_COMPLETER);
-        boolean completed = waitJob.waitFor();
+        boolean completed = WaitJob.waitFor(waitJobConfig, waitJobCondition, "holypants");
 
         assertTrue(completed);
 
@@ -58,21 +57,9 @@ public class WaitJobTest {
     }
 
     @Test
-    public void testTaskCompletesNever() throws IntegrationException, InterruptedException {
+    public void testTaskTimesOut() throws IntegrationException, InterruptedException {
         WaitJobCondition waitJobCondition = () -> false;
-        WaitJob<Boolean> waitJob = new WaitJob(waitJobConfig, waitJobCondition, WaitJob.BOOLEAN_COMPLETER);
-        boolean completed = waitJob.waitFor();
-
-        assertFalse(completed);
-
-        String output = testingLogger.getOutputString(LogLevel.INFO);
-        assertFalse(output.contains("Try #0"));
-        assertTrue(output.contains("Try #1"));
-        assertTrue(output.contains("Try #2"));
-
-        assertTrue(output.contains("holypants"));
-        assertFalse(output.contains("complete!"));
-        assertTrue(output.contains("not done yet"));
+        Assertions.assertThrows(IntegrationTimeoutException.class, () -> WaitJob.waitFor(waitJobConfig, waitJobCondition, "holypants"));
     }
 
 }
