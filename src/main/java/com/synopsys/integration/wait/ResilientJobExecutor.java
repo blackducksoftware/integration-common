@@ -30,11 +30,11 @@ public class ResilientJobExecutor {
         String taskDescription = String.format("for task %s ", resilientJob.getName());
 
         do {
-            String attemptPrefix = createAttemptPrefix(attempts, currentDuration, taskDescription);
+            String attemptPrefix = String.format("Try #%s %s(elapsed: %s)...", attempts, taskDescription, DurationFormatUtils.formatDurationHMS(currentDuration.toMillis()));
             resilientJob.attemptJob();
             if (resilientJob.wasJobCompleted()) {
                 intLogger.info(String.format("%scomplete!", attemptPrefix));
-                return resilientJob.onComplete();
+                return resilientJob.onCompletion();
             } else {
                 intLogger.info(String.format("%snot done yet, waiting %s seconds and trying again...", attemptPrefix, jobConfig.getWaitIntervalInSeconds()));
                 Thread.sleep(jobConfig.getWaitIntervalInSeconds() * 1000);
@@ -44,9 +44,5 @@ public class ResilientJobExecutor {
         } while (currentDuration.compareTo(maximumDuration) <= 0);
 
         return resilientJob.onTimeout();
-    }
-
-    private String createAttemptPrefix(int attempts, Duration currentDuration, String taskDescription) {
-        return String.format("Try #%s %s(elapsed: %s)...", attempts, taskDescription, DurationFormatUtils.formatDurationHMS(currentDuration.toMillis()));
     }
 }

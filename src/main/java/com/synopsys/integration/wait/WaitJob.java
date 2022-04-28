@@ -42,7 +42,7 @@ public class WaitJob implements ResilientJob<Boolean> {
     }
 
     @Override
-    public Boolean onComplete() {
+    public Boolean onCompletion() {
         return complete;
     }
 
