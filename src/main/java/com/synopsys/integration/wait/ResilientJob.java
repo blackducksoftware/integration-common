@@ -17,7 +17,7 @@ public interface ResilientJob<T> {
 
     T onTimeout() throws IntegrationTimeoutException;
 
-    T onCompletion();
+    T onCompletion() throws IntegrationException;
 
     String getName();
 }
