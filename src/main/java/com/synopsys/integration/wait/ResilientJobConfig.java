@@ -63,14 +63,14 @@ public class ResilientJobConfig {
 
     public int getWaitIntervalInSeconds() {
         if (null == flatInterval && this.waitIsProgressive) {
-            return this.getWaitIntervalFibonacciInSeconds2();  // default progressive interval
+            return this.getWaitIntervalFibonacciInSeconds2();  //progressive interval
         } else if (flatInterval.matches("[0-9]+")){
-            return Integer.getInteger(POLLING_INTERVAL_PROPERTY).intValue(); // non-default constant polling interval
+            return Integer.getInteger(POLLING_INTERVAL_PROPERTY).intValue(); //constant polling interval added by sys prop
         }
         return waitIntervalInSeconds; // default 1 second interval
     }
-    
-    public int getWaitIntervalFibonacciInSeconds2() {
+
+    public int getWaitIntervalFibonacciInSeconds() {
         int now = 1;
         if (prev2 == -1 && prev1 == 0) {
             now = prev1 - prev2;
