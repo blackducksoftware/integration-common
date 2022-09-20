@@ -29,6 +29,8 @@ public class CommonZipExpanderTest {
     public void testZipFileIsExtracted() throws Exception {
         final Path tempDirectoryPath = Files.createTempDirectory("unziptesting");
         final File tempDirectory = tempDirectoryPath.toFile();
+        FileUtils.forceDeleteOnExit(tempDirectory);
+
         assertEquals(0, tempDirectory.listFiles().length);
 
         final IntLogger logger = new SilentIntLogger();
@@ -55,8 +57,6 @@ public class CommonZipExpanderTest {
         assertTrue(b.isFile() && b.exists());
         assertTrue(c.isFile() && c.exists());
         assertTrue(d.isFile() && d.exists());
-
-        FileUtils.deleteDirectory(tempDirectory);
     }
 
     @Test
@@ -66,6 +66,7 @@ public class CommonZipExpanderTest {
         try {
             final File sourceArchiveFile = createSampleZip();
             final File targetExpansionDirectory = File.createTempFile("dest.zip", null);
+            targetExpansionDirectory.deleteOnExit();
 
             try (PrintStream ps = new PrintStream(errOutputStream, true, "UTF-8")) {
                 System.setErr(ps);
@@ -85,6 +86,7 @@ public class CommonZipExpanderTest {
 
     private File createSampleZip() throws IOException, ArchiveException {
         final File sourceArchiveFile = File.createTempFile("example.zip", null);
+        sourceArchiveFile.deleteOnExit();
         OutputStream archiveStream = new FileOutputStream(sourceArchiveFile);
         ArchiveOutputStream archive = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP, archiveStream);
 

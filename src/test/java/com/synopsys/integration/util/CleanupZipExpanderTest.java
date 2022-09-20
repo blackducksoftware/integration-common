@@ -26,8 +26,6 @@ public class CleanupZipExpanderTest {
         }
 
         assertEquals(2, tempDirectory.listFiles().length);
-
-        FileUtils.deleteDirectory(tempDirectory);
     }
 
     @Test
@@ -41,13 +39,12 @@ public class CleanupZipExpanderTest {
         }
 
         assertEquals(1, tempDirectory.listFiles().length);
-
-        FileUtils.deleteDirectory(tempDirectory);
     }
 
     private File setupFiles() throws IOException {
         final Path tempDirectoryPath = Files.createTempDirectory("unziptesting");
         final File tempDirectory = tempDirectoryPath.toFile();
+        FileUtils.forceDeleteOnExit(tempDirectory);
         assertEquals(0, tempDirectory.listFiles().length);
 
         final File extraDirectory = new File(tempDirectory, "extra");
