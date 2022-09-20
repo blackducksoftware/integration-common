@@ -12,35 +12,45 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Objects;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.log.IntLogger;
 import com.synopsys.integration.log.SilentIntLogger;
 
 public class CommonZipExpanderTest {
+    private File testDirectory;
+
+    @BeforeEach
+    public void init() throws IOException {
+        testDirectory = Files.createTempDirectory("unziptesting").toFile();
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        FileUtils.forceDelete(testDirectory);
+    }
+
     @Test
     public void testZipFileIsExtracted() throws Exception {
-        final Path tempDirectoryPath = Files.createTempDirectory("unziptesting");
-        final File tempDirectory = tempDirectoryPath.toFile();
-        FileUtils.forceDeleteOnExit(tempDirectory);
-
-        assertEquals(0, tempDirectory.listFiles().length);
+        assertEquals(0, Objects.requireNonNull(testDirectory.listFiles()).length);
 
         final IntLogger logger = new SilentIntLogger();
         final CommonZipExpander commonZipExpander = new CommonZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
-            commonZipExpander.expand(zipFileStream, tempDirectory);
+            commonZipExpander.expand(zipFileStream, testDirectory);
         }
 
-        assertEquals(1, tempDirectory.listFiles().length);
-        final File parent = new File(tempDirectory, "parent");
+        assertEquals(1, Objects.requireNonNull(testDirectory.listFiles()).length);
+        final File parent = new File(testDirectory, "parent");
         final File a = new File(parent, "a.txt");
         final File b = new File(parent, "b.txt");
         final File child = new File(parent, "child");
@@ -50,8 +60,8 @@ public class CommonZipExpanderTest {
         assertTrue(parent.isDirectory() && parent.exists());
         assertTrue(child.isDirectory() && child.exists());
 
-        assertEquals(3, parent.listFiles().length);
-        assertEquals(2, child.listFiles().length);
+        assertEquals(3, Objects.requireNonNull(parent.listFiles()).length);
+        assertEquals(2, Objects.requireNonNull(child.listFiles()).length);
 
         assertTrue(a.isFile() && a.exists());
         assertTrue(b.isFile() && b.exists());

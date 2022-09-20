@@ -1,63 +1,65 @@
 package com.synopsys.integration.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Objects;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.log.IntLogger;
 import com.synopsys.integration.log.SilentIntLogger;
 
 public class CleanupZipExpanderTest {
+    private File testDirectory;
+
+    @BeforeEach
+    public void init() throws IOException {
+        testDirectory = Files.createTempDirectory("unziptesting").toFile();
+
+        final File extraDirectory = new File(testDirectory, "extra");
+        final File extraChild = new File(extraDirectory, "child");
+        final File anotherExtraDirectory = new File(testDirectory, "anotherextra");
+        final File aFile = new File(testDirectory, "safe");
+
+        assertTrue(extraChild.mkdirs());
+        assertTrue(anotherExtraDirectory.mkdirs());
+        assertTrue(aFile.createNewFile());
+        assertEquals(3, Objects.requireNonNull(testDirectory.listFiles()).length);
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        FileUtils.forceDelete(testDirectory);
+    }
+
     @Test
     public void testOtherDirectoriesAreDeleted() throws Exception {
-        final File tempDirectory = setupFiles();
-
         final IntLogger logger = new SilentIntLogger();
         final CommonZipExpander zipExpander = new CleanupZipExpander(logger);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
-            zipExpander.expand(zipFileStream, tempDirectory);
+            zipExpander.expand(zipFileStream, testDirectory);
         }
 
-        assertEquals(2, tempDirectory.listFiles().length);
+        assertEquals(2, Objects.requireNonNull(testDirectory.listFiles()).length);
     }
 
     @Test
     public void testEverythingDeleted() throws Exception {
-        final File tempDirectory = setupFiles();
-
         final IntLogger logger = new SilentIntLogger();
         final CommonZipExpander zipExpander = new CleanupZipExpander(logger, true);
         try (InputStream zipFileStream = getClass().getResourceAsStream("/testArchive.zip")) {
-            zipExpander.expand(zipFileStream, tempDirectory);
+            zipExpander.expand(zipFileStream, testDirectory);
         }
 
-        assertEquals(1, tempDirectory.listFiles().length);
-    }
-
-    private File setupFiles() throws IOException {
-        final Path tempDirectoryPath = Files.createTempDirectory("unziptesting");
-        final File tempDirectory = tempDirectoryPath.toFile();
-        FileUtils.forceDeleteOnExit(tempDirectory);
-        assertEquals(0, tempDirectory.listFiles().length);
-
-        final File extraDirectory = new File(tempDirectory, "extra");
-        final File extraChild = new File(extraDirectory, "child");
-        final File anotherExtraDirectory = new File(tempDirectory, "anotherextra");
-        final File aFile = new File(tempDirectory, "safe");
-
-        extraChild.mkdirs();
-        anotherExtraDirectory.mkdirs();
-        aFile.createNewFile();
-        assertEquals(3, tempDirectory.listFiles().length);
-
-        return tempDirectory;
+        assertEquals(1, Objects.requireNonNull(testDirectory.listFiles()).length);
     }
 
 }
