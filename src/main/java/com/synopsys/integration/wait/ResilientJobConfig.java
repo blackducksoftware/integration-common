@@ -25,7 +25,6 @@ public class ResilientJobConfig {
     private int max = 60;
 
     private boolean waitIsProgressive = false;
-    private String flatInterval = System.getProperty(POLLING_INTERVAL_PROPERTY);
 
     public ResilientJobConfig(IntLogger intLogger, long timeoutInSeconds, long startTime, int waitIntervalInSeconds, boolean waitIsProgressive) {
         this(intLogger, timeoutInSeconds, () -> startTime, waitIntervalInSeconds);
@@ -62,10 +61,8 @@ public class ResilientJobConfig {
     }
 
     public int getWaitIntervalInSeconds() {
-        if (null == flatInterval && this.waitIsProgressive) {
-            return this.getWaitIntervalFibonacciInSeconds();  //progressive interval
-        } else if (null != flatInterval && flatInterval.matches("[0-9]+")){
-            return Integer.getInteger(POLLING_INTERVAL_PROPERTY).intValue(); //constant polling interval added by sys prop
+        if (this.waitIsProgressive) {
+            return  this.getWaitIntervalFibonacciInSeconds();  //progressive interval
         }
         return waitIntervalInSeconds; // default 1 second interval
     }
