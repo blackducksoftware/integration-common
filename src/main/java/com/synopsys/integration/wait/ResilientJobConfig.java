@@ -20,9 +20,11 @@ public class ResilientJobConfig {
     private final Supplier<Long> startTimeSupplier;
     private final int waitIntervalInSeconds;
 
+    // sequence initializers
     private int prev1 = 1;
     private int prev2 = 0;
     private int max = 60;
+    private int now = 1;
 
     private boolean waitIsProgressive = false;
 
@@ -68,12 +70,7 @@ public class ResilientJobConfig {
     }
 
     public int getWaitIntervalFibonacciInSeconds() {
-        int now = 1;
-        if (prev2 == -1 && prev1 == 0) {
-            now = prev1 - prev2;
-        } else {
-            now = prev2 + prev1;
-        }
+        now = prev2 + prev1;
         if (now >= max) {
             return max;
         }
