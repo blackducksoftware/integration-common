@@ -36,8 +36,9 @@ public class ResilientJobExecutor {
                 intLogger.info(String.format("%scomplete!", attemptPrefix));
                 return resilientJob.onCompletion();
             } else {
-                intLogger.info(String.format("%snot done yet, waiting %s seconds and trying again...", attemptPrefix, jobConfig.getWaitIntervalInSeconds()));
-                Thread.sleep(jobConfig.getWaitIntervalInSeconds() * 1000);
+                int waitTimeInSeconds = jobConfig.getWaitIntervalInSeconds();
+                intLogger.info(String.format("%snot done yet, waiting %s seconds and trying again...", attemptPrefix, waitTimeInSeconds));
+                Thread.sleep(waitTimeInSeconds * 1000);
                 currentDuration = Duration.ofMillis(System.currentTimeMillis() - startTime);
             }
             attempts++;
