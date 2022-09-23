@@ -9,6 +9,9 @@ package com.synopsys.integration.wait.tracker;
 
 public class WaitIntervalTrackerFactory {
 
+    private WaitIntervalTrackerFactory() {
+    }
+
     public static WaitIntervalTracker createConstant(long timeoutInSeconds, long waitIntervalInSeconds) {
         return new WaitIntervalTrackerConstant(timeoutInSeconds, waitIntervalInSeconds);
     }
