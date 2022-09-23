@@ -9,13 +9,13 @@ package com.synopsys.integration.wait.tracker;
 
 public class WaitIntervalTrackerConstant implements WaitIntervalTracker {
     private final long timeoutInSeconds;
-    private final int waitIntervalInSeconds;
+    private final long waitIntervalInSeconds;
 
-    public WaitIntervalTrackerConstant(long timeoutInSeconds, int waitIntervalInSeconds) {
+    public WaitIntervalTrackerConstant(long timeoutInSeconds, long waitIntervalInSeconds) {
         this.timeoutInSeconds = timeoutInSeconds;
         // waitInterval needs to be less than the timeout
         if (waitIntervalInSeconds > timeoutInSeconds) {
-            this.waitIntervalInSeconds = (int) timeoutInSeconds;
+            this.waitIntervalInSeconds = timeoutInSeconds;
         } else {
             this.waitIntervalInSeconds = waitIntervalInSeconds;
         }
@@ -27,7 +27,7 @@ public class WaitIntervalTrackerConstant implements WaitIntervalTracker {
     }
 
     @Override
-    public int getNextWaitIntervalInSeconds() {
+    public long getNextWaitIntervalInSeconds() {
         return waitIntervalInSeconds;
     }
 }

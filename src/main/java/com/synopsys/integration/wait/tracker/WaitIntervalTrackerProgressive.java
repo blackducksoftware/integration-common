@@ -9,14 +9,13 @@ package com.synopsys.integration.wait.tracker;
 
 public class WaitIntervalTrackerProgressive implements WaitIntervalTracker {
     private final long timeoutInSeconds;
-    private final int maxWaitIntervalSeconds;
+    private final long maxWaitIntervalSeconds;
 
     // sequence initializers
-    private int prev1 = 1;
-    private int prev2 = 0;
-    private int now = 1;
+    private long prev1 = 1L;
+    private long prev2 = 0L;
 
-    public WaitIntervalTrackerProgressive(long timeoutInSeconds, int maxWaitIntervalSeconds) {
+    public WaitIntervalTrackerProgressive(long timeoutInSeconds, long maxWaitIntervalSeconds) {
         this.timeoutInSeconds = timeoutInSeconds;
         this.maxWaitIntervalSeconds = maxWaitIntervalSeconds;
     }
@@ -27,8 +26,8 @@ public class WaitIntervalTrackerProgressive implements WaitIntervalTracker {
     }
 
     @Override
-    public int getNextWaitIntervalInSeconds() {
-        now = prev2 + prev1;
+    public long getNextWaitIntervalInSeconds() {
+        long now = prev2 + prev1;
         if (now >= maxWaitIntervalSeconds) {
             return maxWaitIntervalSeconds;
         }

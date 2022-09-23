@@ -41,7 +41,7 @@ public class ResilientJobConfig {
         return startTimeSupplier.get();
     }
 
-    public int getWaitIntervalInSeconds() {
+    public long getWaitIntervalInSeconds() {
         return waitIntervalTracker.getNextWaitIntervalInSeconds();
     }
 }

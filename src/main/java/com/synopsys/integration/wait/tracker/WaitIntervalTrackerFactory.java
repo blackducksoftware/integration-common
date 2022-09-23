@@ -9,11 +9,11 @@ package com.synopsys.integration.wait.tracker;
 
 public class WaitIntervalTrackerFactory {
 
-    public static WaitIntervalTracker createConstant(long timeoutInSeconds, int waitIntervalInSeconds) {
+    public static WaitIntervalTracker createConstant(long timeoutInSeconds, long waitIntervalInSeconds) {
         return new WaitIntervalTrackerConstant(timeoutInSeconds, waitIntervalInSeconds);
     }
 
-    public static WaitIntervalTracker createProgressive(long timeoutInSeconds, int maxWaitInSeconds) {
+    public static WaitIntervalTracker createProgressive(long timeoutInSeconds, long maxWaitInSeconds) {
         return new WaitIntervalTrackerProgressive(timeoutInSeconds, maxWaitInSeconds);
     }
 }

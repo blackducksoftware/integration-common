@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 
 public class WaitJobTest {
     private final BufferedIntLogger testingLogger = new BufferedIntLogger();
-    private final ResilientJobConfig waitJobConfig = new ResilientJobConfig(testingLogger, ResilientJobConfig.CURRENT_TIME_SUPPLIER, WaitIntervalTrackerFactory.createConstant(5, 1));
-    private final ResilientJobConfig waitJobConfigFibonacciWaitIntervals = new ResilientJobConfig(testingLogger, System.currentTimeMillis(), WaitIntervalTrackerFactory.createProgressive(60, 60));
+    private final ResilientJobConfig waitJobConfig = new ResilientJobConfig(testingLogger, ResilientJobConfig.CURRENT_TIME_SUPPLIER, WaitIntervalTrackerFactory.createConstant(5L, 1L));
+    private final ResilientJobConfig waitJobConfigFibonacciWaitIntervals = new ResilientJobConfig(testingLogger, System.currentTimeMillis(), WaitIntervalTrackerFactory.createProgressive(60L, 60L));
 
     @Test
     public void testTaskCompletesImmediately() throws IntegrationException, InterruptedException {
