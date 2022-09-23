@@ -7,14 +7,15 @@ import com.synopsys.integration.exception.IntegrationException;
 import com.synopsys.integration.exception.IntegrationTimeoutException;
 import com.synopsys.integration.log.BufferedIntLogger;
 import com.synopsys.integration.log.LogLevel;
+import com.synopsys.integration.wait.tracker.WaitIntervalTrackerFactory;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class WaitJobTest {
     private final BufferedIntLogger testingLogger = new BufferedIntLogger();
-    private final ResilientJobConfig waitJobConfig = new ResilientJobConfig(testingLogger, 5, ResilientJobConfig.CURRENT_TIME_SUPPLIER, 1);
-    private final ResilientJobConfig waitJobConfigFibonacciWaitIntervals = new ResilientJobConfig(testingLogger, 60, System.currentTimeMillis(), 1, true);
+    private final ResilientJobConfig waitJobConfig = new ResilientJobConfig(testingLogger, ResilientJobConfig.CURRENT_TIME_SUPPLIER, WaitIntervalTrackerFactory.createConstant(5, 1));
+    private final ResilientJobConfig waitJobConfigFibonacciWaitIntervals = new ResilientJobConfig(testingLogger, System.currentTimeMillis(), WaitIntervalTrackerFactory.createProgressive(60, 60));
 
     @Test
     public void testTaskCompletesImmediately() throws IntegrationException, InterruptedException {

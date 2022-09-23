@@ -10,44 +10,23 @@ package com.synopsys.integration.wait;
 import java.util.function.Supplier;
 
 import com.synopsys.integration.log.IntLogger;
+import com.synopsys.integration.wait.tracker.WaitIntervalTracker;
 
 public class ResilientJobConfig {
     public static final Supplier<Long> CURRENT_TIME_SUPPLIER = System::currentTimeMillis;
-
-    private final String POLLING_INTERVAL_PROPERTY = "ConstantPollingInterval";
     private final IntLogger intLogger;
-    private final long timeoutInSeconds;
     private final Supplier<Long> startTimeSupplier;
-    private final int waitIntervalInSeconds;
+    private final WaitIntervalTracker waitIntervalTracker;
 
-    // sequence initializers
-    private int prev1 = 1;
-    private int prev2 = 0;
-    private int max = 60;
-    private int now = 1;
+    public ResilientJobConfig(IntLogger intLogger, long startTime, WaitIntervalTracker waitIntervalTracker) {
+        this(intLogger, () -> startTime, waitIntervalTracker);
 
-    private boolean waitIsProgressive = false;
-
-    public ResilientJobConfig(IntLogger intLogger, long timeoutInSeconds, long startTime, int waitIntervalInSeconds, boolean waitIsProgressive) {
-        this(intLogger, timeoutInSeconds, () -> startTime, waitIntervalInSeconds);
-        this.waitIsProgressive  = waitIsProgressive;
     }
 
-    public ResilientJobConfig(IntLogger intLogger, long timeoutInSeconds, long startTime, int waitIntervalInSeconds) {
-        this(intLogger, timeoutInSeconds, () -> startTime, waitIntervalInSeconds);
-    }
-
-    public ResilientJobConfig(IntLogger intLogger, long timeoutInSeconds, Supplier<Long> startTimeSupplier, int waitIntervalInSeconds) {
+    public ResilientJobConfig(IntLogger intLogger, Supplier<Long> startTimeSupplier, WaitIntervalTracker waitIntervalTracker) {
         this.intLogger = intLogger;
-        this.timeoutInSeconds = timeoutInSeconds;
+        this.waitIntervalTracker  = waitIntervalTracker;
         this.startTimeSupplier = startTimeSupplier;
-
-        // waitInterval needs to be less than the timeout
-        if (waitIntervalInSeconds > timeoutInSeconds) {
-            this.waitIntervalInSeconds = (int) timeoutInSeconds;
-        } else {
-            this.waitIntervalInSeconds = waitIntervalInSeconds;
-        }
     }
 
     public IntLogger getIntLogger() {
@@ -55,7 +34,7 @@ public class ResilientJobConfig {
     }
 
     public long getTimeoutInSeconds() {
-        return timeoutInSeconds;
+        return waitIntervalTracker.getTimeoutInSeconds();
     }
 
     public long getStartTime() {
@@ -63,20 +42,6 @@ public class ResilientJobConfig {
     }
 
     public int getWaitIntervalInSeconds() {
-        if (this.waitIsProgressive) {
-            return  this.getWaitIntervalFibonacciInSeconds();  //progressive interval
-        }
-        return waitIntervalInSeconds; // default 1 second interval
-    }
-
-    public int getWaitIntervalFibonacciInSeconds() {
-        now = prev2 + prev1;
-        if (now >= max) {
-            return max;
-        }
-
-        prev2 = prev1;
-        prev1 = now;
-        return now;
+        return waitIntervalTracker.getNextWaitIntervalInSeconds();
     }
 }
