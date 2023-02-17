@@ -1,7 +1,7 @@
 /*
  * integration-common
  *
- * Copyright (c) 2022 Synopsys, Inc.
+ * Copyright (c) 2023 Synopsys, Inc.
  *
  * Use subject to the terms and conditions of the Synopsys End User Software License and Maintenance Agreement. All rights reserved worldwide.
  */
@@ -36,8 +36,9 @@ public class IntegrationEscapeUtil {
             return null;
         }
 
-        final String escaped = s.replaceAll("[^A-Za-z0-9]", "_");
-        return escaped;
+        // Replace anything that is not an alphabetic character or a digit with an underscore.
+        // See https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html for further details.
+        return s.replaceAll("[^\\p{IsAlphabetic}\\p{Digit}]", "_");
     }
 
 }
