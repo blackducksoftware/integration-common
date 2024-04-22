@@ -10,7 +10,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
 public class TestPropertiesManagerTest {
-    private static final String FROM_FILE_VALID = "SERVER_URL";
+    private static final String FROM_FILE_VALID = "TEST_PROPERTY_ONE";
     private static final String FROM_FILE_INVALID = "SHOULD_NOT_EXIST";
 
     private static final String VARIABLE_NAME_FROM_ENVIRONMENT = "PATH";

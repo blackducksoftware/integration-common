@@ -13,7 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
 public class PropertiesManagerTest {
-    private static final String FROM_FILE_VALID = "SERVER_API_TOKEN";
+    private static final String FROM_FILE_VALID = "TEST_PROPERTY_TWO";
     private static final String FROM_FILE_INVALID = "SHOULD_NOT_EXIST";
 
     private static final String VARIABLE_NAME_FROM_ENVIRONMENT = "HOME";
