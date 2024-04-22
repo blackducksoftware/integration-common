@@ -10,11 +10,14 @@ package com.synopsys.integration.properties;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
 
 /**
- * Create Properties object from properties file, environment, or both.
+ * Create Properties object from a Properties object, a file, the environment,
+ * or both a file and the environment.
  * Intended to be used for Unit tests.
  *
  * @author danam
@@ -25,38 +28,92 @@ public class TestPropertiesManager extends PropertiesManager {
     public static final String DEFAULT_TEST_PROPERTIES_LOCATION = "src/main/resources/" + DEFAULT_TEST_PROPERTIES_FILE_NAME;
 
     /**
-     * Load properties from default test file {@value DEFAULT_TEST_PROPERTIES_LOCATION}
+     * Load properties from existing Properties.
+     *
+     * @param properties
+     *            An existing Properties object.
+     * @return TestPropertiesManager
      */
-    public static TestPropertiesManager loadDefaultTestProperties() {
-        return new TestPropertiesManager(DEFAULT_TEST_PROPERTIES_LOCATION, Collections.emptyMap());
+    public static TestPropertiesManager loadProperties(Properties properties) {
+        return new TestPropertiesManager(properties);
     }
 
     /**
-     * Load properties from environment and default test file {@value DEFAULT_TEST_PROPERTIES_LOCATION}
+     * Load properties from <b>default</b> test file only: {@value DEFAULT_TEST_PROPERTIES_LOCATION}
+     * @return TestPropertiesManager
+     */
+    public static TestPropertiesManager loadFromDefaultFile() {
+        return TestPropertiesManager.loadWithOverrides(DEFAULT_TEST_PROPERTIES_LOCATION, Collections.emptyMap());
+    }
+
+    /**
+     * Load properties from <b>default</b> test file : {@value DEFAULT_TEST_PROPERTIES_LOCATION}
+     * and from environment.
+     * For properties that exist in both, environment will take precedence.
      *
      * @param environmentProperties
      *            A map of variables used to pull from run environment.
-     *            The key is the name of the variable within the environment.
-     *            The value is how the variable will be represented in Properties object.
+     *            The map key is the name of the variable within the run environment.
+     *            The map value is how the variable will be represented in Properties object.
+     * @return TestPropertiesManager
      */
-    public static TestPropertiesManager loadDefaultTestProperties(Map<String, String> environmentProperties) {
-        return new TestPropertiesManager(DEFAULT_TEST_PROPERTIES_LOCATION, environmentProperties);
+    public static TestPropertiesManager loadFromEnvironmentAndDefaultFile(Map<String, String> environmentProperties) {
+        return TestPropertiesManager.loadWithOverrides(DEFAULT_TEST_PROPERTIES_LOCATION, environmentProperties);
     }
 
     /**
-     * Load properties from file and environment
+     * Load properties from file only.
      *
      * @param propertiesFileLocation
      *            The path to file containing variables to load.
-     *            Data is expected to be in the format VARIABLE_NAME=VALUE.
-     *            The VARIABLE_NAME is how the variable will be represented in the Properties object.
+     *            Data is expected to be in the format NAME=VALUE.
+     *            The NAME is how the variable will be represented in the Properties object.
+     * @return TestPropertiesManager
+     */
+    public static TestPropertiesManager loadFromFile(String propertiesFileLocation) {
+        return TestPropertiesManager.loadWithOverrides(propertiesFileLocation, null);
+    }
+
+    /**
+     * Load properties from environment only.
+     *
      * @param environmentProperties
      *            A map of variables used to pull from run environment.
-     *            The key is the name of the variable within the environment.
-     *            The value is how the variable will be represented in Properties object.
+     *            The map key is the name of the variable within the run environment.
+     *            The map value is how the variable will be represented in Properties object.
+     * @return TestPropertiesManager
      */
-    public TestPropertiesManager(String propertiesFileLocation, Map<String, String> environmentProperties) {
-        super(propertiesFileLocation, environmentProperties);
+    public static TestPropertiesManager loadFromEnvironment(Map<String, String> environmentProperties) {
+        return TestPropertiesManager.loadWithOverrides(null, environmentProperties);
+    }
+
+    /**
+     * Load properties from file and environment.
+     * For properties that exist in both, environment will take precedence.
+     *
+     * @param propertiesFileLocation
+     *            The path to file containing variables to load.
+     *            Data is expected to be in the format NAME=VALUE.
+     *            The NAME is how the variable will be represented in the Properties object.
+     * @param environmentProperties
+     *            A map of variables used to pull from run environment.
+     *            The map key is the name of the variable within the run environment.
+     *            The map value is how the variable will be represented in Properties object.
+     * @return TestPropertiesManager
+     */
+    public static TestPropertiesManager loadWithOverrides(String propertiesFileLocation, Map<String, String> environmentProperties) {
+        TestPropertiesManager testPropertiesManager = new TestPropertiesManager();
+        testPropertiesManager.addPropertiesFromFile(propertiesFileLocation);
+        testPropertiesManager.addPropertiesFromEnv(environmentProperties);
+        return testPropertiesManager;
+    }
+
+    private TestPropertiesManager() {
+        super();
+    }
+
+    private TestPropertiesManager(Properties properties) {
+        super(properties);
     }
 
     /**
@@ -64,9 +121,8 @@ public class TestPropertiesManager extends PropertiesManager {
      * Use Assumptions.assumeTrue before retrieving property value.
      *
      * @param propertyKey
-     *            String used to search Properties
-     * @return
-     *            Optional.ofNullable String
+     *            String used to search Properties.
+     * @return Optional.ofNullable String
      */
     @Override
     public Optional<String> getProperty(String propertyKey) {

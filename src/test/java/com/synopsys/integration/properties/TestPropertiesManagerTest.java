@@ -2,9 +2,12 @@ package com.synopsys.integration.properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.Properties;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
@@ -18,8 +21,20 @@ public class TestPropertiesManagerTest {
     private static final String FROM_ENV_INVALID = "should.not.exist";
 
     @Test
-    public void testPropertiesExpectedFromFileOnly() {
-        PropertiesManager propertiesManager = TestPropertiesManager.loadDefaultTestProperties();
+    public void testLoadProperties() {
+        String propertyKey = RandomStringUtils.randomAlphanumeric(10);
+        String propertyValue = RandomStringUtils.randomAlphanumeric(10);
+        Properties properties = new Properties();
+        properties.put(propertyKey, propertyValue);
+
+        TestPropertiesManager testPropertiesManager = TestPropertiesManager.loadProperties(properties);
+        assertTrue(testPropertiesManager.containsKey(propertyKey));
+        assertEquals(propertyValue, testPropertiesManager.getProperty(propertyKey).orElse(null));
+    }
+
+    @Test
+    public void testLoadFromDefaultFile() {
+        PropertiesManager propertiesManager = TestPropertiesManager.loadFromDefaultFile();
         assertTrue(propertiesManager.containsKey(FROM_FILE_VALID));
         assertTrue(propertiesManager.getProperty(FROM_FILE_VALID).isPresent());
 
@@ -29,8 +44,33 @@ public class TestPropertiesManagerTest {
     }
 
     @Test
-    public void testPropertiesExpectedFromEnvOnly() {
-        PropertiesManager propertiesManager = new TestPropertiesManager(RandomStringUtils.randomAlphanumeric(25), Collections.singletonMap(VARIABLE_NAME_FROM_ENVIRONMENT, FROM_ENV_VALID));
+    public void testLoadFromEnvironmentAndDefaultFile() {
+        PropertiesManager propertiesManager = TestPropertiesManager.loadFromEnvironmentAndDefaultFile(Collections.singletonMap("PATH", "path"));
+        assertTrue(propertiesManager.containsKey(FROM_FILE_VALID));
+        assertTrue(propertiesManager.getProperty(FROM_FILE_VALID).isPresent());
+        assertTrue(propertiesManager.containsKey(FROM_ENV_VALID));
+        assertTrue(propertiesManager.getProperty(FROM_ENV_VALID).isPresent());
+
+        assertFalse(propertiesManager.containsKey(VARIABLE_NAME_FROM_ENVIRONMENT));
+        assertFalse(propertiesManager.containsKey(FROM_ENV_INVALID));
+        assertFalse(propertiesManager.containsKey(FROM_FILE_INVALID));
+    }
+
+    @Test
+    public void testLoadFromFile() {
+        String propertiesFullPath = Paths.get("").toAbsolutePath() + "/" + TestPropertiesManager.DEFAULT_TEST_PROPERTIES_LOCATION;
+        PropertiesManager propertiesManager = TestPropertiesManager.loadFromFile(propertiesFullPath);
+        assertTrue(propertiesManager.containsKey(FROM_FILE_VALID));
+        assertTrue(propertiesManager.getProperty(FROM_FILE_VALID).isPresent());
+
+        assertFalse(propertiesManager.containsKey(FROM_FILE_INVALID));
+        assertFalse(propertiesManager.containsKey(FROM_ENV_VALID));
+        assertFalse(propertiesManager.containsKey(FROM_ENV_INVALID));
+    }
+
+    @Test
+    public void testLoadFromEnvironment() {
+        PropertiesManager propertiesManager = TestPropertiesManager.loadFromEnvironment(Collections.singletonMap(VARIABLE_NAME_FROM_ENVIRONMENT, FROM_ENV_VALID));
         assertTrue(propertiesManager.containsKey(FROM_ENV_VALID));
         assertTrue(propertiesManager.getProperty(FROM_ENV_VALID).isPresent());
 
@@ -38,8 +78,9 @@ public class TestPropertiesManagerTest {
     }
 
     @Test
-    public void testPropertiesExpectedFromBoth() {
-        PropertiesManager propertiesManager = TestPropertiesManager.loadDefaultTestProperties(Collections.singletonMap("PATH", "path"));
+    public void testLoadWithOverrides() {
+        PropertiesManager propertiesManager = TestPropertiesManager.loadWithOverrides(TestPropertiesManager.DEFAULT_TEST_PROPERTIES_LOCATION,
+            Collections.singletonMap(VARIABLE_NAME_FROM_ENVIRONMENT, FROM_ENV_VALID));
         assertTrue(propertiesManager.containsKey(FROM_FILE_VALID));
         assertTrue(propertiesManager.getProperty(FROM_FILE_VALID).isPresent());
         assertTrue(propertiesManager.containsKey(FROM_ENV_VALID));
