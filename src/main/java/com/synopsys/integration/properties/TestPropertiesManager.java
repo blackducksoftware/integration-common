@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.Test;
 
 /**
  * Create Properties object from a Properties object, a file, the environment,

@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Properties;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class PropertiesManagerTest {
@@ -24,6 +24,18 @@ public class PropertiesManagerTest {
     private static final String VARIABLE_NAME_FROM_ENVIRONMENT = "HOME";
     private static final String FROM_ENV_VALID = "home";
     private static final String FROM_ENV_INVALID = "should.not.exist";
+
+    @BeforeEach
+    public void init() {
+        String testPropertyValue = RandomStringUtils.randomAlphanumeric(10);
+        String testProperty = FROM_FILE_VALID + "=" + testPropertyValue;
+
+        File testPropertiesFile = new File(TestPropertiesManager.DEFAULT_TEST_PROPERTIES_LOCATION);
+        assertDoesNotThrow(() -> testPropertiesFile.getParentFile().mkdirs());
+        assertDoesNotThrow(testPropertiesFile::createNewFile);
+        assertDoesNotThrow(() -> Files.write(testPropertiesFile.toPath(), testProperty.getBytes(StandardCharsets.UTF_8)));
+        testPropertiesFile.deleteOnExit();
+    }
 
     @Test
     public void testLoadProperties() {
@@ -84,6 +96,7 @@ public class PropertiesManagerTest {
             Collections.singletonMap(VARIABLE_NAME_FROM_ENVIRONMENT, FROM_ENV_VALID));
         assertTrue(propertiesManager.containsKey(FROM_ENV_VALID));
         assertNotEquals(testValue, propertiesManager.getProperty(FROM_ENV_VALID).orElse(null));
+        assertEquals(System.getenv(VARIABLE_NAME_FROM_ENVIRONMENT), propertiesManager.getProperty(FROM_ENV_VALID).orElse(null));
     }
 
     @Test

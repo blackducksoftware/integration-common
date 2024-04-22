@@ -1,15 +1,19 @@
 package com.synopsys.integration.properties;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Properties;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class TestPropertiesManagerTest {
@@ -19,6 +23,18 @@ public class TestPropertiesManagerTest {
     private static final String VARIABLE_NAME_FROM_ENVIRONMENT = "PATH";
     private static final String FROM_ENV_VALID = "path";
     private static final String FROM_ENV_INVALID = "should.not.exist";
+
+    @BeforeEach
+    public void init() {
+        String testPropertyValue = RandomStringUtils.randomAlphanumeric(10);
+        String testProperty = FROM_FILE_VALID + "=" + testPropertyValue;
+
+        File testPropertiesFile = new File(TestPropertiesManager.DEFAULT_TEST_PROPERTIES_LOCATION);
+        assertDoesNotThrow(() -> testPropertiesFile.getParentFile().mkdirs());
+        assertDoesNotThrow(testPropertiesFile::createNewFile);
+        assertDoesNotThrow(() -> Files.write(testPropertiesFile.toPath(), testProperty.getBytes(StandardCharsets.UTF_8)));
+        testPropertiesFile.deleteOnExit();
+    }
 
     @Test
     public void testLoadProperties() {
