@@ -105,12 +105,6 @@ public class PropertiesManagerTest {
     }
 
     @Test
-    public void dana() {
-        new EnvironmentVariables();
-
-    }
-
-    @Test
     public void testDoesNotExist() {
         assertThrows(IntegrationException.class, () -> PropertiesManager.loadFromFile(getRandom(25)));
 

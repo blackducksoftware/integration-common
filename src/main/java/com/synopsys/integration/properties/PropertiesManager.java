@@ -167,7 +167,7 @@ public class PropertiesManager {
      * @return boolean
      */
     public boolean containsKey(String propertyKey) {
-        return getProperties().containsKey(propertyKey);
+        return properties.containsKey(propertyKey);
     }
 
     /**
