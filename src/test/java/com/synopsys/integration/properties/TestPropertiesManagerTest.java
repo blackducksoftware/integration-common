@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Properties;
@@ -26,20 +27,21 @@ public class TestPropertiesManagerTest {
 
     @BeforeEach
     public void init() {
-        String testPropertyValue = RandomStringUtils.randomAlphanumeric(10);
+        String testPropertyValue = getRandom(10);
         String testProperty = FROM_FILE_VALID + "=" + testPropertyValue;
 
         File testPropertiesFile = new File(TestPropertiesManager.DEFAULT_TEST_PROPERTIES_LOCATION);
         assertDoesNotThrow(() -> testPropertiesFile.getParentFile().mkdirs());
         assertDoesNotThrow(testPropertiesFile::createNewFile);
         assertDoesNotThrow(() -> Files.write(testPropertiesFile.toPath(), testProperty.getBytes(StandardCharsets.UTF_8)));
+        assertTrue(testPropertiesFile.setReadable(true));
         testPropertiesFile.deleteOnExit();
     }
 
     @Test
     public void testLoadProperties() {
-        String propertyKey = RandomStringUtils.randomAlphanumeric(10);
-        String propertyValue = RandomStringUtils.randomAlphanumeric(10);
+        String propertyKey = getRandom(10);
+        String propertyValue = getRandom(10);
         Properties properties = new Properties();
         properties.put(propertyKey, propertyValue);
 
@@ -106,4 +108,53 @@ public class TestPropertiesManagerTest {
         assertFalse(testPropertiesManager.containsKey(FROM_ENV_INVALID));
         assertFalse(testPropertiesManager.containsKey(FROM_FILE_INVALID));
     }
+
+    @Test
+    public void testDoesNotExist() {
+        TestPropertiesManager testPropertiesManager = TestPropertiesManager.loadWithOverrides(getRandom(25),
+            Collections.singletonMap(getRandom(10), getRandom(10)));
+        assertEquals(0, testPropertiesManager.getProperties().size());
+    }
+
+    @Test
+    public void testNull() {
+        TestPropertiesManager testPropertiesManager = TestPropertiesManager.loadWithOverrides(null, null);
+        assertEquals(0, testPropertiesManager.getProperties().size());
+    }
+
+    @Test
+    public void testEmpty() {
+        TestPropertiesManager testPropertiesManager = TestPropertiesManager.loadWithOverrides("", Collections.singletonMap("", ""));
+        assertEquals(0, testPropertiesManager.getProperties().size());
+    }
+
+    @Test
+    public void testWhiteSpace() {
+        TestPropertiesManager testPropertiesManager = TestPropertiesManager.loadWithOverrides("      \n\t  \r  ",
+            Collections.singletonMap("      \n\t  \r  ", "      \n\t  \r  "));
+        assertEquals(0, testPropertiesManager.getProperties().size());
+    }
+
+    @Test
+    public void testDirectory() {
+        Path tempDirectory = assertDoesNotThrow(() -> Files.createTempDirectory(getRandom(10)));
+        tempDirectory.toFile().deleteOnExit();
+
+        TestPropertiesManager testPropertiesManager = TestPropertiesManager.loadFromFile(tempDirectory.toString());
+        assertEquals(0, testPropertiesManager.getProperties().size());
+    }
+
+    @Test
+    public void testFileNotReadable() {
+        File testPropertiesFile = new File(TestPropertiesManager.DEFAULT_TEST_PROPERTIES_LOCATION);
+        assertTrue(testPropertiesFile.length() > 0);
+        assertTrue(testPropertiesFile.setReadable(false));
+        TestPropertiesManager testPropertiesManager = TestPropertiesManager.loadFromFile(testPropertiesFile.toString());
+        assertEquals(0, testPropertiesManager.getProperties().size());
+    }
+
+    private String getRandom(int count) {
+        return RandomStringUtils.randomAlphanumeric(count);
+    }
+
 }

@@ -7,12 +7,15 @@
  */
 package com.synopsys.integration.properties;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
 import org.junit.jupiter.api.Assumptions;
+
+import com.synopsys.integration.exception.IntegrationException;
 
 /**
  * Create Properties object from a Properties object, a file, the environment,
@@ -39,6 +42,9 @@ public class TestPropertiesManager extends PropertiesManager {
 
     /**
      * Load properties from <b>default</b> test file only: {@value DEFAULT_TEST_PROPERTIES_LOCATION}
+     * Validation is performed against the properties file, but not it's contents.
+     * No attempt to load the file will be made if it is invalid.
+     *
      * @return TestPropertiesManager
      */
     public static TestPropertiesManager loadFromDefaultFile() {
@@ -49,6 +55,10 @@ public class TestPropertiesManager extends PropertiesManager {
      * Load properties from <b>default</b> test file : {@value DEFAULT_TEST_PROPERTIES_LOCATION}
      * and from environment.
      * For properties that exist in both, environment will take precedence.
+     * Validation is performed against the properties file, but not it's contents.
+     * No attempt to load the file will be made if it is invalid.
+     * If the variable exists in the environment without a value,
+     * this empty value will still be added to the properties.
      *
      * @param environmentProperties
      *            A map of variables used to pull from run environment.
@@ -62,6 +72,8 @@ public class TestPropertiesManager extends PropertiesManager {
 
     /**
      * Load properties from file only.
+     * Validation is performed against the properties file, but not it's contents.
+     * No attempt to load the file will be made if it is invalid.
      *
      * @param propertiesFileLocation
      *            The path to file containing variables to load.
@@ -75,6 +87,8 @@ public class TestPropertiesManager extends PropertiesManager {
 
     /**
      * Load properties from environment only.
+     * If the variable exists in the environment without a value,
+     * this empty value will still be added to the properties.
      *
      * @param environmentProperties
      *            A map of variables used to pull from run environment.
@@ -83,12 +97,18 @@ public class TestPropertiesManager extends PropertiesManager {
      * @return TestPropertiesManager
      */
     public static TestPropertiesManager loadFromEnvironment(Map<String, String> environmentProperties) {
-        return TestPropertiesManager.loadWithOverrides(null, environmentProperties);
+        TestPropertiesManager testPropertiesManager = new TestPropertiesManager();
+        testPropertiesManager.addPropertiesFromEnv(environmentProperties);
+        return testPropertiesManager;
     }
 
     /**
      * Load properties from file and environment.
      * For properties that exist in both, environment will take precedence.
+     * Validation is performed against the properties file, but not it's contents.
+     * No attempt to load the file will be made if it is invalid.
+     * If the variable exists in the environment without a value,
+     * this empty value will still be added to the properties.
      *
      * @param propertiesFileLocation
      *            The path to file containing variables to load.
@@ -102,8 +122,7 @@ public class TestPropertiesManager extends PropertiesManager {
      */
     public static TestPropertiesManager loadWithOverrides(String propertiesFileLocation, Map<String, String> environmentProperties) {
         TestPropertiesManager testPropertiesManager = new TestPropertiesManager();
-        testPropertiesManager.addPropertiesFromFile(propertiesFileLocation);
-        testPropertiesManager.addPropertiesFromEnv(environmentProperties);
+        testPropertiesManager.addProperties(propertiesFileLocation, environmentProperties);
         return testPropertiesManager;
     }
 
@@ -113,6 +132,29 @@ public class TestPropertiesManager extends PropertiesManager {
 
     private TestPropertiesManager(Properties properties) {
         super(properties);
+    }
+
+    /**
+     * Add values to Properties.
+     * Validation is performed against the properties file, but not it's contents.
+     * No attempt to load the file will be made if it is invalid.
+     *
+     * @param propertiesFileLocation
+     *            The path to file containing variables to load.
+     * @param environmentProperties
+     *            A map of variables used to pull from run environment.
+     */
+    @Override
+    protected void addProperties(String propertiesFileLocation, Map<String, String> environmentProperties) {
+        try {
+            super.validatePropertiesLocation(propertiesFileLocation);
+            super.addPropertiesFromFile(propertiesFileLocation);
+        } catch (IntegrationException | IOException e) {
+            System.out.println("Failed to load properties from " + propertiesFileLocation);
+            System.out.println(e.getMessage());
+        }
+
+        super.addPropertiesFromEnv(environmentProperties);
     }
 
     /**
