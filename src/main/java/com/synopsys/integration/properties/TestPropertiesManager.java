@@ -170,4 +170,20 @@ public class TestPropertiesManager extends PropertiesManager {
         Assumptions.assumeTrue(containsKey(propertyKey));
         return super.getProperty(propertyKey);
     }
+
+    /**
+     * Search for Property by Property name.
+     * If the property is not found, throw an exception. Intended for when you do
+     * not want to disable a test like getProperty() does.
+     *
+     * @param propertyKey
+     *            String used to search Properties.
+     * @return String
+     *
+     * @throws IntegrationException
+     *            If Property is not found.
+     */
+    public String getRequiredProperty(String propertyKey) throws IntegrationException {
+        return super.getProperty(propertyKey).orElseThrow(() -> new IntegrationException("Required property does not exist: " + propertyKey));
+    }
 }

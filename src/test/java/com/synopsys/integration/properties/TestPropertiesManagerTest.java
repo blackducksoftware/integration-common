@@ -3,6 +3,7 @@ package com.synopsys.integration.properties;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -17,8 +18,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.synopsys.integration.exception.IntegrationException;
+
 public class TestPropertiesManagerTest {
     private static final String FROM_FILE_VALID = "TEST_PROPERTY_ONE";
+    private static final String TEST_PROPERTY_VALUE = getRandom(10);
     private static final String FROM_FILE_INVALID = "SHOULD_NOT_EXIST";
 
     private static final String VARIABLE_NAME_FROM_ENVIRONMENT = "PATH";
@@ -27,8 +31,7 @@ public class TestPropertiesManagerTest {
 
     @BeforeEach
     public void init() {
-        String testPropertyValue = getRandom(10);
-        String testProperty = FROM_FILE_VALID + "=" + testPropertyValue;
+        String testProperty = FROM_FILE_VALID + "=" + TEST_PROPERTY_VALUE;
 
         File testPropertiesFile = new File(TestPropertiesManager.DEFAULT_TEST_PROPERTIES_LOCATION);
         assertDoesNotThrow(() -> testPropertiesFile.getParentFile().mkdirs());
@@ -153,7 +156,14 @@ public class TestPropertiesManagerTest {
         assertEquals(0, testPropertiesManager.getProperties().size());
     }
 
-    private String getRandom(int count) {
+    @Test
+    public void testRequiredProperty() {
+        TestPropertiesManager testPropertiesManager = TestPropertiesManager.loadFromDefaultFile();
+        assertDoesNotThrow(() -> assertEquals(TEST_PROPERTY_VALUE, testPropertiesManager.getRequiredProperty(FROM_FILE_VALID)));
+        assertThrows(IntegrationException.class, () -> testPropertiesManager.getRequiredProperty(getRandom(25)));
+    }
+
+    private static String getRandom(int count) {
         return RandomStringUtils.randomAlphanumeric(count);
     }
 
