@@ -116,7 +116,11 @@ public class PropertiesManager {
 
     protected PropertiesManager(Properties properties) {
         this.properties = new Properties();
-        this.properties.putAll(properties);
+        addProperties(properties);
+    }
+
+    private void addProperties(Properties inputProperties) {
+        inputProperties.forEach((k, v) -> properties.put(k.toString(), v.toString()));
     }
 
     /**
