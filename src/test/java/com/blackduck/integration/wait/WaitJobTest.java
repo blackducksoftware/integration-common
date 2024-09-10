@@ -3,17 +3,14 @@ package com.blackduck.integration.wait;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.blackduck.integration.exception.IntegrationException;
 import com.blackduck.integration.exception.IntegrationTimeoutException;
 import com.blackduck.integration.log.BufferedIntLogger;
 import com.blackduck.integration.log.LogLevel;
-import com.blackduck.integration.wait.ResilientJobConfig;
-import com.blackduck.integration.wait.WaitJob;
-import com.blackduck.integration.wait.WaitJobCondition;
 import com.blackduck.integration.wait.tracker.WaitIntervalTrackerFactory;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class WaitJobTest {
     private final BufferedIntLogger testingLogger = new BufferedIntLogger();

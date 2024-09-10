@@ -20,8 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.blackduck.integration.exception.IntegrationException;
-import com.blackduck.integration.properties.PropertiesManager;
-import com.blackduck.integration.properties.TestPropertiesManager;
 
 public class PropertiesManagerTest {
     private static final String FROM_FILE_VALID = "TEST_PROPERTY_TWO";

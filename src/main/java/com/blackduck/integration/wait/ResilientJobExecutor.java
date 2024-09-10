@@ -11,8 +11,8 @@ import java.time.Duration;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
-import com.blackduck.integration.log.IntLogger;
 import com.blackduck.integration.exception.IntegrationException;
+import com.blackduck.integration.log.IntLogger;
 
 public class ResilientJobExecutor {
     protected final ResilientJobConfig jobConfig;

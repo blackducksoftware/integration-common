@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.blackduck.integration.util.ExcludedIncludedFilter;
-
 public class ExcludedIncludedFilterTest {
     @Test
     public void testConstructor() {

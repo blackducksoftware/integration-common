@@ -30,8 +30,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 
-import com.blackduck.integration.util.NoThreadExecutorService;
-
 class NoThreadExecutorServiceTest {
     @Test
     void execute() {

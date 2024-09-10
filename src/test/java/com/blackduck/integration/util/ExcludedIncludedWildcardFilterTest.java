@@ -8,9 +8,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.blackduck.integration.util.ExcludedIncludedFilter;
-import com.blackduck.integration.util.ExcludedIncludedWildcardFilter;
-
 public class ExcludedIncludedWildcardFilterTest {
     @Test
     public void testExcluded() {

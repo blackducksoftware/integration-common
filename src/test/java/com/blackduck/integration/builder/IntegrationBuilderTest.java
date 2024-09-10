@@ -6,10 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.blackduck.integration.builder.Buildable;
-import com.blackduck.integration.builder.BuilderStatus;
-import com.blackduck.integration.builder.IntegrationBuilder;
-
 public class IntegrationBuilderTest {
     public static final String POSITIVE_TEST = "positive";
     public static final String NEGATIVE_TEST = "negative";

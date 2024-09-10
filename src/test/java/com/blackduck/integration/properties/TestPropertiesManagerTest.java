@@ -19,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.blackduck.integration.exception.IntegrationException;
-import com.blackduck.integration.properties.TestPropertiesManager;
 
 public class TestPropertiesManagerTest {
     private static final String FROM_FILE_VALID = "TEST_PROPERTY_ONE";

@@ -12,9 +12,6 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.blackduck.integration.builder.BuilderProperties;
-import com.blackduck.integration.builder.BuilderPropertyKey;
-
 public class BuilderPropertiesTest {
     public static final HashSet<String> DEFAULT_STRINGS = new HashSet<>(Arrays.asList("ONE", "TWO", "THREE_FOUR"));
 

@@ -1,15 +1,16 @@
 package com.blackduck.integration.log;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
 
 import org.junit.jupiter.api.Test;
-
-import com.blackduck.integration.log.BufferedIntLogger;
-import com.blackduck.integration.log.LogLevel;
 
 public class BufferedIntLoggerTest {
     @Test

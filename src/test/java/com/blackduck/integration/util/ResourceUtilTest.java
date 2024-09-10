@@ -1,12 +1,10 @@
 package com.blackduck.integration.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
-
-import com.blackduck.integration.util.ResourceUtil;
 
 public class ResourceUtilTest {
     private static final String TEST_RESOURCE = "/test-resource.txt";

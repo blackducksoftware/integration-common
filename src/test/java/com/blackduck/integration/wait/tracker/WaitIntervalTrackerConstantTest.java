@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import com.blackduck.integration.wait.tracker.WaitIntervalTracker;
-import com.blackduck.integration.wait.tracker.WaitIntervalTrackerConstant;
-
 public class WaitIntervalTrackerConstantTest {
 
     @Test

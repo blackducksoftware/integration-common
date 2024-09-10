@@ -1,10 +1,9 @@
 package com.blackduck.integration.builder;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
-
-import com.blackduck.integration.builder.BuilderPropertyKey;
 
 public class BuilderPropertyKeyTest {
     @Test

@@ -21,8 +21,8 @@ import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import com.blackduck.integration.log.IntLogger;
 import com.blackduck.integration.exception.IntegrationException;
+import com.blackduck.integration.log.IntLogger;
 
 /**
  * Used for expanding a given archive to a target directory. Subclasses can

@@ -1,13 +1,11 @@
 package com.blackduck.integration.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-
-import com.blackduck.integration.util.IntegrationEscapeUtil;
 
 public class IntegrationEscapeUtilTest {
     @Test

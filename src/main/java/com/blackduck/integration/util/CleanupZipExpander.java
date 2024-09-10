@@ -12,8 +12,8 @@ import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 
-import com.blackduck.integration.log.IntLogger;
 import com.blackduck.integration.exception.IntegrationException;
+import com.blackduck.integration.log.IntLogger;
 
 /**
  * This will delete any/all directories in the expansion directory prior to

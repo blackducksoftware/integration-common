@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import com.blackduck.integration.log.IntLogger;
 import com.blackduck.integration.log.SilentIntLogger;
-import com.blackduck.integration.util.CleanupZipExpander;
-import com.blackduck.integration.util.CommonZipExpander;
 
 public class CleanupZipExpanderTest {
     private File testDirectory;

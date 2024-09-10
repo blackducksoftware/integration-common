@@ -1,12 +1,10 @@
 package com.blackduck.integration.log;
 
-import com.blackduck.integration.log.IntLogger;
-import com.blackduck.integration.log.LogLevel;
-import com.blackduck.integration.log.PrintStreamIntLogger;
-import com.blackduck.integration.util.IntEnvironmentVariables;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.blackduck.integration.util.IntEnvironmentVariables;
 
 public class IntLoggerTest {
     @Test

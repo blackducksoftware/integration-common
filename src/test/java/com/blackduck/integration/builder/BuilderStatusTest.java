@@ -10,8 +10,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
-import com.blackduck.integration.builder.BuilderStatus;
-
 public class BuilderStatusTest {
     @Test
     public void testNoErrors() {

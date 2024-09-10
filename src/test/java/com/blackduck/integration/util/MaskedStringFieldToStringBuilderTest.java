@@ -1,10 +1,8 @@
 package com.blackduck.integration.util;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.blackduck.integration.util.MaskedStringFieldToStringBuilder;
+import org.junit.jupiter.api.Test;
 
 public class MaskedStringFieldToStringBuilderTest {
     @Test
