@@ -9,7 +9,7 @@ buildscript {
 project.ext.moduleName = 'com.blackduck.integration.integration-common'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '27.0.1-SNAPSHOT'
+version = '27.0.0-SNAPSHOT'
 description = 'The base library for all other integration libraries to encompass and export common dependencies and code.'
 
 apply plugin: 'com.blackduck.integration.library'
