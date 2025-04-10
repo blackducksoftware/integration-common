@@ -7,9 +7,6 @@
  */
 package com.blackduck.integration.util;
 
-import java.util.Objects;
-import java.util.Optional;
-
 public class NameVersion extends Stringable {
     private String name;
     private String version;
@@ -18,8 +15,8 @@ public class NameVersion extends Stringable {
     }
 
     public NameVersion(final String name, final String version) {
-        this.name = Optional.ofNullable(name).orElse("");
-        this.version = Optional.ofNullable(version).orElse("");
+        this.name = name;
+        this.version = version;
     }
 
     public NameVersion(final String name) {
@@ -42,19 +39,4 @@ public class NameVersion extends Stringable {
         this.version = version;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        NameVersion that = (NameVersion) o;
-        return Objects.equals(name, that.name) && Objects.equals(version, that.version); // ignore case?
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), name, version);
-    }
 }
