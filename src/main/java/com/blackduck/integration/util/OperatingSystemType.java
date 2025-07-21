@@ -12,7 +12,8 @@ import org.apache.commons.lang3.SystemUtils;
 public enum OperatingSystemType {
     LINUX,
     MAC,
-    WINDOWS;
+    WINDOWS,
+    ALPINE_LINUX;
 
     public static OperatingSystemType determineFromSystem() {
         if (SystemUtils.IS_OS_MAC) {
