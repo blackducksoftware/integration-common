@@ -1,7 +1,7 @@
 buildscript {
     apply from: 'https://raw.githubusercontent.com/blackducksoftware/integration-resources/master/gradle_common/buildscript-repositories.gradle', to: buildscript
 
-    apply from: 'https://raw.githubusercontent.com/blackducksoftware/integration-resources/master/gradle_common/buildscript-cgp-version.gradle'
+    project.ext { managedCgpVersion = '2.1.1' }
 
     ext {
         javaTargetCompatibility = 8
@@ -14,7 +14,7 @@ buildscript {
 project.ext.moduleName = 'com.blackduck.integration.integration-common'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '27.0.3-SNAPSHOT'
+version = '27.0.3'
 description = 'The base library for all other integration libraries to encompass and export common dependencies and code.'
 
 apply plugin: 'com.blackduck.integration.library'
