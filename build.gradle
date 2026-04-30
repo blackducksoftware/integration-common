@@ -14,7 +14,7 @@ buildscript {
 project.ext.moduleName = 'com.blackduck.integration.integration-common'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '27.0.4-SNAPSHOT'
+version = '27.0.4-LOCAL'
 description = 'The base library for all other integration libraries to encompass and export common dependencies and code.'
 
 apply plugin: 'com.blackduck.integration.library'
@@ -31,7 +31,7 @@ dependencies {
     api 'org.apache.commons:commons-collections4:4.4'
     api 'com.google.code.gson:gson:2.10.1'
     api 'org.jetbrains:annotations:24.0.1'
-    api 'com.jayway.jsonpath:json-path:2.9.0'
+    api 'com.jayway.jsonpath:json-path:2.10.0'
     api 'org.slf4j:slf4j-api:2.0.7'
     api 'com.flipkart.zjsonpatch:zjsonpatch:0.4.16'
 
